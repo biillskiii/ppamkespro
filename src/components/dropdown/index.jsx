@@ -44,11 +44,12 @@ const DropdownInput = ({ type, label, name, options = [], placeholder }) => {
     <div className="relative">
       <div
         onClick={toggleDropdown}
+        style={{ width: "150px" }}
         className={clsx(
           "border p-2 rounded-md w-full cursor-pointer",
           "focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
           "text-black font-medium",
-          "w-[156px]",
+
           getBackgroundColor(selectedValue) || "bg-white"
         )}
       >
