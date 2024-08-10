@@ -1,6 +1,6 @@
 import React from "react";
-import Login from "@/modules/login";
+import Signup from "@/modules/signup";
 const page = () => {
-  return <Login />;
+  return <Signup />;
 };
 export default page;

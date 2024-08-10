@@ -2,7 +2,7 @@ import React from "react";
 import clsx from "clsx";
 import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
 
-const Button = ({ variant = "primary", label, withIcon = true }) => {
+const Button = ({ variant = "primary", label, withIcon = true, onClick }) => {
   const getButtonClasses = () => {
     switch (variant) {
       case "primary":
@@ -19,10 +19,11 @@ const Button = ({ variant = "primary", label, withIcon = true }) => {
   return (
     <button
       className={clsx(
-        "flex items-center justify-center gap-2",
+        "flex items-center w-full justify-center gap-2",
         "rounded-lg px-4 py-2 font-semibold",
         getButtonClasses()
       )}
+      onClick={onClick}
     >
       {withIcon && (variant === "secondary" || variant === "tertiary") && (
         <FaArrowLeft />

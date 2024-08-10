@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import clsx from "clsx";
 import { FaCheck } from "react-icons/fa";
-
+import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 const CustomInput = ({
   type,
   options = [],
@@ -14,7 +14,7 @@ const CustomInput = ({
   const [selectedValues, setSelectedValues] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState("");
-
+  const [showPassword, setShowPassword] = useState(false);
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
@@ -45,12 +45,17 @@ const CustomInput = ({
     if (label === options[2].label) return "bg-abu"; // Option 3: Gray
     return "text-abu";
   };
+  const inputStyle = clsx(
+    "w-full p-2 rounded-md focus:outline-none focus:ring-2",
+    "focus:ring-blue-500 transition-colors duration-200",
+    "border border-gray-300"
+  );
 
   switch (type) {
     case "checkbox":
       return (
         <div>
-          <label htmlFor={name} className="block mb-2">
+          <label htmlFor={name} className="block mb-2 ">
             {label}
           </label>
           <div className="flex flex-row flex-wrap gap-4">
@@ -126,16 +131,54 @@ const CustomInput = ({
           )}
         </div>
       );
+    case "password":
+      return (
+        <div>
+          <label htmlFor={name} className="block mb-2 font-medium text-base">
+            {label}
+          </label>
+          <div className="flex items-center border p-2 rounded-md w-full">
+            <input
+              type={showPassword ? "text" : "password"}
+              id={name}
+              name={name}
+              placeholder={placeholder}
+              className="flex-grow focus:outline-none"
+            />
+            <div
+              className="ml-2 cursor-pointer"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <IoEyeOffOutline /> : <IoEyeOutline />}
+            </div>
+          </div>
+        </div>
+      );
 
     case "text":
     default:
       return (
         <div>
-          <label htmlFor={name} className="block mb-2">
+          <label htmlFor={name} className="block mb-2 font-medium text-base">
             {label}
           </label>
           <input
             type="text"
+            id={name}
+            name={name}
+            placeholder={placeholder}
+            className={clsx("border", "p-2", "rounded-md", "w-full")}
+          />
+        </div>
+      );
+    case "email":
+      return (
+        <div>
+          <label htmlFor={name} className="block mb-2 font-medium text-base">
+            {label}
+          </label>
+          <input
+            type="email"
             id={name}
             name={name}
             placeholder={placeholder}
