@@ -50,6 +50,7 @@ const DropdownInput = ({ type, label, name, options = [], placeholder }) => {
           "focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
           "text-black font-medium",
 
+
           getBackgroundColor(selectedValue) || "bg-white"
         )}
       >
