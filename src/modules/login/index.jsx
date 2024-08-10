@@ -3,7 +3,7 @@ import Image from "next/image";
 import IconLogin from "../../../public/assets/test-icon.png";
 import Logo from "../../../public/assets/logo.png";
 import Frame from "../../../public/assets/frame-3.png";
-import CustomInput from "@/components/input";
+import CustomInput from "@/components/dropdown";
 import Button from "@/components/button";
 const Login = () => {
   const handleLogin = {};
@@ -52,10 +52,7 @@ const Login = () => {
             <h2 className="text-2xl font-bold ">Masuk Akun</h2>
             <p className="text-start text-base">
               Belum memiliki akun?{" "}
-              <a
-                href="/signup"
-                className="font-bold text-accent"
-              >
+              <a href="/signup" className="font-bold text-accent">
                 Buat Akun
               </a>
             </p>
@@ -63,7 +60,7 @@ const Login = () => {
           <form>
             <div className="mb-4">
               <CustomInput
-                label={"Username"}
+                label={"Masukan nama pengguna atau email pengguna"}
                 name={"username"}
                 type={"text"}
                 placeholder={"Misal: Asep Phantom atau contoh@xyz.com"}
@@ -71,7 +68,7 @@ const Login = () => {
             </div>
             <div className="mb-6">
               <CustomInput
-                label={"Password"}
+                label={"Masukan kata sandi"}
                 name={"password"}
                 type={"password"}
                 placeholder={"8 karakter di awali huruf besar"}

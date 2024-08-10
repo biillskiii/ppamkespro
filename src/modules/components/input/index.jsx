@@ -1,5 +1,5 @@
 import React from "react";
-import CustomInput from "@/components/input";
+import CustomInput from "@/components/dropdown";
 const index = () => {
   return (
     <div className="space-y-10">

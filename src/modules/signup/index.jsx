@@ -3,7 +3,7 @@ import Image from "next/image";
 import IconLogin from "../../../public/assets/test-icon.png";
 import Logo from "../../../public/assets/logo.png";
 import Frame from "../../../public/assets/frame-3.png";
-import CustomInput from "@/components/input";
+import CustomInput from "@/components/dropdown";
 import Button from "@/components/button";
 const Login = () => {
   const handleLogin = {};
@@ -60,7 +60,7 @@ const Login = () => {
           <form className="">
             <div className="mb-4">
               <CustomInput
-                label={"Username"}
+                label={"Masukan nama pengguna"}
                 name={"username"}
                 type={"text"}
                 placeholder={"Misal: Asep Phantom"}
@@ -68,7 +68,7 @@ const Login = () => {
             </div>
             <div className="mb-4 w-full">
               <CustomInput
-                label={"Email"}
+                label={"Masukan email pengguna"}
                 name={"email"}
                 type={"email"}
                 placeholder={"Misal: Asep Phantom atau contoh@xyz.com"}
@@ -82,10 +82,11 @@ const Login = () => {
                 placeholder={"Misal: Dinas Kesehatan Kota Semarang"}
               />
             </div>
+
             <div className="flex items-center gap-x-12">
               <div className="mb-6">
                 <CustomInput
-                  label={"Password"}
+                  label={"Buat kata sandi"}
                   name={"password"}
                   type={"password"}
                   placeholder={"8 karakter di awali huruf besar"}
@@ -93,15 +94,30 @@ const Login = () => {
               </div>
               <div className="mb-6">
                 <CustomInput
-                  label={"Konfirmasi Password"}
+                  label={"Masukan ulang kata sandi"}
                   name={"password"}
                   type={"password"}
                   placeholder={"8 karakter di awali huruf besar"}
                 />
               </div>
             </div>
+            <div className="mb-6 w-full">
+              <CustomInput
+                label={"Pilih Role"}
+                type={"checkbox"}
+                name={"role"}
+                options={[
+                  { label: "Submitter", value: "submitter" },
+                  { label: "Viewer", value: "viewer" },
+                ]}
+              />
+            </div>
             <div className="flex w-full items-center justify-between">
-              <Button label={"Daftar Akun"} onClick={handleLogin} withIcon={false} />
+              <Button
+                label={"Daftar Akun"}
+                onClick={handleLogin}
+                withIcon={false}
+              />
             </div>
           </form>
         </div>
