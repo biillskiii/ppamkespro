@@ -9,7 +9,7 @@ const Question = ({ type, options = [], label, name, placeholder }) => {
   const [comment, setComment] = useState("");
 
   return (
-    <div className="bg-white rounded-lg p-4  w-[1048px]">
+    <div className="bg-white rounded-lg pt-4 px-4 h-[190px] w-[1048px]">
       <div className="flex flex-col items-start gap-y-3 mb-4 border border-border p-4 rounded-lg">
         <label
           htmlFor={name}
@@ -19,7 +19,7 @@ const Question = ({ type, options = [], label, name, placeholder }) => {
         </label>
 
         {type === "checkbox" && (
-          <div className="w-11/12 flex flex-col items-start gap-y-2">
+          <div className="w-full flex flex-col items-start gap-y-2">
             <CheckboxInput options={options} name={name} />
             <TextInput
               type="text"
@@ -30,7 +30,7 @@ const Question = ({ type, options = [], label, name, placeholder }) => {
         )}
 
         {type === "dropdown" && (
-          <div className="w-11/12 flex flex-row justify-center items-start gap-x-2">
+          <div className="w-full flex flex-row justify-center items-start gap-x-2">
             <DropdownInput
               options={options}
               name={name}
