@@ -5,6 +5,8 @@ import Logo from "../../../public/assets/logo.png";
 import Frame from "../../../public/assets/frame-3.png";
 import CustomInput from "@/components/dropdown";
 import Button from "@/components/button";
+import TextInput from "@/components/input-text";
+import PasswordInput from "@/components/password";
 const Login = () => {
   const handleLogin = {};
   return (
@@ -59,18 +61,16 @@ const Login = () => {
           </div>
           <form>
             <div className="mb-4">
-              <CustomInput
+              <TextInput
                 label={"Masukan nama pengguna atau email pengguna"}
                 name={"username"}
-                type={"text"}
-                placeholder={"Misal: Asep Phantom atau contoh@xyz.com"}
+                placeholder={"Misal: John Doe atau johndoe@xyz.com"}
               />
             </div>
             <div className="mb-6">
-              <CustomInput
+              <PasswordInput
                 label={"Masukan kata sandi"}
                 name={"password"}
-                type={"password"}
                 placeholder={"8 karakter di awali huruf besar"}
               />
             </div>

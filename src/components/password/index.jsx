@@ -1,3 +1,4 @@
+'use client'
 import React, { useState } from "react";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 

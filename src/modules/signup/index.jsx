@@ -5,6 +5,9 @@ import Logo from "../../../public/assets/logo.png";
 import Frame from "../../../public/assets/frame-3.png";
 import CustomInput from "@/components/dropdown";
 import Button from "@/components/button";
+import TextInput from "@/components/input-text";
+import PasswordInput from "@/components/password";
+import CheckboxInput from "@/components/checkbox";
 const Login = () => {
   const handleLogin = {};
   return (
@@ -59,50 +62,46 @@ const Login = () => {
           </div>
           <form className="">
             <div className="mb-4">
-              <CustomInput
+              <TextInput
                 label={"Masukan nama pengguna"}
                 name={"username"}
-                type={"text"}
-                placeholder={"Misal: Asep Phantom"}
+                placeholder={"Misal: John Doe"}
               />
             </div>
             <div className="mb-4 w-full">
-              <CustomInput
+              <TextInput
                 label={"Masukan email pengguna"}
                 name={"email"}
                 type={"email"}
-                placeholder={"Misal: Asep Phantom atau contoh@xyz.com"}
+                placeholder={"Misal: johndoe@xyz.com"}
               />
             </div>
             <div className="mb-4 w-full">
-              <CustomInput
+              <TextInput
                 label={"Nama Lembaga"}
                 name={"lembaga"}
-                type={"text"}
                 placeholder={"Misal: Dinas Kesehatan Kota Semarang"}
               />
             </div>
 
             <div className="flex items-center gap-x-12">
               <div className="mb-6">
-                <CustomInput
+                <PasswordInput
                   label={"Buat kata sandi"}
                   name={"password"}
-                  type={"password"}
                   placeholder={"8 karakter di awali huruf besar"}
                 />
               </div>
               <div className="mb-6">
-                <CustomInput
+                <PasswordInput
                   label={"Masukan ulang kata sandi"}
                   name={"password"}
-                  type={"password"}
                   placeholder={"8 karakter di awali huruf besar"}
                 />
               </div>
             </div>
             <div className="mb-6 w-full">
-              <CustomInput
+              <CheckboxInput
                 label={"Pilih Role"}
                 type={"checkbox"}
                 name={"role"}
