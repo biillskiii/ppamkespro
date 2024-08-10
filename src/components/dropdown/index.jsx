@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import { IoIosArrowDown } from "react-icons/io";
 
@@ -7,36 +7,44 @@ const DropdownInput = ({ type, label, name, options = [], placeholder }) => {
   const [selectedValue, setSelectedValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
+  useEffect(() => {
+    const savedValue = localStorage.getItem(name);
+    if (savedValue) {
+      setSelectedValue(savedValue);
+    }
+  }, [name]);
+
   const toggleDropdown = () => setIsOpen(!isOpen);
 
   const handleSelectDropdown = (value) => {
     setSelectedValue(value);
     setIsOpen(false);
+    localStorage.setItem(name, value);
   };
 
   const getTextColor = (label) => {
     switch (label.toLowerCase()) {
       case "ya":
-        return "text-hijau"; // or "text-green-500" for Tailwind CSS
+        return "text-hijau";
       case "tidak":
-        return "text-merah"; // or "text-red-500" for Tailwind CSS
+        return "text-merah";
       case "tidak tahu":
-        return "text-abu"; // or "text-gray-500" for Tailwind CSS
+        return "text-abu";
       default:
-        return "text-abu"; // Default color if not matched
+        return "text-abu";
     }
   };
 
   const getBackgroundColor = (label) => {
     switch (label.toLowerCase()) {
       case "ya":
-        return "bg-hijau text-white"; // or "bg-green-500" for Tailwind CSS
+        return "bg-hijau text-white";
       case "tidak":
-        return "bg-merah text-white"; // or "bg-red-500" for Tailwind CSS
+        return "bg-merah text-white";
       case "tidak tahu":
-        return "bg-abu text-white"; // or "bg-gray-500" for Tailwind CSS
+        return "bg-abu text-white";
       default:
-        return "bg-white"; // Default background if not matched
+        return "bg-white";
     }
   };
 
@@ -49,8 +57,6 @@ const DropdownInput = ({ type, label, name, options = [], placeholder }) => {
           "border p-2 rounded-md w-full cursor-pointer",
           "focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
           "text-black font-medium",
-
-
           getBackgroundColor(selectedValue) || "bg-white"
         )}
       >

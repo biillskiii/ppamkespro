@@ -1,24 +1,20 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import CheckboxInput from "../checkbox";
 import DropdownInput from "../dropdown";
 import TextInput from "../input-text";
 
 const Question = ({ type, options = [], label, name, placeholder }) => {
-  const [comment, setComment] = useState("");
+  const [answer, setAnswer] = useState(""); // Tidak lagi diinisialisasi dari localStorage
+  const [comment, setComment] = useState(""); // Tidak lagi diinisialisasi dari localStorage
 
-  // Load initial data from localStorage
-  useEffect(() => {
-    const savedData = localStorage.getItem(name);
-    if (savedData) {
-      setComment(savedData);
-    }
-  }, [name]);
+  const handleAnswerChange = (value) => {
+    setAnswer(value); // LocalStorage handling dilakukan di dalam CheckboxInput/DropdownInput
+  };
 
-  // Save data to localStorage whenever it changes
-  useEffect(() => {
-    localStorage.setItem(name, comment);
-  }, [name, comment]);
+  const handleCommentChange = (e) => {
+    setComment(e.target.value); // LocalStorage handling dilakukan di dalam TextInput
+  };
 
   return (
     <div className="bg-white rounded-lg pt-4 px-4 h-[190px] w-[1048px]">
@@ -35,14 +31,15 @@ const Question = ({ type, options = [], label, name, placeholder }) => {
             <CheckboxInput
               options={options}
               name={name}
-              onChange={(value) => setComment(value)}
+              value={answer}
+              onChange={(e) => handleAnswerChange(e.target.value)}
             />
             <TextInput
               type="text"
               name={`${name}_comment`}
               placeholder={placeholder}
               value={comment}
-              onChange={(e) => setComment(e.target.value)}
+              onChange={handleCommentChange}
             />
           </div>
         )}
@@ -53,14 +50,15 @@ const Question = ({ type, options = [], label, name, placeholder }) => {
               options={options}
               name={name}
               placeholder={placeholder}
-              onChange={(value) => setComment(value)}
+              value={answer}
+              onChange={(e) => handleAnswerChange(e.target.value)}
             />
             <TextInput
               type="text"
               name={`${name}_comment`}
               placeholder={placeholder}
               value={comment}
-              onChange={(e) => setComment(e.target.value)}
+              onChange={handleCommentChange}
             />
           </div>
         )}

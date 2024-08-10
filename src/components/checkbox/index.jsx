@@ -1,9 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import { FaCheck } from "react-icons/fa";
 
 const CheckboxInput = ({ options = [], name }) => {
   const [selectedValues, setSelectedValues] = useState([]);
+
+  useEffect(() => {
+    const savedValues = localStorage.getItem(name);
+    if (savedValues) {
+      setSelectedValues(JSON.parse(savedValues));
+    }
+  }, [name]);
+
+  useEffect(() => {
+    if (selectedValues.length > 0) {
+      localStorage.setItem(name, JSON.stringify(selectedValues));
+    } else {
+      localStorage.removeItem(name);
+    }
+  }, [selectedValues, name]);
 
   const handleSelectCheckbox = (value) => {
     if (selectedValues.includes(value)) {
@@ -22,7 +37,7 @@ const CheckboxInput = ({ options = [], name }) => {
             id={`${name}-${index}`}
             name={name}
             value={option.value}
-            className="hidden "
+            className="hidden"
             checked={selectedValues.includes(option.value)}
             onChange={() => handleSelectCheckbox(option.value)}
           />
