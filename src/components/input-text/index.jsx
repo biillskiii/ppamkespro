@@ -1,8 +1,8 @@
-'use client'
+"use client";
 import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 
-const TextInput = ({ type, name, placeholder }) => {
+const TextInput = ({ type, name, placeholder, label }) => {
   const [savedAnswer, setSavedAnswer] = useState("");
 
   useEffect(() => {
@@ -19,21 +19,24 @@ const TextInput = ({ type, name, placeholder }) => {
   };
 
   return (
-    <input
-      type={type}
-      id={name}
-      name={name}
-      placeholder={placeholder}
-      value={savedAnswer}
-      onChange={handleOnChange}
-      className={clsx(
-        "border",
-        "p-2",
-        "rounded-md",
-        "w-full",
-        "focus:outline-none"
-      )}
-    />
+    <div className="w-full">
+      <label htmlFor="">{label}</label>
+      <input
+        type={type}
+        id={name}
+        name={name}
+        placeholder={placeholder}
+        value={savedAnswer}
+        onChange={handleOnChange}
+        className={clsx(
+          "border",
+          "p-2",
+          "rounded-md",
+          "w-full",
+          "focus:outline-none"
+        )}
+      />
+    </div>
   );
 };
 
