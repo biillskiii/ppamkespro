@@ -9,7 +9,7 @@ const Question = ({ type, options = [], label, name, placeholder }) => {
   const [comment, setComment] = useState("");
 
   return (
-    <div className="bg-white rounded-lg p-4 shadow-md w-[1048px]">
+    <div className="bg-white rounded-lg p-4  w-[1048px]">
       <div className="flex flex-col items-start gap-y-3 mb-4 border border-border p-4 rounded-lg">
         <label
           htmlFor={name}

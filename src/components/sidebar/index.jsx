@@ -3,7 +3,7 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 
 const Sidebar = () => {
   return (
-    <div className="bg-white pl-[31.83px] pt-[32px] w-[296px] h-screen fixed shadow-md">
+    <div className="bg-white pl-[31.83px] pt-[32px] w-[296px] h-screen fixed ">
       <p className="flex items-center gap-x-2 font-medium cursor-pointer">
         <IoMdArrowRoundBack size={15} />
         Kembali

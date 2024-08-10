@@ -87,7 +87,7 @@ const ParentComponent = () => {
   return (
     <div className="bg-[#F1F1F7]">
       <Sidebar />
-      <div className="max-w-4xl  ml-[344px] space-y-6 p-4">
+      <div className="w-full  ml-[344px] space-y-6 p-4">
         <div className="bg-[#1446AB] p-4 rounded-2xl w-[1048px] h-[115px]">
           <p className="text-white font-extrabold text-xl">
             Bagian II—Kesiapan Memberikan Layanan sebagaimana Diuraikan dalam
