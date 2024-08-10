@@ -1,6 +1,6 @@
 import React from "react";
-import Login from "@/modules/login";
+import DatePicker from "@/components/datepicker";
 const page = () => {
-  return <Login />;
+  return <DatePicker />;
 };
 export default page;
