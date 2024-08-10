@@ -16,13 +16,27 @@ import { id } from "date-fns/locale";
 import { FaCalendarAlt } from "react-icons/fa";
 
 const DatePicker = () => {
-  // Inisialisasi selectedDate dari localStorage
   const [showDatepicker, setShowDatepicker] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(() => {
-    const savedDate = localStorage.getItem("selectedDate");
-    return savedDate ? new Date(savedDate) : null;
-  });
+  const [selectedDate, setSelectedDate] = useState(null);
   const [currentMonth, setCurrentMonth] = useState(new Date());
+
+  // Fetch saved date from localStorage on mount
+  useEffect(() => {
+    const savedDate = localStorage.getItem("selectedDate");
+    if (savedDate) {
+      setSelectedDate(new Date(savedDate));
+    }
+  }, []);
+
+  // Update localStorage when selectedDate changes
+  useEffect(() => {
+    if (selectedDate) {
+      const localDate = format(selectedDate, "yyyy-MM-dd");
+      localStorage.setItem("selectedDate", localDate);
+    } else {
+      localStorage.removeItem("selectedDate");
+    }
+  }, [selectedDate]);
 
   const toggleDatepicker = () => {
     setShowDatepicker(!showDatepicker);
@@ -37,12 +51,10 @@ const DatePicker = () => {
   };
 
   const handleDateSelect = (date) => {
-    // Simpan tanggal yang dipilih ke localStorage tanpa menggunakan toISOString
-    const localDate = format(date, "yyyy-MM-dd");
     setSelectedDate(date);
     setShowDatepicker(false);
-    localStorage.setItem("selectedDate", localDate);
   };
+
   const renderDays = () => {
     const days = ["MIN", "SEN", "SEL", "RAB", "KAM", "JUM", "SAB"];
     return days.map((day) => (
@@ -60,33 +72,22 @@ const DatePicker = () => {
     const dates = [];
     let date = startDate;
 
-    while (date <= endDate || isSameMonth(date, currentMonth)) {
+    while (isSameMonth(date, currentMonth) || date <= endDate) {
       dates.push(date);
       date = addDays(date, 1);
     }
 
-    return dates.map((date) => {
-      const isSunday = getDay(date) === 0;
-      return (
-        <div
-          key={date.toString()}
-          className={`p-2 rounded-lg cursor-pointer ${
-            !isSameMonth(date, currentMonth)
-              ? "text-gray-400"
-              : isSameDay(date, selectedDate)
-              ? "bg-blue-500 text-white"
-              : isSunday
-              ? "text-red-500"
-              : "text-gray-900 hover:bg-gray-200"
-          }`}
-          onClick={() =>
-            isSameMonth(date, currentMonth) && handleDateSelect(date)
-          }
-        >
-          {format(date, "d")}
-        </div>
-      );
-    });
+    return dates.map((date) => (
+      <div
+        key={date.toString()}
+        onClick={() => handleDateSelect(date)}
+        className={`p-2 rounded-lg cursor-pointer ${
+          isSameDay(date, selectedDate) ? "bg-blue-500 text-white" : ""
+        }`}
+      >
+        {format(date, "d")}
+      </div>
+    ));
   };
 
   return (

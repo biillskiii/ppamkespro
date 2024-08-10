@@ -5,15 +5,15 @@ import DropdownInput from "../dropdown";
 import TextInput from "../input-text";
 
 const Question = ({ type, options = [], label, name, placeholder }) => {
-  const [answer, setAnswer] = useState(""); // Tidak lagi diinisialisasi dari localStorage
-  const [comment, setComment] = useState(""); // Tidak lagi diinisialisasi dari localStorage
+  const [answer, setAnswer] = useState("");
+  const [comment, setComment] = useState("");
 
   const handleAnswerChange = (value) => {
-    setAnswer(value); // LocalStorage handling dilakukan di dalam CheckboxInput/DropdownInput
+    setAnswer(value);
   };
 
   const handleCommentChange = (e) => {
-    setComment(e.target.value); // LocalStorage handling dilakukan di dalam TextInput
+    setComment(e.target.value);
   };
 
   return (
