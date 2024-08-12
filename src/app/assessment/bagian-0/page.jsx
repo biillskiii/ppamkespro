@@ -19,7 +19,7 @@ const Bagian0 = () => {
   // Effect untuk mengambil data dari API
   useEffect(() => {
     setLoading(true); // Menandai bahwa data sedang diambil
-    fetch("http://localhost:3001/instrument")
+    fetch("https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/instrument")
       .then((res) => {
         if (!res.ok) {
           throw new Error(`Network response was not ok: ${res.statusText}`);
@@ -75,7 +75,7 @@ const Bagian0 = () => {
   const handleNext = async () => {
     try {
       const response = await axios.post(
-        "http://127.0.0.1:3001/instrument",
+        "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/instrument",
         answers
       );
 

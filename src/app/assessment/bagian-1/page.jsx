@@ -35,7 +35,7 @@ const ParentComponent = () => {
   // Effect untuk mengambil data dari API
   useEffect(() => {
     setLoading(true); // Menandai bahwa data sedang diambil
-    fetch("http://127.0.0.1:3001/instrument") // Pastikan URL ini benar
+    fetch("https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/instrument") // Pastikan URL ini benar
       .then((res) => {
         if (!res.ok) {
           throw new Error(`Network response was not ok: ${res.statusText}`);
@@ -92,7 +92,7 @@ const ParentComponent = () => {
 
   const handleNext = async () => {
     try {
-      const response = await fetch("http://127.0.0.1:3001/response", {
+      const response = await fetch("https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response", {
         // Pastikan URL ini benar
         method: "POST",
         headers: {
