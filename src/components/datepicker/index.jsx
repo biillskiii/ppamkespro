@@ -15,7 +15,7 @@ import {
 import { id } from "date-fns/locale";
 import { FaCalendarAlt } from "react-icons/fa";
 
-const DatePicker = () => {
+const DatePicker = (title) => {
   const [showDatepicker, setShowDatepicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -91,28 +91,30 @@ const DatePicker = () => {
   };
 
   return (
-    <div className="relative inline-block">
-      <label htmlFor="date-picker-input" className="block mb-2">
-        <div>
-          Tanggal Penilaian <span></span>
-        </div>
-      </label>
-      <div className="relative">
-        <input
-          type="text"
-          id="date-picker-input"
-          placeholder="Pilih tanggal"
-          className="w-full pl-3 cursor-pointer pr-4 py-2 border border-border rounded-md"
-          readOnly
-          value={
-            selectedDate
-              ? format(selectedDate, "dd-MMMM-yyyy", { locale: id })
-              : ""
-          }
-          onClick={toggleDatepicker}
-        />
-        <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-          <FaCalendarAlt />
+    <div className="relative inline-block bg-white h-auto p-4 w-[1048px] rounded-lg">
+      <div className="flex flex-col items-start gap-y-3 mb-4 border border-border p-4 rounded-lg">
+        <label htmlFor="date-picker-input" className="block mb-2">
+          <div>
+            Tanggal Penilaian <span></span>
+          </div>
+        </label>
+        <div className="relative w-full">
+          <input
+            type="text"
+            id="date-picker-input"
+            placeholder="Pilih tanggal"
+            className="w-full pl-3 cursor-pointer pr-4 py-2 border border-border rounded-md"
+            readOnly
+            value={
+              selectedDate
+                ? format(selectedDate, "dd-MMMM-yyyy", { locale: id })
+                : ""
+            }
+            onClick={toggleDatepicker}
+          />
+          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+            <FaCalendarAlt />
+          </div>
         </div>
       </div>
       {showDatepicker && (

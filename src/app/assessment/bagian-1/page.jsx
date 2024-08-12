@@ -4,14 +4,15 @@ import Question from "@/components/question"; // Pastikan komponen ini sudah ter
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { useRouter } from "next/navigation";
 import { FaCircleCheck } from "react-icons/fa6";
-import { IoIosArrowForward } from "react-icons/io";
 import Button from "@/components/button"; // Pastikan komponen ini sudah terimport dengan benar
 import { jwtDecode } from "jwt-decode";
+import { IoIosArrowForward, IoIosArrowDown } from "react-icons/io";
 const ParentComponent = () => {
   const [isDone, setIsDone] = useState(false);
   const [answers, setAnswers] = useState({});
   const [isData, setData] = useState([]);
   const [isLoading, setLoading] = useState(false);
+  const [activeAccordion, setActiveAccordion] = useState(null);
   const [username, setUsername] = useState("");
   const router = useRouter();
   useEffect(() => {
@@ -68,7 +69,9 @@ const ParentComponent = () => {
         setLoading(false); // Selesai mengambil data
       });
   }, []);
-
+  const toggleAccordion = (section) => {
+    setActiveAccordion(activeAccordion === section ? null : section);
+  };
   // Effect untuk memeriksa apakah semua pertanyaan telah dijawab
   useEffect(() => {
     if (isData.length > 0) {
@@ -92,14 +95,17 @@ const ParentComponent = () => {
 
   const handleNext = async () => {
     try {
-      const response = await fetch("https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response", {
-        // Pastikan URL ini benar
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(answers), // Mengirim data dalam format JSON
-      });
+      const response = await fetch(
+        "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
+        {
+          // Pastikan URL ini benar
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(answers), // Mengirim data dalam format JSON
+        }
+      );
 
       if (response.ok) {
         router.push("/assessment/bagian-1/assessment2");
@@ -118,7 +124,6 @@ const ParentComponent = () => {
   return (
     <div className="bg-[#F1F1F7] h-screen overflow-x-hidden">
       <div className="bg-white pl-[31.83px] pt-[32px] w-[296px] h-screen fixed">
-        <p>Halo,{username}</p>
         <p
           className="flex items-center gap-x-2 font-medium cursor-pointer"
           onClick={handleBack}
@@ -145,12 +150,96 @@ const ParentComponent = () => {
           Assessment
         </h1>
         <div className="mt-2 border-b-2 w-10/12 border-black"></div>
-        <div className="flex items-center justify-between mt-10 w-10/12 ">
-          <div className="flex items-center gap-x-2">
-            <FaCircleCheck size={24} color={isDone ? "#1446AB" : "#CCC"} />{" "}
-            <span>Bagian 01</span>{" "}
+
+        {/* Bagian 01 */}
+        <div
+          className="flex flex-col mt-10 w-10/12 cursor-pointer"
+          onClick={() => toggleAccordion("bagian01")}
+        >
+          <a href="/assessment/bagian-0" className="flex  items-center gap-x-2">
+            <FaCircleCheck size={24} className="text-white" />{" "}
+            <span>Bagian 0</span>{" "}
+          </a>
+
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-x-2">
+              <FaCircleCheck size={24} /> <span>Bagian 01</span>{" "}
+            </div>
+            {activeAccordion === "bagian01" ? (
+              <IoIosArrowDown size={16} />
+            ) : (
+              <IoIosArrowForward size={16} />
+            )}
           </div>
-          <IoIosArrowForward size={16} />
+          {activeAccordion === "bagian01" && (
+            <div className="pl-6 mt-4">
+              {/* Tambahkan item assessment untuk Bagian 01 */}
+              <div className="flex bg-accent rounded-lg py-3 px-3 text-white items-center justify-between mb-10">
+                <a href="/assessment/bagian-01/assessment-1" className="mb-2">
+                  Assessment 1
+                </a>
+              </div>
+              <a href="/assessment/bagian-01/assessment-2" className="mb-2">
+                Assessment 2
+              </a>
+              <a href="/assessment/bagian-01/assessment-3" className="mb-2">
+                Assessment 3
+              </a>
+              <a href="/assessment/bagian-01/assessment-4" className="mb-2">
+                Assessment 4
+              </a>
+            </div>
+          )}
+        </div>
+
+        {/* Bagian 02 */}
+        <div
+          className="flex flex-col mt-10 w-10/12 cursor-pointer"
+          onClick={() => toggleAccordion("bagian02")}
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-x-2">
+              <FaCircleCheck size={24} color={isDone ? "#1446AB" : "#CCC"} />{" "}
+              <span>Bagian 02</span>{" "}
+            </div>
+            {activeAccordion === "bagian02" ? (
+              <IoIosArrowDown size={16} />
+            ) : (
+              <IoIosArrowForward size={16} />
+            )}
+          </div>
+          {activeAccordion === "bagian02" && (
+            <div className="pl-6 mt-4">
+              {/* Tambahkan item assessment untuk Bagian 02 */}
+              <a href="/assessment/bagian-2/assessment-1" className="mb-2">
+                Assessment 1
+              </a>
+              <a href="/assessment/bagian-2/assessment-2" className="mb-2">
+                Assessment 2
+              </a>
+              <a href="/assessment/bagian-2/assessment-3" className="mb-2">
+                Assessment 3
+              </a>
+              <a href="/assessment/bagian-2/assessment-4" className="mb-2">
+                Assessment 4
+              </a>
+              <a href="/assessment/bagian-2/assessment-5" className="mb-2">
+                Assessment 5
+              </a>
+              <a href="/assessment/bagian-2/assessment-6" className="mb-2">
+                Assessment 6
+              </a>
+              <a href="/assessment/bagian-2/assessment-7" className="mb-2">
+                Assessment 7
+              </a>
+              <a href="/assessment/bagian-2/assessment-8" className="mb-2">
+                Assessment 8
+              </a>
+              <a href="/assessment/bagian-2/assessment-9" className="mb-2">
+                Assessment 9
+              </a>
+            </div>
+          )}
         </div>
       </div>
       <div className="w-full ml-[344px] space-y-6 p-4">

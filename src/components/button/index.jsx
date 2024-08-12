@@ -14,9 +14,9 @@ const Button = ({
       case "primary":
         return "bg-accent text-white cursor-pointer";
       case "secondary":
-        return "bg-hover text-accent cursor-not-allowed";
-      default:
-        return "bg-gray-200 text-gray-500 cursor-pointer";
+        return "bg-hover text-accent";
+      case "disabled":
+        return "bg-hover text-white cursor-not-allowed";
     }
   };
 

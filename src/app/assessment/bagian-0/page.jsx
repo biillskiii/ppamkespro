@@ -6,7 +6,8 @@ import { useRouter, usePathname } from "next/navigation"; // Import usePathname 
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosArrowForward, IoIosArrowDown } from "react-icons/io";
 import Button from "@/components/button"; // Pastikan komponen ini sudah terimport dengan benar
-
+import Question0 from "@/components/q-bagian-0";
+import DatePicker from "@/components/datepicker";
 const Bagian0 = () => {
   const [isDone, setIsDone] = useState(false);
   const [answers, setAnswers] = useState({});
@@ -18,8 +19,8 @@ const Bagian0 = () => {
 
   // Effect untuk mengambil data dari API
   useEffect(() => {
-    setLoading(true); // Menandai bahwa data sedang diambil
-    fetch("https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/instrument")
+    setLoading(true);
+    fetch("http://localhost:3001/instrument")
       .then((res) => {
         if (!res.ok) {
           throw new Error(`Network response was not ok: ${res.statusText}`);
@@ -27,19 +28,15 @@ const Bagian0 = () => {
         return res.json();
       })
       .then((responseData) => {
-        console.log("Data fetched:", responseData); // Log data yang diambil
+        console.log("Data fetched:", responseData);
 
         if (responseData && Array.isArray(responseData.data)) {
           const data = responseData.data;
-
-          // Filter data untuk mengambil hanya item dengan ID antara 1-7
           const filteredData = data.filter(
             (item) => item.number >= 1 && item.number <= 7
           );
-
           console.log("Filtered Data:", filteredData); // Log data yang telah difilter
-
-          setData(filteredData); // Set data ke state
+          setData(filteredData);
         } else {
           console.error("Invalid data format received:", responseData);
           throw new Error("Invalid data format");
@@ -49,7 +46,7 @@ const Bagian0 = () => {
         console.error("Error fetching data:", error);
       })
       .finally(() => {
-        setLoading(false); // Selesai mengambil data
+        setLoading(false);
       });
   }, []);
 
@@ -132,10 +129,15 @@ const Bagian0 = () => {
           }`}
           onClick={() => toggleAccordion("bagian01")}
         >
+          <div className="flex bg-accent rounded-lg py-3 px-3 text-white items-center justify-between mb-10">
+            <div className="flex  items-center gap-x-2">
+              <FaCircleCheck size={24} className="text-white" />{" "}
+              <span>Bagian 0</span>{" "}
+            </div>
+          </div>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-x-2">
-              <FaCircleCheck size={24} color={isDone ? "#1446AB" : "#CCC"} />{" "}
-              <span>Bagian 01</span>{" "}
+              <FaCircleCheck size={24} /> <span>Bagian 01</span>{" "}
             </div>
             {activeAccordion === "bagian01" ? (
               <IoIosArrowDown size={16} />
@@ -146,10 +148,18 @@ const Bagian0 = () => {
           {activeAccordion === "bagian01" && (
             <div className="pl-6 mt-4">
               {/* Tambahkan item assessment untuk Bagian 01 */}
-              <p className="mb-2">Assessment 1</p>
-              <p className="mb-2">Assessment 2</p>
-              <p className="mb-2">Assessment 3</p>
-              <p className="mb-2">Assessment 4</p>
+              <a href="/assessment/bagian-1/" className="mb-2">
+                Assessment 1
+              </a>
+              <a href="/assessment/bagian-1/assessment-2" className="mb-2">
+                Assessment 2
+              </a>
+              <a href="/assessment/bagian-1/assessment-3" className="mb-2">
+                Assessment 3
+              </a>
+              <a href="/assessment/bagian-1/assessment-4" className="mb-2">
+                Assessment 4
+              </a>
             </div>
           )}
         </div>
@@ -208,45 +218,52 @@ const Bagian0 = () => {
       </div>
 
       <div className="w-full ml-[344px] space-y-6 p-4">
-        <div className="bg-[#1446AB] p-4 rounded-2xl w-[1048px] h-[115px]">
+        <div className="bg-[#1446AB] pl-4 py-4 rounded-2xl w-[1048px] ">
           <p className="text-white font-extrabold text-xl">
-            Bagian II—Kesiapan Memberikan Layanan sebagaimana Diuraikan dalam
-            PPAM
-          </p>
-          <hr className="w-full my-4 mx-auto" />
-          <p className="font-medium text-base text-white">
-            PPAM 3: MENCEGAH PENULARAN DAN MENGURANGI KESAKITAN DAN KEMATIAN
-            AKIBAT HIV DAN IMS LAINNYA
+            Bagian 0 - Informasi umum
           </p>
         </div>
         <form action="" className="flex flex-col gap-y-5">
-          {isData.map((item, index) => (
-            <div key={index} className="">
-              <Question
-                type={item.type}
-                label={item.question}
-                name={`input-${item.number}`}
-                options={item.choice}
-                placeholder="Komentar/Referensi/Rincian..."
-                onChange={(value) =>
-                  handleInputChange(`input-${item.number}`, value)
-                }
-              />
-            </div>
-          ))}
+          <div className="flex w-[70%] gap-x-4 ">
+            <Question0
+              label={"1. Siapa yang Memimpin Penilaian?"}
+              type={"text"}
+              placeholder={"Nama pemimpin penilaian..."}
+              name={"pemipin"}
+              onChange={{}}
+            />
+            <DatePicker label={"2. Tanggal Penilaian"} />
+          </div>
+          <Question0
+            label={"3. Pada tingkat apa penilaian dilakukan?"}
+            placeholder={
+              "Masukan nama Provinsi (Jika Tingkat Nasional), Kabupaten/Kota (Jika Tingkat Sub Nasional)..."
+            }
+            name={"tingkat"}
+            type={"dropdown"}
+            options={{}}
+            // onChange={{}}
+          />
+          <Question0
+            label={"4. Peserta yang terlibat dalam penilaian?"}
+            placeholder={"Nama peserta penilaian..."}
+            name={"tingkat"}
+            type={"text"}
+            options={{}}
+            // onChange={{}}
+          />
 
-          <div className="flex items-center ml-80 my-10 gap-x-5 w-3/12">
+          <div className="flex  items-center ml-80 my-10 gap-x-5 w-3/12">
             <Button
               label={"Sebelumnya"}
               onClick={handleBack}
               withIcon={"left"}
-              variant="secondary"
+              variant="disabled"
             />
             <Button
               label={"Berikutnya"}
               onClick={handleNext}
               withIcon={"right"}
-              disabled={!isDone}
             />
           </div>
         </form>
