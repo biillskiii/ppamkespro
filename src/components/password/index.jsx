@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 
-const PasswordInput = ({ name, placeholder, label }) => {
+const PasswordInput = ({ name, placeholder, onChange, value, label }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -14,6 +14,8 @@ const PasswordInput = ({ name, placeholder, label }) => {
           id={name}
           name={name}
           placeholder={placeholder}
+          value={value}
+          onChange={onChange}
           className="flex-grow focus:outline-none"
         />
         <div

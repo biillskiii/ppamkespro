@@ -2,18 +2,34 @@ import React from "react";
 import clsx from "clsx";
 import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
 
-const Button = ({ variant = "primary", label, withIcon = true, onClick }) => {
+const Button = ({
+  variant = "primary",
+  label,
+  withIcon,
+  disabled,
+  onClick,
+}) => {
   const getButtonClasses = () => {
     switch (variant) {
       case "primary":
-        return "bg-blue-600 text-white";
+        return "bg-accent text-white cursor-pointer";
       case "secondary":
-        return "bg-gray-200 text-gray-500";
-      case "tertiary":
-        return "bg-white text-blue-600 border border-blue-600";
+        return "bg-hover text-accent cursor-not-allowed";
       default:
-        return "bg-gray-200 text-gray-500";
+        return "bg-gray-200 text-gray-500 cursor-pointer";
     }
+  };
+
+  const renderIcon = () => {
+    if (withIcon === "left") {
+      return (
+        (variant === "primary" && <FaArrowLeft />) ||
+        (variant === "secondary" && <FaArrowLeft className="text-accent " />)
+      );
+    } else if (withIcon === "right") {
+      return variant === "primary" && <FaArrowRight />;
+    }
+    return null;
   };
 
   return (
@@ -21,15 +37,14 @@ const Button = ({ variant = "primary", label, withIcon = true, onClick }) => {
       className={clsx(
         "flex items-center w-full justify-center gap-2",
         "rounded-lg px-4 py-2 font-semibold",
-        getButtonClasses()
+        getButtonClasses(),
+        { "cursor-not-allowed": disabled === true } // Disable pointer events for secondary variant
       )}
-      onClick={onClick}
+      onClick={variant === "secondary" ? undefined : onClick} // Disable onClick for secondary variant
     >
-      {withIcon && (variant === "secondary" || variant === "tertiary") && (
-        <FaArrowLeft />
-      )}
+      {withIcon === "left" && renderIcon()}
       <span>{label}</span>
-      {withIcon && variant === "primary" && <FaArrowRight />}
+      {withIcon === "right" && renderIcon()}
     </button>
   );
 };

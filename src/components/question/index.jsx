@@ -4,12 +4,22 @@ import CheckboxInput from "../checkbox";
 import DropdownInput from "../dropdown";
 import TextInput from "../input-text";
 
-const Question = ({ type, options = [], label, name, placeholder }) => {
+const Question = ({
+  type,
+  options = [],
+  label,
+  name,
+  placeholder,
+  onChange,
+  subname,
+  subquestion,
+}) => {
   const [answer, setAnswer] = useState("");
   const [comment, setComment] = useState("");
 
   const handleAnswerChange = (value) => {
     setAnswer(value);
+    onChange(name, value); // Notify parent component of the change
   };
 
   const handleCommentChange = (e) => {
@@ -17,11 +27,11 @@ const Question = ({ type, options = [], label, name, placeholder }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg pt-4 px-4 h-[190px] w-[1048px]">
+    <div className="bg-white rounded-lg p-4 h-auto w-[1048px]">
       <div className="flex flex-col items-start gap-y-3 mb-4 border border-border p-4 rounded-lg">
         <label
           htmlFor={name}
-          className="block font-medium text-base w-2/3 pr-4"
+          className="block font-medium text-base w-2/3 h-auto pr-4"
         >
           {label}
         </label>
@@ -46,6 +56,30 @@ const Question = ({ type, options = [], label, name, placeholder }) => {
 
         {type === "dropdown" && (
           <div className="w-full flex flex-row justify-center items-start gap-x-2">
+            <DropdownInput
+              options={options}
+              name={name}
+              placeholder={placeholder}
+              value={answer}
+              onChange={(e) => handleAnswerChange(e.target.value)}
+            />
+            <TextInput
+              type="text"
+              name={`${name}_comment`}
+              placeholder={placeholder}
+              value={comment}
+              onChange={handleCommentChange}
+            />
+          </div>
+        )}
+        {type === "sub" && (
+          <div className="w-full flex flex-row justify-center items-start gap-x-2">
+            <label
+              htmlFor={subname}
+              className="block font-medium text-base w-2/3 h-auto pr-4"
+            >
+              {subquestion}
+            </label>
             <DropdownInput
               options={options}
               name={name}

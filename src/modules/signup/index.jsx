@@ -1,31 +1,90 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import Image from "next/image";
 import IconLogin from "../../../public/assets/test-icon.png";
 import Logo from "../../../public/assets/logo.png";
 import Frame from "../../../public/assets/frame-3.png";
-import CustomInput from "@/components/dropdown";
-import Button from "@/components/button";
-import TextInput from "@/components/input-text";
+import TextInput from "@/components/input-login";
 import PasswordInput from "@/components/password";
-import CheckboxInput from "@/components/checkbox";
-const Login = () => {
-  const handleLogin = {};
+import Button from "@/components/button";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from "next/navigation";
+
+const Signup = () => {
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    institute: "",
+    password: "",
+    confirmPassword: "",
+    status: "institute", 
+  });
+
+  const router = useRouter();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSignup = async (e) => {
+    e.preventDefault();
+
+    
+    if (!formData.username || !formData.email || !formData.institute || !formData.password || !formData.confirmPassword) {
+      toast.error("Semua input wajib diisi!");
+      return;
+    }
+
+  
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Password dan konfirmasi password tidak cocok!");
+      return;
+    }
+
+    try {
+      const response = await fetch("https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/account/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData), 
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success("Pendaftaran akun berhasil!");
+        router.push("/login");
+      } else {
+        toast.error(`Gagal mendaftar: ${data.message}`);
+      }
+    } catch (error) {
+      console.error("Error during registration:", error);
+      toast.error("Terjadi kesalahan saat mendaftar. Coba lagi.");
+    }
+  };
+
   return (
     <div className="min-h-screen flex">
+      <ToastContainer />
       {/* Left side with image background */}
       <div className="w-[60%] relative">
-        {/* Image as background with cover fit */}
         <div className="absolute top-0 right-0 bottom-0 left-0 -z-10">
           <Image
             src={Frame}
             alt="Background Image"
             layout="fill"
-            objectFit="cover" // Ensures the image covers the full container without being stretched
+            objectFit="cover"
           />
         </div>
 
         <div className="relative flex flex-col justify-center items-center min-h-screen z-10">
-          <div className="w-full flex flex-col items-start justify-start ">
+          <div className="w-full flex flex-col items-start justify-start">
             <div className="flex justify-start pl-8 -mt-14 items-center gap-x-5">
               <Image src={Logo} alt="Logo" width={40} height={40} />
               <p className="text-white font-semibold text-base">
@@ -60,12 +119,14 @@ const Login = () => {
               </a>
             </p>
           </div>
-          <form className="">
+          <form onSubmit={handleSignup}>
             <div className="mb-4">
               <TextInput
                 label={"Masukan nama pengguna"}
                 name={"username"}
                 placeholder={"Misal: John Doe"}
+                value={formData.username}
+                onChange={handleChange}
               />
             </div>
             <div className="mb-4 w-full">
@@ -74,13 +135,17 @@ const Login = () => {
                 name={"email"}
                 type={"email"}
                 placeholder={"Misal: johndoe@xyz.com"}
+                value={formData.email}
+                onChange={handleChange}
               />
             </div>
             <div className="mb-4 w-full">
               <TextInput
-                label={"Nama Lembaga"}
-                name={"lembaga"}
+                label={"Nama institute"}
+                name={"institute"}
                 placeholder={"Misal: Dinas Kesehatan Kota Semarang"}
+                value={formData.institute}
+                onChange={handleChange}
               />
             </div>
 
@@ -90,33 +155,22 @@ const Login = () => {
                   label={"Buat kata sandi"}
                   name={"password"}
                   placeholder={"8 karakter di awali huruf besar"}
+                  value={formData.password}
+                  onChange={handleChange}
                 />
               </div>
               <div className="mb-6">
                 <PasswordInput
                   label={"Masukan ulang kata sandi"}
-                  name={"password"}
+                  name={"confirmPassword"}
                   placeholder={"8 karakter di awali huruf besar"}
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
                 />
               </div>
             </div>
-            <div className="mb-6 w-full">
-              <CheckboxInput
-                label={"Pilih Role"}
-                type={"checkbox"}
-                name={"role"}
-                options={[
-                  { label: "Submitter", value: "submitter" },
-                  { label: "Viewer", value: "viewer" },
-                ]}
-              />
-            </div>
             <div className="flex w-full items-center justify-between">
-              <Button
-                label={"Daftar Akun"}
-                onClick={handleLogin}
-                withIcon={false}
-              />
+              <Button label={"Daftar Akun"} type="submit" withIcon={false} />
             </div>
           </form>
         </div>
@@ -125,4 +179,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signup;

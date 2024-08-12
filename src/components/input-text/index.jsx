@@ -16,6 +16,7 @@ const TextInput = ({ type, name, placeholder, label }) => {
     const value = e.target.value;
     setSavedAnswer(value);
     localStorage.setItem(name, value);
+    console.log(`Value for ${name}: `, value); 
   };
 
   return (

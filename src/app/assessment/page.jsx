@@ -1,145 +1,97 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Question from "@/components/question";
-import { IoMdArrowRoundBack } from "react-icons/io";
+import Navbar from "@/components/navbar";
+import Image from "next/image";
+import Button from "@/components/button";
+import Start from "../../../public/assets/mulai.png";
+import { useRouter } from "next/navigation";
+import { FaSpinner } from "react-icons/fa";
+import { jwtDecode } from "jwt-decode"; // Pastikan Anda mengimpor jwtDecode
 
-const data = [
-  {
-    id: 1,
-    number: 1,
-    topicId: 1,
-    question:
-      "Apakah negara Anda mempunyai Kebijakan dan/atau Program Kesiapsiagaan dan/atau Tanggap Darurat Nasional?",
-    type: "dropdown",
-    choice: [
-      { label: "Ya", value: "Ya" },
-      { label: "Tidak", value: "Tidak" },
-      { label: "Tidak Tahu", value: "Tidak Tahu" },
-    ],
-  },
-  {
-    id: 2,
-    number: 2,
-    topicId: 1,
-    question:
-      "Apakah negara Anda mempunyai Program Kesiapsiagaan Kesehatan Nasional?",
-    type: "checkbox",
-    choice: [
-      { label: "Rumah sakit", value: "Rumah sakit" },
-      { label: "Puskesmas", value: "Puskesmas" },
-      { label: "Klinik Swasta", value: "Klinik Swasta" },
-    ],
-  },
-  {
-    id: 3,
-    number: 3,
-    topicId: 3,
-    question:
-      "Apakah negara Anda mempunyai Kebijakan dan/atau Program Kesiapsiagaan dan/atau Tanggap Darurat Nasional?",
-    type: "dropdown",
-    choice: [
-      { label: "Ya", value: "Ya" },
-      { label: "Tidak", value: "Tidak" },
-      { label: "Tidak Tahu", value: "Tidak Tahu" },
-    ],
-  },
-  {
-    id: 4,
-    number: 4,
-    topicId: 4,
-    question:
-      "Apakah negara Anda mempunyai Program Kesiapsiagaan Kesehatan Nasional?",
-    type: "checkbox",
-    choice: [
-      { label: "Rumah sakit", value: "Rumah sakit" },
-      { label: "Puskesmas", value: "Puskesmas" },
-      { label: "Klinik Swasta", value: "Klinik Swasta" },
-    ],
-  },
-  {
-    id: 5,
-    number: 5,
-    topicId: 5,
-    question:
-      "Apakah negara Anda mempunyai Kebijakan dan/atau Program Kesiapsiagaan dan/atau Tanggap Darurat Nasional?",
-    type: "dropdown",
-    choice: [
-      { label: "Ya", value: "Ya" },
-      { label: "Tidak", value: "Tidak" },
-      { label: "Tidak Tahu", value: "Tidak Tahu" },
-    ],
-  },
-  {
-    id: 6,
-    number: 6,
-    topicId: 6,
-    question:
-      "Apakah negara Anda mempunyai Program Kesiapsiagaan Kesehatan Nasional?",
-    type: "checkbox",
-    choice: [
-      { label: "Rumah sakit", value: "Rumah sakit" },
-      { label: "Puskesmas", value: "Puskesmas" },
-      { label: "Klinik Swasta", value: "Klinik Swasta" },
-    ],
-  },
-];
+const Assessment = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
+  const [username, setUsername] = useState(""); // State untuk username
+  const [status, setStatus] = useState(""); // State untuk status
+  const router = useRouter();
 
-const ParentComponent = () => {
+  useEffect(() => {
+    // Mengambil accessToken dari localStorage
+
+    const token = sessionStorage.getItem("accessToken");
+
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        console.log("Decoded Token:", decodedToken); // Debugging line
+        setUsername(decodedToken.username || "");
+        setStatus(decodedToken.status || "");
+      } catch (error) {
+        console.error("Failed to decode token:", error);
+      }
+    } else {
+      router.push("/login");
+    }
+  }, [router]);
+
+  const handleOpenLogout = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleLogout = () => {
+    setIsLogin(false);
+    localStorage.removeItem("accessToken");
+    router.push("/login");
+  };
+
+  const handleStart = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      router.push("/assessment/bagian-0");
+    }, 3000);
+  };
+
   return (
-    <div className="bg-[#F1F1F7]">
-      <div className="bg-white pl-[31.83px] pt-[32px] w-[296px] h-screen fixed">
-        <p className="flex items-center gap-x-2 font-medium cursor-pointer">
-          <IoMdArrowRoundBack size={15} />
-          Kembali
-        </p>
-        <h1 className="mt-8 flex items-center gap-x-2 text-2xl font-semibold">
-          <svg
-            width="26"
-            height="27"
-            viewBox="0 0 26 27"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M6.58649 10.0324L7.97352 11.4195L10.7476 8.64539M14.2152 10.7259H19.0698M6.58649 16.9676L7.97352 18.3546L10.7476 15.5805M14.2152 17.6611H19.0698M1.29863 17.5661C0.67129 14.8917 0.671291 12.1083 1.29863 9.43391C2.16729 5.73068 5.0588 2.83916 8.76204 1.9705C11.4365 1.34317 14.2198 1.34317 16.8942 1.9705C20.5975 2.83916 23.489 5.73068 24.3576 9.43391C24.985 12.1083 24.985 14.8917 24.3576 17.5661C23.489 21.2693 20.5975 24.1608 16.8942 25.0295C14.2198 25.6568 11.4365 25.6568 8.76204 25.0295C5.05881 24.1608 2.16729 21.2693 1.29863 17.5661Z"
-              stroke="#161616"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          Assessment
-        </h1>
-        <div className="mt-2 border-b-2 w-10/12 border-black"></div>
-      </div>
-      <div className="w-full ml-[344px] space-y-6 p-4">
-        <div className="bg-[#1446AB] p-4 rounded-2xl w-[1048px] h-[115px]">
-          <p className="text-white font-extrabold text-xl">
-            Bagian II—Kesiapan Memberikan Layanan sebagaimana Diuraikan dalam
-            PPAM
-          </p>
-          <hr className="w-full my-4 mx-auto" />
-          <p className="font-medium text-base text-white">
-            PPAM 3: MENCEGAH PENULARAN DAN MENGURANGI KESAKITAN DAN KEMATIAN
-            AKIBAT HIV DAN IMS LAINNYA
+    <div>
+      <Navbar username={username} status={status} onClick={handleOpenLogout} />{" "}
+      {isOpen && (
+        <div className="absolute top-20 right-[218px] bg-white rounded-lg pl-4 py-4 w-[176px] ">
+          <p className="text-base cursor-pointer" onClick={handleLogout}>
+            Keluar
           </p>
         </div>
-        <form action="" className="flex flex-col gap-y-5">
-          {data.map((item, index) => (
-            <div key={index} className="">
-              <Question
-                type={item.type}
-                label={item.question}
-                name={`input-${item.id}`}
-                options={item.choice}
-                placeholder="Komentar/Referensi/Rincian..."
-              />
-            </div>
-          ))}
-        </form>
+      )}
+      <div className="flex flex-col items-center h-screen bg-gray-100">
+        <div className="flex flex-col justify-center mt-28 items-center mb-8">
+          <Image src={Start} alt="mulai assessmen" width={300} />
+          <h1 className="text-base text-center mt-6 text-hitam2 font-extrabold">
+            Instrumen Asessmen Kesiapsiagaan Paket Pelayanan Awal Minimum (PPAM){" "}
+            <br /> (Minimum Initiative Services Package (MISP) Readiness
+            Assessment)
+          </h1>
+        </div>
+        <div className="">
+          <Button
+            label={
+              isLoading ? (
+                <p className="flex items-center gap-x-2">
+                  Mulai Assessmen
+                  <FaSpinner className="animate-spin" />
+                </p>
+              ) : (
+                "Mulai Asesmen"
+              )
+            }
+            variant="primary"
+            onClick={handleStart}
+            withIcon={false}
+            disabled={isLoading} // Disable tombol saat loading
+          />
+        </div>
       </div>
     </div>
   );
 };
 
-export default ParentComponent;
+export default Assessment;

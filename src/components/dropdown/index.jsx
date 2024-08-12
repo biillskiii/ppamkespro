@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import { IoIosArrowDown } from "react-icons/io";
 
-const DropdownInput = ({ type, label, name, options = [], placeholder }) => {
+const DropdownInput = ({ type, value, name, options = [], placeholder }) => {
   const [selectedValue, setSelectedValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
@@ -22,26 +22,26 @@ const DropdownInput = ({ type, label, name, options = [], placeholder }) => {
     localStorage.setItem(name, value);
   };
 
-  const getTextColor = (label) => {
-    switch (label.toLowerCase()) {
-      case "ya":
+  const getTextColor = (index) => {
+    switch (index) {
+      case 0: 
         return "text-hijau";
-      case "tidak":
+      case 1: 
         return "text-merah";
-      case "tidak tahu":
+      case 2: 
         return "text-abu";
       default:
         return "text-abu";
     }
   };
 
-  const getBackgroundColor = (label) => {
-    switch (label.toLowerCase()) {
-      case "ya":
+  const getBackgroundColor = (index) => {
+    switch (index) {
+      case 0:
         return "bg-hijau text-white";
-      case "tidak":
+      case 1: 
         return "bg-merah text-white";
-      case "tidak tahu":
+      case 2: 
         return "bg-abu text-white";
       default:
         return "bg-white";
@@ -52,12 +52,12 @@ const DropdownInput = ({ type, label, name, options = [], placeholder }) => {
     <div className="relative">
       <div
         onClick={toggleDropdown}
-        style={{ width: "150px" }}
+        style={{ width: "200px" }}
         className={clsx(
           "border p-2 rounded-md w-full cursor-pointer",
           "focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
           "text-black font-medium",
-          getBackgroundColor(selectedValue) || "bg-white"
+          getBackgroundColor(options.findIndex(option => option.value === selectedValue)) || "bg-white"
         )}
       >
         {selectedValue || (
@@ -76,15 +76,15 @@ const DropdownInput = ({ type, label, name, options = [], placeholder }) => {
           {options.map((option, index) => (
             <li
               key={index}
-              onClick={() => handleSelectDropdown(option.label)}
+              onClick={() => handleSelectDropdown(option.value)}
               className={clsx(
                 "px-4 py-2 cursor-pointer",
                 "hover:bg-gray-200",
                 "text-base",
-                getTextColor(option.label)
+                getTextColor(index)
               )}
             >
-              {option.label}
+              {option.value}
             </li>
           ))}
         </ul>
