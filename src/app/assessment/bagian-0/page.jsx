@@ -95,7 +95,7 @@ const Bagian0 = () => {
 
   return (
     <div className="bg-[#F1F1F7] h-screen overflow-x-hidden">
-      <Sidebar />
+      <Sidebar activeId={0} />
 
       <div className="w-full ml-[344px] space-y-6 p-4">
         <div className="bg-[#1446AB] pl-4 py-4 rounded-2xl w-[1048px] ">

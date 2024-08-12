@@ -8,7 +8,7 @@ import {
 } from "react-icons/io";
 import { FaCircleCheck } from "react-icons/fa6";
 
-const Sidebar = () => {
+const Sidebar = ({ activeId }) => {
   const [activeAccordion, setActiveAccordion] = useState(null);
   const [activeSection, setActiveSection] = useState(null);
   const [sesiAktif, setSesiAktif] = useState({
@@ -29,6 +29,7 @@ const Sidebar = () => {
 
   const menus = [
     {
+      id: 0,
       title: "Bagian 0",
       href: "/assesstment/bagian-0",
     },
@@ -37,23 +38,27 @@ const Sidebar = () => {
       href: "/assesstment/bagian-1",
       subMenu: [
         {
+          id: 1,
           title:
             "Asesmen 1",
           desc: "Pertanyaan 1–7",
           href: "/assesstment/bagian-0",
         },
         {
+          id: 2,
           title:
             "Asesmen 2",
           desc: "Pertanyaan 8–13",
           href: "/assesstment/bagian-1?input-8_comment=&input-9_comment=&input-10_comment=&input-11_comment=&input-12_comment=&input-13_comment=",
         },
         {
+          id: 3,
           title: "Asesmen 3",
           desc: "Pertanyaan 14–17",
           href: "#",
         },
         {
+          id: 4,
           title: "Asesmen 4",
           desc: "Pertanyaan 18–21",
           href: "#",
@@ -64,49 +69,58 @@ const Sidebar = () => {
       title: "Bagian II",
       subMenu: [
         {
+          id: 5,
           title: "Asesmen 1",
           desc: "Pertanyaan 22–30",
           href: "#",
         },
         {
+          id: 6,
           title:
             "Asesmen 2",
           desc: "Pertanyaan 31–36",
           href: "#",
         },
         {
+          id: 7,
           title:
             "Asesmen 3",
           desc: "Pertanyaan 37–42",
           href: "#",
         },
         {
+          id: 8,
           title:
             "Asesmen 4",
           desc: "Pertanyaan 43–47",
           href: "#",
         },
         {
+          id: 9,
           title: "Asesmen 5",
           desc: "Pertanyaan 48–52",
           href: "#",
         },
         {
+          id: 10,
           title: "Asesmen 6",
           desc: "Pertanyaan 53–57",
           href: "#",
         },
         {
+          id: 11,
           title: "Komponen PPAM 7: Layananminum kesehatan Balita",
           desc: "Pertanyaan 58–62",
           href: "#",
         },
         {
+          id: 12,
           title: "Komponen PPAM 8: Layanan Minimum Kesehatan Lansia",
           desc: "Pertanyaan 63-67",
           href: "#",
         },
         {
+          id: 13,
           title:
             "Kegiatan prioritas lainnya: Perawatan aborsi yang aman sesuai dengan hukum yang berlaku",
           desc: "Pertanyaan 68-73",
@@ -118,20 +132,22 @@ const Sidebar = () => {
 
   function Menu({title, subMenu=[{
     title: 'Bagian'
-  }]}) {
+  }], accordion}) {
 
     const isActive = activeAccordion === title;
 
-    function Assesstment({ title, desc }) {
+    function Assesstment({ title, desc, id }) {
       return (
-        <button className="flex h-full w-full active:bg-accent">
+        <button className="flex h-full w-full">
           <a
             href="#"
-            className={`mb-2 ${
-              activeSection === title
-                ? "bg-accent rounded-lg py-4 pl-4 text-white"
-                : ""
-            }`}
+            className={`mb-2
+              ${
+                activeId === id
+                  ? "bg-accent rounded-lg py-4 pl-4 text-white"
+                  : ""
+              }
+            `}
             onClick={() => handleSectionClick(title)}
           >
             {title}
@@ -143,7 +159,7 @@ const Sidebar = () => {
     // console.log(subMenu)
     return (
       <div
-        className={`flex flex-col mt-10 w-10/12 cursor-pointer justify-center ${ isActive && ('Bagian 0' === activeAccordion) && (activeSection === null) ? ' bg-accent py-3 pl-3 rounded-lg text-white' : ''}`}
+        className={`flex flex-col mt-10 w-10/12 cursor-pointer justify-center ${ (activeId === 0) && (title === 'Bagian 0') ? ' bg-accent py-3 pl-3 rounded-lg text-white' : ''}`}
         onClick={ () => toggleAccordion(title)}
         // style={
         //   bacg
@@ -163,7 +179,7 @@ const Sidebar = () => {
           <div className="pl-6 mt-4">
             {/* Tambahkan item assessment untuk Bagian 02 */}
             { subMenu.length > 1 && subMenu.map( (item, index) => (
-              <Assesstment key={index} title={`Asesmen-${index + 1}`} />
+              <Assesstment key={index} title={`Asesmen-${index + 1}`} accordion={title} id={item.id} />
             ))}
           </div>
         )}
