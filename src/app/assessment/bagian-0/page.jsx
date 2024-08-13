@@ -91,7 +91,11 @@ const Bagian0 = () => {
   };
 
   if (isLoading) {
-    return <div><FaSpinner className="animate-spin" scale={50}/></div>; // Tampilkan loading indikator saat data sedang diambil
+    return (
+      <div className="min-h-screen w-full flex justify-center items-center">
+        <FaSpinner className="animate-spin text-accent" size={50} />
+      </div>
+    ); // Tampilkan loading indikator saat data sedang diambil
   }
 
   return (

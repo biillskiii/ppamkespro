@@ -7,6 +7,7 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosArrowForward } from "react-icons/io";
 import Button from "@/components/button"; // Pastikan komponen ini sudah terimport dengan benar
 import Sidebar from "@/components/sidebar";
+import { FaSpinner } from "react-icons/fa";
 
 const ParentComponent = () => {
   const [isDone, setIsDone] = useState(false);
@@ -87,7 +88,11 @@ const ParentComponent = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>; // Tampilkan loading indikator saat data sedang diambil
+    return (
+      <div className="min-h-screen w-full flex justify-center items-center">
+        <FaSpinner className="animate-spin text-accent" size={50} />
+      </div>
+    ); // Tampilkan loading indikator saat data sedang diambil
   }
 
   return (
@@ -96,13 +101,12 @@ const ParentComponent = () => {
       <div className="w-full ml-[344px] space-y-6 p-4">
         <div className="bg-[#1446AB] p-4 rounded-2xl w-[1048px] h-[115px]">
           <p className="text-white font-extrabold text-xl">
-            Bagian II—Kesiapan Memberikan Layanan sebagaimana Diuraikan dalam
-            PPAM
+            BAGIAN I—KESIAPAN KESELURUHAN TINGKAT NASIONAL: KEBIJAKAN,
+            KOORDINASI DAN SUMBER DAYA
           </p>
           <hr className="w-full my-4 mx-auto" />
-          <p className="font-medium text-base text-white">
-            PPAM 3: MENCEGAH PENULARAN DAN MENGURANGI KESAKITAN DAN KEMATIAN
-            AKIBAT HIV DAN IMS LAINNYA
+          <p className="uppercase font-medium text-base text-white">
+            Mekanisme Koordinasi Penanggulangan Bencana berkaitan dengan kespro
           </p>
         </div>
         <form action="" className="flex flex-col gap-y-5">

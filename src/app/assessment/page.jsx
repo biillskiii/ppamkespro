@@ -13,7 +13,7 @@ const Assessment = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
-  const [username, setUsername] = useState(""); 
+  const [username, setUsername] = useState("");
   const [status, setStatus] = useState("");
   const router = useRouter();
 
@@ -43,7 +43,7 @@ const Assessment = () => {
   const handleLogout = () => {
     setIsLogin(false);
     localStorage.removeItem("accessToken");
-    router.push("/login");
+    router.push("/");
   };
 
   const handleStart = () => {
@@ -63,7 +63,7 @@ const Assessment = () => {
             onClick={handleLogout}
           >
             Keluar
-            <IoLogOutOutline size={15}/>
+            <IoLogOutOutline size={15} />
           </p>
         </div>
       )}
