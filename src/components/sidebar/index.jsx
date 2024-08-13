@@ -1,67 +1,78 @@
-'use client';
+"use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   IoMdArrowRoundBack,
   IoIosArrowDown,
   IoIosArrowForward,
 } from "react-icons/io";
 import { FaCircleCheck } from "react-icons/fa6";
+import { useRouter } from "next/navigation";
 
 const Sidebar = ({ activeId }) => {
   const [activeAccordion, setActiveAccordion] = useState(null);
-  const [activeSection, setActiveSection] = useState(null);
-  const [sesiAktif, setSesiAktif] = useState({
-    Bagian: 0,
-    Assesmen: 0
-  });
+  const router = useRouter();
+
+  // Load active accordion from local storage
+  useEffect(() => {
+    const savedAccordion = localStorage.getItem("activeAccordion");
+    if (savedAccordion) {
+      setActiveAccordion(savedAccordion);
+    }
+  }, []);
+
   const toggleAccordion = (section) => {
-    if (activeAccordion === section) {
-      setActiveAccordion(null);
-    } else {
-      setActiveAccordion(section);
+    // Toggle accordion open/close
+    setActiveAccordion((prev) => {
+      const newActiveAccordion = prev === section ? null : section;
+      localStorage.setItem("activeAccordion", newActiveAccordion);
+      return newActiveAccordion;
+    });
+  };
+
+  const handleNavigation = (href, section) => {
+    router.push(href);
+    if (section) {
+      toggleAccordion(section); // Ensure the section stays open
     }
   };
 
-  const handleSectionClick = (section) => {
-    setActiveSection(section);
+  const handleBack = () => {
+    router.push("/assessment");
   };
 
   const menus = [
     {
       id: 0,
       title: "Bagian 0",
-      href: "/assesstment/bagian-0",
+      href: "/assessment/bagian-0/",
     },
     {
       title: "Bagian I",
-      href: "/assesstment/bagian-1",
       subMenu: [
         {
           id: 1,
-          title:
-            "Asesmen 1",
+          title: "Asesmen 1",
           desc: "Pertanyaan 1–7",
-          href: "/assesstment/bagian-0",
+          href: "/assessment/bagian-1/",
         },
         {
           id: 2,
-          title:
-            "Asesmen 2",
+          title: "Asesmen 2",
           desc: "Pertanyaan 8–13",
-          href: "/assesstment/bagian-1?input-8_comment=&input-9_comment=&input-10_comment=&input-11_comment=&input-12_comment=&input-13_comment=",
+          href: "/assessment/bagian-1/assessment-2",
         },
         {
           id: 3,
           title: "Asesmen 3",
           desc: "Pertanyaan 14–17",
-          href: "#",
+          href: "/assessment/bagian-1/assessment-3",
         },
         {
           id: 4,
           title: "Asesmen 4",
           desc: "Pertanyaan 18–21",
-          href: "#",
+          href: "/assessment/bagian-1/assessment-4",
         },
       ],
     },
@@ -72,114 +83,123 @@ const Sidebar = ({ activeId }) => {
           id: 5,
           title: "Asesmen 1",
           desc: "Pertanyaan 22–30",
-          href: "#",
+          href: "/assessment/bagian-2/",
         },
         {
           id: 6,
-          title:
-            "Asesmen 2",
+          title: "Asesmen 2",
           desc: "Pertanyaan 31–36",
-          href: "#",
+          href: "/assessment/bagian-2/assessment-2",
         },
         {
           id: 7,
-          title:
-            "Asesmen 3",
+          title: "Asesmen 3",
           desc: "Pertanyaan 37–42",
-          href: "#",
+          href: "/assessment/bagian-2/assessment-3",
         },
         {
           id: 8,
-          title:
-            "Asesmen 4",
+          title: "Asesmen 4",
           desc: "Pertanyaan 43–47",
-          href: "#",
+          href: "/assessment/bagian-2/assessment-4",
         },
         {
           id: 9,
           title: "Asesmen 5",
           desc: "Pertanyaan 48–52",
-          href: "#",
+          href: "/assessment/bagian-2/assessment-5",
         },
         {
           id: 10,
           title: "Asesmen 6",
           desc: "Pertanyaan 53–57",
-          href: "#",
+          href: "/assessment/bagian-2/assessment-6",
         },
         {
           id: 11,
-          title: "Komponen PPAM 7: Layananminum kesehatan Balita",
+          title: "Asesmen 7",
           desc: "Pertanyaan 58–62",
-          href: "#",
+          href: "/assessment/bagian-2/assessment-7",
         },
         {
           id: 12,
-          title: "Komponen PPAM 8: Layanan Minimum Kesehatan Lansia",
+          title: "Asesmen 8",
           desc: "Pertanyaan 63-67",
-          href: "#",
+          href: "/assessment/bagian-2/assessment-8",
         },
         {
           id: 13,
-          title:
-            "Kegiatan prioritas lainnya: Perawatan aborsi yang aman sesuai dengan hukum yang berlaku",
+          title: "Asesmen 9",
           desc: "Pertanyaan 68-73",
-          href: "#",
+          href: "/assessment/bagian-2/assessment-9",
         },
       ],
     },
   ];
-
-  function Menu({title, subMenu=[{
-    title: 'Bagian'
-  }], accordion}) {
-
+  function Menu({ title, desc, subMenu = [], href }) {
     const isActive = activeAccordion === title;
+    const isHighlighted =
+      activeId === href || subMenu.some((item) => item.href === activeId);
 
-    function Assesstment({ title, desc, id }) {
+    function Assesstment({ title, desc, href }) {
       return (
-        <button className="flex h-full w-full">
-          <a
-            href="#"
-            className={`mb-2
-              ${
-                activeId === id
-                  ? "bg-accent rounded-lg py-4 pl-4 text-white"
-                  : ""
-              }
-            `}
-            onClick={() => handleSectionClick(title)}
+        <div className="border-white border-2 -ml-5 mb-5 rounded-lg bg-white">
+          <button
+            className="flex  flex-col items-start  h-8 w-full"
+            onClick={() =>
+              handleNavigation(href, title === "Bagian I" ? title : null)
+            }
           >
-            {title}
-          </a>
-        </button>
+            <a
+              href="#"
+              className={`mb-2
+                ${
+                  isHighlighted
+                    ? "bg-white text-accent"
+                    : "bg-white text-accent"
+                } rounded-lg py-2 text-start pl-2 font-semibold  w-full
+              `}
+            >
+              {title}
+            </a>
+          </button>
+          <p className="text-xs text-accent pl-2 pb-3 ">{desc}</p>
+        </div>
       );
     }
 
-    // console.log(subMenu)
     return (
       <div
-        className={`flex flex-col mt-10 w-10/12 cursor-pointer justify-center ${ (activeId === 0) && (title === 'Bagian 0') ? ' bg-accent py-3 pl-3 rounded-lg text-white' : ''}`}
-        onClick={ () => toggleAccordion(title)}
-        // style={
-        //   bacg
-        // }
+        className={`flex flex-col mt-10 w-10/12 cursor-pointer justify-center ${
+          isHighlighted ? "bg-accent text-white" : "bg-accent text-white"
+        } py-4 px-4 rounded-lg font-semibold`}
+        onClick={() => {
+          if (title === "Bagian 0") {
+            handleNavigation(href);
+          } else {
+            toggleAccordion(title);
+          }
+        }}
       >
-        <div className={`flex items-center h-auto justify-between `}>
+        <div className={`flex items-center h-auto justify-between`}>
           <div className="flex items-center h-full gap-x-2">
-            <FaCircleCheck size={24} color="#CCC" /> <span>{title}</span>
+            <FaCircleCheck size={24} color="#fff" /> <span>{title}</span>
           </div>
-          {title === 'Bagian 0' ? () => {} :  activeAccordion === title ? (
+          {title === "Bagian 0" ? null : isActive ? (
             <IoIosArrowDown size={16} />
           ) : (
             <IoIosArrowForward size={16} />
           )}
         </div>
-        {activeAccordion === title && activeAccordion !== 'Bagian 0' && (
+        {isActive && title !== "Bagian 0" && (
           <div className="pl-6 mt-4">
-            {/* Tambahkan item assessment untuk Bagian 02 */}
-            { subMenu.length > 1 && subMenu.map( (item, index) => (
-              <Assesstment key={index} title={`Asesmen-${index + 1}`} accordion={title} id={item.id} />
+            {subMenu.map((item, index) => (
+              <Assesstment
+                key={index}
+                title={item.title}
+                desc={item.desc}
+                href={item.href}
+              />
             ))}
           </div>
         )}
@@ -191,7 +211,7 @@ const Sidebar = ({ activeId }) => {
     <div className="bg-white pl-[31.83px] pt-[32px] w-[296px] h-screen fixed">
       <p
         className="flex items-center gap-x-2 font-medium cursor-pointer"
-        onClick={() => console.log("Back button clicked")}
+        onClick={handleBack}
       >
         <IoMdArrowRoundBack size={15} />
         Kembali
@@ -216,9 +236,13 @@ const Sidebar = ({ activeId }) => {
       </h1>
       <div className="mt-2 border-b-2 w-10/12 border-black"></div>
 
-      {/* Check */}
-      { menus.map( (item, index) => (
-        <Menu key={index} title={item.title} subMenu={item.subMenu} />
+      {menus.map((item, index) => (
+        <Menu
+          key={index}
+          title={item.title}
+          subMenu={item.subMenu}
+          href={item.href}
+        />
       ))}
     </div>
   );

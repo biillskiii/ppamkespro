@@ -9,6 +9,7 @@ import Button from "@/components/button"; // Pastikan komponen ini sudah terimpo
 import Question0 from "@/components/q-bagian-0";
 import DatePicker from "@/components/datepicker";
 import Sidebar from "@/components/sidebar";
+import { FaSpinner } from "react-icons/fa";
 const Bagian0 = () => {
   const [isDone, setIsDone] = useState(false);
   const [answers, setAnswers] = useState({});
@@ -90,7 +91,7 @@ const Bagian0 = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>; // Tampilkan loading indikator saat data sedang diambil
+    return <div><FaSpinner className="animate-spin" scale={50}/></div>; // Tampilkan loading indikator saat data sedang diambil
   }
 
   return (
