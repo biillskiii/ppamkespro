@@ -14,6 +14,7 @@ const Bagian0 = () => {
   const [isDone, setIsDone] = useState(false);
   const [answers, setAnswers] = useState({});
   const [isData, setData] = useState([]);
+  const [isDataArea, setDataArea] = useState({});
   const [isLoading, setLoading] = useState(false);
   const [activeAccordion, setActiveAccordion] = useState(null); // State untuk mengontrol accordion
   const router = useRouter();
@@ -30,7 +31,7 @@ const Bagian0 = () => {
         return res.json();
       })
       .then((responseData) => {
-        console.log("Data fetched:", responseData);
+        console.log("Data instrument fetched:", responseData);
 
         if (responseData && Array.isArray(responseData.data)) {
           const data = responseData.data;
@@ -49,6 +50,27 @@ const Bagian0 = () => {
       })
       .finally(() => {
         setLoading(false);
+      });
+
+    fetch("https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/instrument/area")
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`Network response was not ok: ${res.statusText}`);
+        }
+        return res.json();
+      })
+      .then((responseData) => {
+        console.log("Data area fetched:", responseData);
+        const transformedNasional = responseData.data.nasional.map((item) => ({
+          value: item,
+        }));
+        setDataArea({
+          ...responseData.data,
+          nasional: transformedNasional,
+        });
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
       });
   }, []);
 
@@ -126,7 +148,8 @@ const Bagian0 = () => {
             }
             name={"tingkat"}
             type={"dropdown"}
-            options={{}}
+            options={isDataArea.nasional}
+            suggestions={isDataArea.subnasional}
             // onChange={{}}
           />
           <Question0
