@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import { FaCheck } from "react-icons/fa";
 
-const CheckboxInput = ({ options = [], name, value, title }) => {
+const CheckboxInput = ({ options = [], name, value }) => {
   const [selectedValues, setSelectedValues] = useState([]);
 
   useEffect(() => {
@@ -31,8 +31,7 @@ const CheckboxInput = ({ options = [], name, value, title }) => {
 
   return (
     <div className="space-y-2">
-      <p>{value}</p>
-      <div className="flex flex-row flex-wrap gap-4">
+      <div className="flex flex-row flex-wrap gap-6">
         {options.map((option, index) => (
           <label key={index} className="flex items-center cursor-pointer">
             <input
@@ -46,17 +45,15 @@ const CheckboxInput = ({ options = [], name, value, title }) => {
             />
             <div
               className={clsx(
-                "w-5 h-5 border rounded-full flex justify-center items-center mr-2",
+                "w-5 h-5 border-2 rounded-lg flex justify-center items-center mr-2",
                 selectedValues.includes(option.value)
-                  ? "bg-blue-500 border-blue-500"
+                  ? "bg-accent border-accent text-white"
                   : "border-gray-300"
               )}
             >
-              {selectedValues.includes(option.value) && (
-                <FaCheck size={10} className="text-white" />
-              )}
+              {selectedValues.includes(option.value) && <FaCheck size={12} />}
             </div>
-            <span>{option.value}</span>
+            <span className="text-gray-600">{option.value}</span>
           </label>
         ))}
       </div>

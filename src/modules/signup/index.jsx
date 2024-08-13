@@ -66,7 +66,7 @@ const Signup = () => {
 
       if (response.ok) {
         toast.success("Pendaftaran akun berhasil!");
-        router.push("/login");
+        router.push("/");
       } else {
         toast.error(`Gagal mendaftar: ${data.message}`);
       }
@@ -121,7 +121,7 @@ const Signup = () => {
             <h2 className="text-2xl font-bold ">Daftar Akun</h2>
             <p className="text-start text-base">
               Sudah memiliki akun?{" "}
-              <a href="/login" className="font-bold text-accent">
+              <a href="/" className="font-bold text-accent">
                 Masuk Akun
               </a>
             </p>

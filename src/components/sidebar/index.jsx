@@ -208,7 +208,7 @@ const Sidebar = ({ activeId }) => {
   }
 
   return (
-    <div className="bg-white pl-[31.83px] pt-[32px] w-[296px] h-screen fixed">
+    <div className="bg-white pl-[31.83px] pt-[32px] w-[296px] h-screen fixed overflow-y-auto">
       <p
         className="flex items-center gap-x-2 font-medium cursor-pointer"
         onClick={handleBack}

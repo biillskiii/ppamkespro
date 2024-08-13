@@ -1,11 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Question from "@/components/question"; // Pastikan komponen ini sudah terimport dengan benar
+import Question from "@/components/question"; // Ensure this component is correctly imported
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { useRouter } from "next/navigation";
-import { FaCircleCheck } from "react-icons/fa6";
-import { IoIosArrowForward } from "react-icons/io";
-import Button from "@/components/button"; // Pastikan komponen ini sudah terimport dengan benar
+import Button from "@/components/button"; // Ensure this component is correctly imported
 import Sidebar from "@/components/sidebar";
 import { FaSpinner } from "react-icons/fa";
 
@@ -16,9 +14,9 @@ const ParentComponent = () => {
   const [isLoading, setLoading] = useState(false);
   const router = useRouter();
 
-  // Effect untuk mengambil data dari API
+  // Effect to fetch data from API
   useEffect(() => {
-    setLoading(true); // Menandai bahwa data sedang diambil
+    setLoading(true); // Mark that data is being fetched
     fetch("https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/instrument")
       .then((res) => {
         if (!res.ok) {
@@ -27,19 +25,19 @@ const ParentComponent = () => {
         return res.json();
       })
       .then((responseData) => {
-        console.log("Data fetched:", responseData); // Log data yang diambil
+        console.log("Data fetched:", responseData);
 
         if (responseData && Array.isArray(responseData.data)) {
           const data = responseData.data;
 
-          // Filter data untuk mengambil hanya item dengan ID antara 1-7
+          // Filter data to get only items with ID between 14-17
           const filteredData = data.filter(
-            (item) => item.number >= 14 && item.number <= 17
+            (item) => item.number >= 8 && item.number <= 13
           );
 
-          console.log("Filtered Data:", filteredData); // Log data yang telah difilter
+          console.log("Filtered Data:", filteredData);
 
-          setData(filteredData); // Set data ke state
+          setData(filteredData); // Set data to state
         } else {
           console.error("Invalid data format received:", responseData);
           throw new Error("Invalid data format");
@@ -49,14 +47,19 @@ const ParentComponent = () => {
         console.error("Error fetching data:", error);
       })
       .finally(() => {
-        setLoading(false); // Selesai mengambil data
+        setLoading(false); // Finished fetching data
       });
   }, []);
 
-  // Effect untuk memeriksa apakah semua pertanyaan telah dijawab
+  // Effect to check if all questions have been answered
   useEffect(() => {
     if (isData.length > 0) {
-      const allAnswered = isData.every((item) => answers[`input-${item.id}`]);
+      const allAnswered = isData.every((item) => {
+        if (item.type === "sub") {
+          return item.sub.every((sub) => answers[`input-${sub.id}`]);
+        }
+        return answers[`input-${item.number}`];
+      });
       setIsDone(allAnswered);
     }
   }, [answers, isData]);
@@ -68,7 +71,7 @@ const ParentComponent = () => {
   const handleInputChange = (name, value) => {
     setAnswers((prevAnswers) => ({
       ...prevAnswers,
-      [name]: value, // Menyimpan nilai input yang dipilih
+      [name]: value, // Save the input value
     }));
   };
 
@@ -92,7 +95,7 @@ const ParentComponent = () => {
       <div className="min-h-screen w-full flex justify-center items-center">
         <FaSpinner className="animate-spin text-accent" size={50} />
       </div>
-    ); // Tampilkan loading indikator saat data sedang diambil
+    ); // Show loading indicator while data is being fetched
   }
 
   return (
@@ -114,17 +117,21 @@ const ParentComponent = () => {
             <div key={index} className="">
               <Question
                 type={item.type}
+                no={item.number}
                 label={item.question}
                 name={`input-${item.number}`}
-                options={item.choice.map((choice) =>
-                  typeof choice === "object"
-                    ? { value: choice.value, label: choice.label }
-                    : { value: choice, label: choice }
-                )}
-                placeholder="Komentar/Referensi/Rincian..."
-                onChange={(value) =>
-                  handleInputChange(`input-${item.number}`, value)
+                options={
+                  item.choice
+                    ? item.choice.map((choice) => ({
+                        value: choice.value,
+                        label: choice.value,
+                      }))
+                    : []
                 }
+                placeholder="Komentar/Referensi/Rincian..."
+                onChange={(name, value) => handleInputChange(name, value)}
+                subname={item.subname}
+                subquestions={item.sub || []} // Pass subquestions if any
               />
             </div>
           ))}

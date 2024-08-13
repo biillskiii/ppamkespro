@@ -46,7 +46,7 @@ const ParentComponent = () => {
           const data = responseData.data;
 
           const filteredData = data.filter(
-            (item) => item.number >= 1 && item.number <= 7
+            (item) => item.number >= 31 && item.number <= 36
           );
 
           console.log("Filtered Data:", filteredData);
@@ -121,16 +121,17 @@ const ParentComponent = () => {
 
   return (
     <div className="bg-[#F1F1F7] h-screen overflow-x-hidden">
-      <Sidebar activeId={1} />
+      <Sidebar activeId={6} />
       <div className="w-full ml-[344px] space-y-6 p-4">
         <div className="bg-[#1446AB] p-4 rounded-2xl w-[1048px] h-[115px]">
           <p className="text-white font-extrabold text-xl">
-            BAGIAN I—KESIAPAN KESELURUHAN TINGKAT NASIONAL: KEBIJAKAN,
-            KOORDINASI DAN SUMBER DAYA
+            BAGIAN II—KESIAPAN UNTUK MEMBERIKAN LAYANAN SEPERTI YANG DIURAI
+            DALAM PPAM
           </p>
           <hr className="w-full my-4 mx-auto" />
           <p className="uppercase font-medium text-base text-white">
-            Kebijakan dan Rencana Penanggulangan Bencana Nasional dan Daerah
+            Komponen PPAM 2: Mencegah kekerasan seksual dan menanggapi kebutuhan
+            para penyintas
           </p>
         </div>
         <form action="" className="flex flex-col gap-y-5">
