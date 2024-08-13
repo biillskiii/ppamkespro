@@ -18,7 +18,7 @@ const Signup = () => {
     institute: "",
     password: "",
     confirmPassword: "",
-    status: "institute", 
+    status: "submitter",
   });
 
   const router = useRouter();
@@ -34,26 +34,33 @@ const Signup = () => {
   const handleSignup = async (e) => {
     e.preventDefault();
 
-    
-    if (!formData.username || !formData.email || !formData.institute || !formData.password || !formData.confirmPassword) {
+    if (
+      !formData.username ||
+      !formData.email ||
+      !formData.institute ||
+      !formData.password ||
+      !formData.confirmPassword
+    ) {
       toast.error("Semua input wajib diisi!");
       return;
     }
 
-  
     if (formData.password !== formData.confirmPassword) {
       toast.error("Password dan konfirmasi password tidak cocok!");
       return;
     }
 
     try {
-      const response = await fetch("https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/account/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData), 
-      });
+      const response = await fetch(
+        "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/account/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       const data = await response.json();
 

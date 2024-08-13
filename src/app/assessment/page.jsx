@@ -6,14 +6,15 @@ import Button from "@/components/button";
 import Start from "../../../public/assets/mulai.png";
 import { useRouter } from "next/navigation";
 import { FaSpinner } from "react-icons/fa";
-import { jwtDecode } from "jwt-decode"; // Pastikan Anda mengimpor jwtDecode
+import { jwtDecode } from "jwt-decode";
+import { IoLogOutOutline } from "react-icons/io5";
 
 const Assessment = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
-  const [username, setUsername] = useState(""); // State untuk username
-  const [status, setStatus] = useState(""); // State untuk status
+  const [username, setUsername] = useState(""); 
+  const [status, setStatus] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -56,9 +57,13 @@ const Assessment = () => {
     <div>
       <Navbar username={username} status={status} onClick={handleOpenLogout} />{" "}
       {isOpen && (
-        <div className="absolute top-20 right-[218px] bg-white rounded-lg pl-4 py-4 w-[176px] ">
-          <p className="text-base cursor-pointer" onClick={handleLogout}>
+        <div className="absolute top-20 right-[218px] bg-merah rounded-b-lg p-4 py-4 w-[176px] ">
+          <p
+            className="text-base flex items-center justify-between cursor-pointer text-white font-semibold"
+            onClick={handleLogout}
+          >
             Keluar
+            <IoLogOutOutline size={15}/>
           </p>
         </div>
       )}

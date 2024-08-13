@@ -43,7 +43,7 @@ const DropdownInput = ({ type, value, name, options = [], placeholder }) => {
       {isOpen && (
         <ul
           className={clsx(
-            "absolute mt-2 border border-gray-200 rounded-md bg-white w-full z-10",
+            "absolute top-32 border border-gray-200 rounded-md bg-white w-full z-10",
             "max-h-60 overflow-y-auto"
           )}
         >
