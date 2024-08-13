@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 
-const TextInput = ({ type, name, placeholder, label }) => {
+const TextInput = ({ type, name, placeholder, label, suggestions = [] }) => {
   const [savedAnswer, setSavedAnswer] = useState("");
 
   useEffect(() => {
@@ -16,7 +16,7 @@ const TextInput = ({ type, name, placeholder, label }) => {
     const value = e.target.value;
     setSavedAnswer(value);
     localStorage.setItem(name, value);
-    console.log(`Value for ${name}: `, value); 
+    console.log(`Value for ${name}: `, value);
   };
 
   return (
@@ -29,6 +29,7 @@ const TextInput = ({ type, name, placeholder, label }) => {
         placeholder={placeholder}
         value={savedAnswer}
         onChange={handleOnChange}
+        list={suggestions ? `${name}-suggestions` : null}
         className={clsx(
           "border",
           "p-2",
@@ -37,6 +38,13 @@ const TextInput = ({ type, name, placeholder, label }) => {
           "focus:outline-none"
         )}
       />
+      {suggestions && (
+        <datalist id={`${name}-suggestions`}>
+          {suggestions.map((suggestion, index) => (
+            <option key={index} value={suggestion} />
+          ))}
+        </datalist>
+      )}
     </div>
   );
 };

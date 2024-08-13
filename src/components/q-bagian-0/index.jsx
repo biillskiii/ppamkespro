@@ -11,6 +11,7 @@ const Question0 = ({
   name,
   placeholder,
   onChange,
+  suggestions,
 }) => {
   const [answer, setAnswer] = useState("");
   const [comment, setComment] = useState("");
@@ -41,6 +42,7 @@ const Question0 = ({
               placeholder={placeholder}
               value={comment}
               onChange={handleCommentChange}
+              suggestions={suggestions}
             />
           </div>
         )}
@@ -59,6 +61,7 @@ const Question0 = ({
               placeholder={placeholder}
               value={comment}
               onChange={handleCommentChange}
+              suggestions={suggestions}
             />
           </div>
         )}
@@ -78,6 +81,7 @@ const Question0 = ({
               placeholder={placeholder}
               value={comment}
               onChange={handleCommentChange}
+              suggestions={suggestions}
             />
           </div>
         )}
