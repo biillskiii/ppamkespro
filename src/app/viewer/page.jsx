@@ -63,6 +63,12 @@ const Viewer = () => {
           const { id, number, question, sub } = item;
           if (id > 195) return [];
 
+          // Check if the ID has been processed
+          const shouldDisplayId = !processedIds.has(id);
+          if (shouldDisplayId) {
+            processedIds.add(id);
+          }
+
           if (sub && Array.isArray(sub)) {
             const subedArray = [
               {
@@ -87,9 +93,9 @@ const Viewer = () => {
           }
           return [
             {
-              id: id,
+              id: shouldDisplayId ? id : "", // Display ID only for the first occurrence
               number: "", // No number for non-sub items
-              question: item.question || "-",
+              question: item.question || "-", // Use the main question for main items
               value: item.value || "-",
               comment: item.comment || "-",
             },
@@ -119,7 +125,7 @@ const Viewer = () => {
   };
 
   const columnConfig = [
-    { header: "No.", accessor: "number" }, // Changed to number
+    { header: "No.", accessor: "number" },
     { header: "Pertanyaan", accessor: "question" },
     { header: "Jawaban", accessor: "value" },
     { header: "Komentar", accessor: "comment" },
