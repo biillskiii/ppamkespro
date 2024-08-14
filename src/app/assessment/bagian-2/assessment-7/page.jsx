@@ -6,6 +6,8 @@ import Button from "@/components/button";
 import { jwtDecode } from "jwt-decode";
 import { FaSpinner } from "react-icons/fa";
 import Sidebar from "@/components/sidebar";
+import axios from "axios";
+
 const ParentComponent = () => {
   const [isDone, setIsDone] = useState(false);
   const [answers, setAnswers] = useState({});
@@ -14,9 +16,12 @@ const ParentComponent = () => {
   const [activeAccordion, setActiveAccordion] = useState(null);
   const [username, setUsername] = useState("");
   const router = useRouter();
-  useEffect(() => {
-    const token = sessionStorage.getItem("accessToken");
+  const token =
+    typeof window !== "undefined"
+      ? sessionStorage.getItem("accessToken")
+      : null;
 
+  useEffect(() => {
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
@@ -111,6 +116,60 @@ const ParentComponent = () => {
     }
   };
 
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData.entries());
+
+      const mapData = [
+        {
+          instrumentId: 61,
+          value: null,
+          score: 0,
+          comment: data["input-58_comment"],
+        },
+        {
+          instrumentId: 62,
+          value: data["input-59"],
+          score: 0,
+          comment: data["input-59_comment"],
+        },
+        {
+          instrumentId: 63,
+          value: `${data["input-60_sub_141"]} || ${data["input-60_sub_142"]} || ${data["input-60_sub_143"]} || ${data["input-60_sub_144"]} || ${data["input-60_sub_145"]} || ${data["input-60_sub_146"]} || ${data["input-60_sub_147"]} || ${data["input-60_sub_148"]} || ${data["input-60_sub_149"]} || ${data["input-60_sub_150"]}`,
+          score: 0,
+          comment: `${data["input-60_comment_sub_141"]} || ${data["input-60_comment_sub_142"]} || ${data["input-60_comment_sub_143"]} || ${data["input-60_comment_sub_144"]} || ${data["input-60_comment_sub_145"]} || ${data["input-60_comment_sub_146"]} || ${data["input-60_comment_sub_147"]} || ${data["input-60_comment_sub_148"]} || ${data["input-60_comment_sub_149"]} || ${data["input-60_comment_sub_150"]}`,
+        },
+        {
+          instrumentId: 64,
+          value: `${data["input-61_sub_152"]} || ${data["input-61_sub_153"]} || ${data["input-61_sub_154"]} || ${data["input-61_sub_155"]} || ${data["input-61_sub_156"]} || ${data["input-61_sub_157"]} || ${data["input-61_sub_158"]}`,
+          score: 0,
+          comment: `${data["input-61_comment_sub_152"]} || ${data["input-61_comment_sub_153"]} || ${data["input-61_comment_sub_154"]} || ${data["input-61_comment_sub_155"]} || ${data["input-61_comment_sub_156"]} || ${data["input-61_comment_sub_157"]} || ${data["input-61_comment_sub_158"]}`,
+        },
+        {
+          instrumentId: 65,
+          value: `${data["input-62_sub_160"]} || ${data["input-62_sub_161"]} || ${data["input-62_sub_162"]}`,
+          score: 0,
+          comment: `${data["input-62_comment_sub_160"]} || ${data["input-62_comment_sub_161"]} || ${data["input-62_comment_sub_162"]}`,
+        },
+      ];
+
+      const response = await axios.post(
+        "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
+        mapData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (response.status === 200) {
+        router.push("/assessment/bagian-2/assessment-8");
+      }
+    } catch (error) {
+      console.error("Error posting data:", error);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen w-full flex justify-center items-center">
@@ -133,7 +192,11 @@ const ParentComponent = () => {
             Komponen PPAM 7: Layananminum kesehatan Balita
           </p>
         </div>
-        <form action="" className="flex flex-col gap-y-5">
+        <form
+          // action=""
+          className="flex flex-col gap-y-5"
+          onSubmit={onSubmit}
+        >
           {isData.map((item, index) => (
             <div key={index} className="">
               <Question
@@ -163,12 +226,15 @@ const ParentComponent = () => {
               onClick={handleBack}
               withIcon={"left"}
               variant="secondary"
+              type="button"
             />
             <Button
               label={"Berikutnya"}
-              onClick={handleNext}
+              // onClick={handleNext}
               withIcon={"right"}
-              disabled={!isDone}
+              // variant={!isDone && "disabeled"}
+              // disabled={!isDone}
+              type="submit"
             />
           </div>
         </form>
