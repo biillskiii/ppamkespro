@@ -15,7 +15,7 @@ import {
 import { id } from "date-fns/locale";
 import { FaCalendarAlt } from "react-icons/fa";
 
-const DatePicker = (title) => {
+const DatePicker = ({ title, name }) => {
   const [showDatepicker, setShowDatepicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -92,6 +92,12 @@ const DatePicker = (title) => {
 
   return (
     <div className="relative inline-block bg-white h-auto p-4 w-[1048px] rounded-lg">
+      <input
+        type="text"
+        value={selectedDate && format(selectedDate, "yyyy-MM-dd")}
+        name={name}
+        className="hidden"
+      />
       <div className="flex flex-col items-start gap-y-3 mb-4 border border-border p-4 rounded-lg">
         <label htmlFor="date-picker-input" className="block mb-2">
           <div>

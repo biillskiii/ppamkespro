@@ -10,6 +10,8 @@ import Question0 from "@/components/q-bagian-0";
 import DatePicker from "@/components/datepicker";
 import Sidebar from "@/components/sidebar";
 import { FaSpinner } from "react-icons/fa";
+import axios from "axios";
+
 const Bagian0 = () => {
   const [isDone, setIsDone] = useState(false);
   const [answers, setAnswers] = useState({});
@@ -19,10 +21,12 @@ const Bagian0 = () => {
   const [activeAccordion, setActiveAccordion] = useState(null); // State untuk mengontrol accordion
   const router = useRouter();
   const pathname = usePathname(); // Mendapatkan route saat ini
+  const token = sessionStorage.getItem("accessToken");
 
   // Effect untuk mengambil data dari API
   useEffect(() => {
     setLoading(true);
+
     fetch("http://localhost:3001/instrument")
       .then((res) => {
         if (!res.ok) {
@@ -120,6 +124,54 @@ const Bagian0 = () => {
     ); // Tampilkan loading indikator saat data sedang diambil
   }
 
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData.entries());
+
+      const mapData = [
+        {
+          instrumentId: 1,
+          value: null,
+          score: 0,
+          comment: data.pemipin_comment,
+        },
+        {
+          instrumentId: 2,
+          value: data.tanggal,
+          score: 0,
+          comment: null,
+        },
+        {
+          instrumentId: 3,
+          value: data.tingkat,
+          score: 0,
+          comment: data.tingkat_comment,
+        },
+        {
+          instrumentId: 4,
+          value: null,
+          score: 0,
+          comment: data.peserta_comment,
+        },
+      ];
+
+      const response = await axios.post(
+        "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
+        mapData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (response.status === 200) {
+        router.push("/assessment/bagian-1");
+      }
+    } catch (error) {
+      console.error("Error posting data:", error);
+    }
+  };
+
   return (
     <div className="bg-[#F1F1F7] h-screen overflow-x-hidden">
       <Sidebar activeId={0} />
@@ -130,17 +182,25 @@ const Bagian0 = () => {
             Bagian 0 - Informasi umum
           </p>
         </div>
-        <form action="" className="flex flex-col gap-y-5">
+        <form
+          // action=""
+          onSubmit={onSubmit}
+          className="flex flex-col gap-y-5"
+        >
           <div className="flex w-[70%] gap-x-4 ">
             <Question0
               label={"1. Siapa yang Memimpin Penilaian?"}
               type={"text"}
               placeholder={"Nama pemimpin penilaian..."}
               name={"pemipin"}
-              onChange={{}}
+              // onChange={{}}
             />
-            <DatePicker label={"2. Tanggal Penilaian"} />
+            <DatePicker
+              // label={"2. Tanggal Penilaian"}
+              name="tanggal"
+            />
           </div>
+
           <Question0
             label={"3. Pada tingkat apa penilaian dilakukan?"}
             placeholder={
@@ -152,12 +212,13 @@ const Bagian0 = () => {
             suggestions={isDataArea.subnasional}
             // onChange={{}}
           />
+
           <Question0
             label={"4. Peserta yang terlibat dalam penilaian?"}
             placeholder={"Nama peserta penilaian..."}
-            name={"tingkat"}
+            name={"peserta"}
             type={"text"}
-            options={{}}
+            // options={{}}
             // onChange={{}}
           />
 
@@ -167,11 +228,14 @@ const Bagian0 = () => {
               onClick={handleBack}
               withIcon={"left"}
               variant="disabled"
+              type="button"
+              disabled
             />
             <Button
               label={"Berikutnya"}
-              onClick={handleNext}
+              // onClick={handleNext}
               withIcon={"right"}
+              type="submit"
             />
           </div>
         </form>

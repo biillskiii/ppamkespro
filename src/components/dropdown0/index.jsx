@@ -24,6 +24,7 @@ const DropdownInput = ({ type, value, name, options = [], placeholder }) => {
 
   return (
     <div className="relative">
+      <input type="text" value={selectedValue} name={name} className="hidden" />
       <div
         onClick={toggleDropdown}
         style={{ width: "200px" }}
@@ -31,7 +32,7 @@ const DropdownInput = ({ type, value, name, options = [], placeholder }) => {
           "border p-2 rounded-md w-full cursor-pointer",
           "focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
           "text-black font-medium",
-          "bg-white"  // Keep the background white for the selected option
+          "bg-white" // Keep the background white for the selected option
         )}
       >
         {selectedValue || (
@@ -53,7 +54,7 @@ const DropdownInput = ({ type, value, name, options = [], placeholder }) => {
               onClick={() => handleSelectDropdown(option.value)}
               className={clsx(
                 "px-4 py-2 cursor-pointer",
-                "hover:bg-abu",  // Set hover background color to bg-abu
+                "hover:bg-abu", // Set hover background color to bg-abu
                 "text-base"
               )}
             >

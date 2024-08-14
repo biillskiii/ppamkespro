@@ -8,6 +8,7 @@ const Button = ({
   withIcon,
   disabled,
   onClick,
+  type,
 }) => {
   const getButtonClasses = () => {
     switch (variant) {
@@ -41,6 +42,8 @@ const Button = ({
         { "cursor-not-allowed": disabled === true } // Disable pointer events for secondary variant
       )}
       onClick={variant === "secondary" ? undefined : onClick} // Disable onClick for secondary variant
+      type={type}
+      disabled={disabled}
     >
       {withIcon === "left" && renderIcon()}
       <span>{label}</span>
