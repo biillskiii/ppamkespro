@@ -83,7 +83,7 @@ const ParentComponent = () => {
   }, [answers, isData]);
 
   const handleBack = () => {
-    router.push("/assessment");
+    router.push("/assessment/bagian-1/assessment-3");
   };
 
   const handleInputChange = (name, value) => {
@@ -93,28 +93,28 @@ const ParentComponent = () => {
     }));
   };
 
-  const handleNext = async () => {
-    try {
-      const response = await fetch(
-        "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(answers),
-        }
-      );
+  // const handleNext = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify(answers),
+  //       }
+  //     );
 
-      if (response.ok) {
-        router.push("/assessment/bagian-1/assessment2");
-      } else {
-        console.error("Error posting data:", response.statusText);
-      }
-    } catch (error) {
-      console.error("Error posting data:", error);
-    }
-  };
+  //     if (response.ok) {
+  //       router.push("/assessment/bagian-1/assessment2");
+  //     } else {
+  //       console.error("Error posting data:", response.statusText);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error posting data:", error);
+  //   }
+  // };
 
   const onSubmit = async (e) => {
     e.preventDefault();

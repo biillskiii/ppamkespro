@@ -83,7 +83,7 @@ const ParentComponent = () => {
   }, [answers, isData]);
 
   const handleBack = () => {
-    router.push("/assessment");
+    router.push("/assessment/bagian-2/assessment-3");
   };
 
   const handleInputChange = (name, value) => {

@@ -70,7 +70,7 @@ const ParentComponent = () => {
   }, [answers, isData]);
 
   const handleBack = () => {
-    router.push("/assessment");
+    router.push("/assessment/bagian-1/assessment-2");
   };
 
   const handleInputChange = (name, value) => {
@@ -80,20 +80,20 @@ const ParentComponent = () => {
     }));
   };
 
-  const handleNext = async () => {
-    try {
-      const response = await axios.post(
-        "http://127.0.0.1:3001/instrument",
-        answers
-      );
+  // const handleNext = async () => {
+  //   try {
+  //     const response = await axios.post(
+  //       "http://127.0.0.1:3001/instrument",
+  //       answers
+  //     );
 
-      if (response.status === 200) {
-        router.push("/assessment/bagian-1");
-      }
-    } catch (error) {
-      console.error("Error posting data:", error);
-    }
-  };
+  //     if (response.status === 200) {
+  //       router.push("/assessment/bagian-1");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error posting data:", error);
+  //   }
+  // };
 
   const onSubmit = async (e) => {
     e.preventDefault();

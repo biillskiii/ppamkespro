@@ -60,7 +60,7 @@ const DropdownInput = ({
               key={index}
               onClick={() => handleSelectDropdown(option.value)}
               className={clsx(
-                "px-4 py-2 cursor-pointer",
+                "px-4 py-2  cursor-pointer",
                 "hover:bg-abu", // Set hover background color to bg-abu
                 "text-base"
               )}

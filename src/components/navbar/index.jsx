@@ -18,7 +18,7 @@ const Navbar = ({ username, onClick, status }) => {
           onClick={onClick}
         >
           <CgProfile size={35} />
-          <span>{username}</span>{" "}
+          <span className="capitalize">{username}</span>{" "}
           {/* Pastikan bahwa user memiliki properti name */}
           <IoIosArrowDown size={16} />
         </p>

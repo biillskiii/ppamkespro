@@ -70,7 +70,7 @@ const ParentComponent = () => {
   }, [answers, isData]);
 
   const handleBack = () => {
-    router.push("/assessment");
+    router.push("/assessment/bagian-1/");
   };
 
   const handleInputChange = (name, value) => {

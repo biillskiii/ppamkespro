@@ -83,7 +83,7 @@ const ParentComponent = () => {
   }, [answers, isData]);
 
   const handleBack = () => {
-    router.push("/assessment");
+    router.push("/assessment/bagian-2/assessment-8");
   };
 
   const handleInputChange = (name, value) => {
@@ -193,6 +193,8 @@ const ParentComponent = () => {
       );
 
       if (response.status === 200) {
+        // Clear all localStorage items
+        localStorage.clear();
         router.push("/assessment");
       }
     } catch (error) {
@@ -260,7 +262,7 @@ const ParentComponent = () => {
               type="button"
             />
             <Button
-              label={"Berikutnya"}
+              label={"Submit"}
               // onClick={handleNext}
               withIcon={"right"}
               // variant={!isDone && "disabeled"}
