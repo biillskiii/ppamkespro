@@ -104,25 +104,25 @@ const ParentComponent = () => {
 
       const mapData = [
         {
-          instrumentId: 18,
+          instrumentId: 20,
           value: data["input-14"],
           score: 0,
           comment: data["input-14_comment"],
         },
         {
-          instrumentId: 19,
+          instrumentId: 21,
           value: data["input-15"],
           score: 0,
           comment: data["input-15_comment"],
         },
         {
-          instrumentId: 20,
+          instrumentId: 22,
           value: data["input-16"],
           score: 0,
           comment: data["input-16_comment"],
         },
         {
-          instrumentId: 21,
+          instrumentId: 23,
           value: data["input-17"],
           score: 0,
           comment: data["input-17_comment"],

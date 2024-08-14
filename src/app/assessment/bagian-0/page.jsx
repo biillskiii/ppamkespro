@@ -136,25 +136,25 @@ const Bagian0 = () => {
 
       const mapData = [
         {
-          instrumentId: 1,
+          instrumentId: 196,
           value: null,
           score: 0,
           comment: data.pemipin_comment,
         },
         {
-          instrumentId: 2,
+          instrumentId: 197,
           value: data.tanggal,
           score: 0,
           comment: null,
         },
         {
-          instrumentId: 3,
+          instrumentId: 198,
           value: data.tingkat,
           score: 0,
           comment: data.tingkat_comment,
         },
         {
-          instrumentId: 4,
+          instrumentId: 199,
           value: null,
           score: 0,
           comment: data.peserta_comment,

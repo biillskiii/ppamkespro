@@ -125,34 +125,82 @@ const ParentComponent = () => {
 
       const mapData = [
         {
-          instrumentId: 52,
+          instrumentId: 101,
           value: null,
           score: 0,
           comment: data["input-48_comment"],
         },
         {
-          instrumentId: 53,
+          instrumentId: 102,
           value: data["input-49"],
           score: 0,
           comment: data["input-49_comment"],
         },
         {
-          instrumentId: 54,
-          value: `${data["input-50_sub_104"]} || ${data["input-50_sub_105"]} || ${data["input-50_sub_106"]} || ${data["input-50_sub_107"]} || ${data["input-50_sub_108"]} || ${data["input-50_sub_109"]}`,
+          instrumentId: 104,
+          value: `${data["input-50_sub_104"]}`,
           score: 0,
-          comment: `${data["input-50_comment_sub_104"]} || ${data["input-50_comment_sub_105"]} || ${data["input-50_comment_sub_106"]} || ${data["input-50_comment_sub_107"]} || ${data["input-50_comment_sub_108"]} || ${data["input-50_comment_sub_109"]}`,
+          comment: `${data["input-50_comment_sub_104"]}`,
         },
         {
-          instrumentId: 55,
-          value: `${data["input-51_sub_111"]} || ${data["input-51_sub_112"]}`,
+          instrumentId: 105,
+          value: `${data["input-50_sub_105"]}`,
           score: 0,
-          comment: `${data["input-51_comment_sub_111"]} || ${data["input-51_comment_sub_112"]}`,
+          comment: `${data["input-50_comment_sub_105"]}`,
         },
         {
-          instrumentId: 56,
-          value: `${data["input-52_sub_114"]} || ${data["input-52_sub_115"]} || ${data["input-52_sub_116"]}`,
+          instrumentId: 106,
+          value: `${data["input-50_sub_106"]}`,
           score: 0,
-          comment: `${data["input-52_comment_sub_114"]} || ${data["input-52_comment_sub_115"]} || ${data["input-52_comment_sub_116"]}`,
+          comment: `${data["input-50_comment_sub_106"]}`,
+        },
+        {
+          instrumentId: 107,
+          value: `${data["input-50_sub_107"]}`,
+          score: 0,
+          comment: `${data["input-50_comment_sub_107"]}`,
+        },
+        {
+          instrumentId: 108,
+          value: `${data["input-50_sub_108"]}`,
+          score: 0,
+          comment: `${data["input-50_comment_sub_108"]}`,
+        },
+        {
+          instrumentId: 109,
+          value: `${data["input-50_sub_109"]}`,
+          score: 0,
+          comment: `${data["input-50_comment_sub_109"]}`,
+        },
+        {
+          instrumentId: 111,
+          value: `${data["input-51_sub_111"]}`,
+          score: 0,
+          comment: `${data["input-51_comment_sub_111"]}`,
+        },
+        {
+          instrumentId: 112,
+          value: `${data["input-51_sub_112"]}`,
+          score: 0,
+          comment: `${data["input-51_comment_sub_112"]}`,
+        },
+        {
+          instrumentId: 114,
+          value: `${data["input-52_sub_114"]}`,
+          score: 0,
+          comment: `${data["input-52_comment_sub_114"]}`,
+        },
+        {
+          instrumentId: 115,
+          value: `${data["input-52_sub_115"]}`,
+          score: 0,
+          comment: `${data["input-52_comment_sub_115"]}`,
+        },
+        {
+          instrumentId: 116,
+          value: `${data["input-52_sub_116"]}`,
+          score: 0,
+          comment: `${data["input-52_comment_sub_116"]}`,
         },
       ];
 

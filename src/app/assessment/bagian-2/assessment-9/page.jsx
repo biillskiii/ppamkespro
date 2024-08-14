@@ -125,40 +125,64 @@ const ParentComponent = () => {
 
       const mapData = [
         {
-          instrumentId: 71,
+          instrumentId: 184,
           value: data["input-68"],
           score: 0,
           comment: data["input-68_comment"],
         },
         {
-          instrumentId: 72,
+          instrumentId: 185,
           value: null,
           score: 0,
           comment: data["input-69_comment"],
         },
         {
-          instrumentId: 73,
+          instrumentId: 186,
           value: data["input-70"],
           score: 0,
           comment: data["input-70_comment"],
         },
         {
-          instrumentId: 74,
+          instrumentId: 187,
           value: data["input-71"],
           score: 0,
           comment: data["input-71_comment"],
         },
         {
-          instrumentId: 75,
-          value: `${data["input-72_sub_189"]} || ${data["input-72_sub_190"]} || ${data["input-72_sub_191"]}`,
+          instrumentId: 189,
+          value: `${data["input-72_sub_189"]}`,
           score: 0,
-          comment: `${data["input-72_comment_sub_189"]} || ${data["input-72_comment_sub_190"]} || ${data["input-72_comment_sub_191"]}`,
+          comment: `${data["input-72_comment_sub_189"]}`,
         },
         {
-          instrumentId: 76,
-          value: `${data["input-73_sub_193"]} || ${data["input-73_sub_194"]} || ${data["input-73_sub_195"]}`,
+          instrumentId: 190,
+          value: `${data["input-72_sub_190"]}`,
           score: 0,
-          comment: `${data["input-73_comment_sub_193"]} || ${data["input-73_comment_sub_194"]} || ${data["input-73_comment_sub_195"]}`,
+          comment: `${data["input-72_comment_sub_190"]}`,
+        },
+        {
+          instrumentId: 191,
+          value: `${data["input-72_sub_191"]}`,
+          score: 0,
+          comment: `${data["input-72_comment_sub_191"]}`,
+        },
+        {
+          instrumentId: 193,
+          value: `${data["input-73_sub_193"]}`,
+          score: 0,
+          comment: `${data["input-73_comment_sub_193"]}`,
+        },
+        {
+          instrumentId: 194,
+          value: `${data["input-73_sub_194"]}`,
+          score: 0,
+          comment: `${data["input-73_comment_sub_194"]}`,
+        },
+        {
+          instrumentId: 195,
+          value: `${data["input-73_sub_195"]}`,
+          score: 0,
+          comment: `${data["input-73_comment_sub_195"]}`,
         },
       ];
 
