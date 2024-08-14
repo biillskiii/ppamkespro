@@ -6,6 +6,8 @@ import Button from "@/components/button";
 import { jwtDecode } from "jwt-decode";
 import { FaSpinner } from "react-icons/fa";
 import Sidebar from "@/components/sidebar";
+import axios from "axios";
+
 const ParentComponent = () => {
   const [isDone, setIsDone] = useState(false);
   const [answers, setAnswers] = useState({});
@@ -14,9 +16,12 @@ const ParentComponent = () => {
   const [activeAccordion, setActiveAccordion] = useState(null);
   const [username, setUsername] = useState("");
   const router = useRouter();
-  useEffect(() => {
-    const token = sessionStorage.getItem("accessToken");
+  const token =
+    typeof window !== "undefined"
+      ? sessionStorage.getItem("accessToken")
+      : null;
 
+  useEffect(() => {
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
@@ -111,6 +116,60 @@ const ParentComponent = () => {
     }
   };
 
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData.entries());
+
+      const mapData = [
+        {
+          instrumentId: 47,
+          value: null,
+          score: 0,
+          comment: data["input-43_comment"],
+        },
+        {
+          instrumentId: 48,
+          value: null,
+          score: 0,
+          comment: data["input-44_comment"],
+        },
+        {
+          instrumentId: 49,
+          value: `${data["input-45_sub_84"]} || ${data["input-45_sub_85"]} || ${data["input-45_sub_86"]} || ${data["input-45_sub_87"]} || ${data["input-45_sub_88"]}`,
+          score: 0,
+          comment: `${data["input-45_comment_sub_84"]} || ${data["input-45_comment_sub_85"]} || ${data["input-45_comment_sub_86"]} || ${data["input-45_comment_sub_87"]} || ${data["input-45_comment_sub_88"]}`,
+        },
+        {
+          instrumentId: 50,
+          value: `${data["input-46_sub_90"]} || ${data["input-46_sub_91"]} || ${data["input-46_sub_92"]} || ${data["input-46_sub_93"]} || ${data["input-46_sub_94"]} || ${data["input-46_sub_95"]} || ${data["input-46_sub_96"]}`,
+          score: 0,
+          comment: `${data["input-46_comment_sub_90"]} || ${data["input-46_comment_sub_91"]} || ${data["input-46_comment_sub_92"]} || ${data["input-46_comment_sub_93"]} || ${data["input-46_comment_sub_94"]} || ${data["input-46_comment_sub_95"]} || ${data["input-46_comment_sub_96"]}`,
+        },
+        {
+          instrumentId: 51,
+          value: `${data["input-47_sub_98"]} || ${data["input-47_sub_99"]} || ${data["input-47_sub_100"]}`,
+          score: 0,
+          comment: `${data["input-47_comment_sub_98"]} || ${data["input-47_comment_sub_99"]} || ${data["input-47_comment_sub_100"]}`,
+        },
+      ];
+
+      const response = await axios.post(
+        "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
+        mapData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (response.status === 200) {
+        router.push("/assessment/bagian-2/assessment-5");
+      }
+    } catch (error) {
+      console.error("Error posting data:", error);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen w-full flex justify-center items-center">
@@ -134,7 +193,11 @@ const ParentComponent = () => {
             maternal dan neonatal
           </p>
         </div>
-        <form action="" className="flex flex-col gap-y-5">
+        <form
+          // action=""
+          className="flex flex-col gap-y-5"
+          onSubmit={onSubmit}
+        >
           {isData.map((item, index) => (
             <div key={index} className="">
               <Question
@@ -164,12 +227,15 @@ const ParentComponent = () => {
               onClick={handleBack}
               withIcon={"left"}
               variant="secondary"
+              type="button"
             />
             <Button
               label={"Berikutnya"}
-              onClick={handleNext}
+              // onClick={handleNext}
               withIcon={"right"}
-              disabled={!isDone}
+              // variant={!isDone && "disabeled"}
+              // disabled={!isDone}
+              type="submit"
             />
           </div>
         </form>
