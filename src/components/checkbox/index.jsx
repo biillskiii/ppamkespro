@@ -1,6 +1,6 @@
 "use client";
-import React, { useState, useEffect } from "react";
 import clsx from "clsx";
+import { useEffect, useState } from "react";
 import { FaCheck } from "react-icons/fa";
 
 const CheckboxInput = ({ options = [], name, value }) => {
@@ -32,12 +32,18 @@ const CheckboxInput = ({ options = [], name, value }) => {
   return (
     <div className="space-y-2">
       <div className="flex flex-row flex-wrap gap-6">
+        <input
+          type="text"
+          value={selectedValues.join(" || ")}
+          // className="hidden"
+          name={name}
+        />
         {options.map((option, index) => (
           <label key={index} className="flex items-center cursor-pointer">
             <input
               type="checkbox"
               id={`${name}-${index}`}
-              name={name}
+              name={`${name}-${index}`}
               value={option.value}
               className="hidden"
               checked={selectedValues.includes(option.value)}
