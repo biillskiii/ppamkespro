@@ -14,7 +14,10 @@ const ParentComponent = () => {
   const [isData, setData] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const router = useRouter();
-  const token = sessionStorage.getItem("accessToken");
+  const token =
+    typeof window !== "undefined"
+      ? sessionStorage.getItem("accessToken")
+      : null;
 
   // Effect to fetch data from API
   useEffect(() => {

@@ -16,7 +16,10 @@ const ParentComponent = () => {
   const [activeAccordion, setActiveAccordion] = useState(null);
   const [username, setUsername] = useState("");
   const router = useRouter();
-  const token = sessionStorage.getItem("accessToken");
+  const token =
+    typeof window !== "undefined"
+      ? sessionStorage.getItem("accessToken")
+      : null;
 
   useEffect(() => {
     if (token) {

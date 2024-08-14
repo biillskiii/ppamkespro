@@ -21,7 +21,10 @@ const Bagian0 = () => {
   const [activeAccordion, setActiveAccordion] = useState(null); // State untuk mengontrol accordion
   const router = useRouter();
   const pathname = usePathname(); // Mendapatkan route saat ini
-  const token = sessionStorage.getItem("accessToken");
+  const token =
+    typeof window !== "undefined"
+      ? sessionStorage.getItem("accessToken")
+      : null;
 
   // Effect untuk mengambil data dari API
   useEffect(() => {
