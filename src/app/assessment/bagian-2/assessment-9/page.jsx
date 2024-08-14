@@ -6,6 +6,8 @@ import Button from "@/components/button";
 import { jwtDecode } from "jwt-decode";
 import { FaSpinner } from "react-icons/fa";
 import Sidebar from "@/components/sidebar";
+import axios from "axios";
+
 const ParentComponent = () => {
   const [isDone, setIsDone] = useState(false);
   const [answers, setAnswers] = useState({});
@@ -14,9 +16,12 @@ const ParentComponent = () => {
   const [activeAccordion, setActiveAccordion] = useState(null);
   const [username, setUsername] = useState("");
   const router = useRouter();
-  useEffect(() => {
-    const token = sessionStorage.getItem("accessToken");
+  const token =
+    typeof window !== "undefined"
+      ? sessionStorage.getItem("accessToken")
+      : null;
 
+  useEffect(() => {
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
@@ -111,6 +116,66 @@ const ParentComponent = () => {
     }
   };
 
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData.entries());
+
+      const mapData = [
+        {
+          instrumentId: 71,
+          value: data["input-68"],
+          score: 0,
+          comment: data["input-68_comment"],
+        },
+        {
+          instrumentId: 72,
+          value: null,
+          score: 0,
+          comment: data["input-69_comment"],
+        },
+        {
+          instrumentId: 73,
+          value: data["input-70"],
+          score: 0,
+          comment: data["input-70_comment"],
+        },
+        {
+          instrumentId: 74,
+          value: data["input-71"],
+          score: 0,
+          comment: data["input-71_comment"],
+        },
+        {
+          instrumentId: 75,
+          value: `${data["input-72_sub_189"]} || ${data["input-72_sub_190"]} || ${data["input-72_sub_191"]}`,
+          score: 0,
+          comment: `${data["input-72_comment_sub_189"]} || ${data["input-72_comment_sub_190"]} || ${data["input-72_comment_sub_191"]}`,
+        },
+        {
+          instrumentId: 76,
+          value: `${data["input-73_sub_193"]} || ${data["input-73_sub_194"]} || ${data["input-73_sub_195"]}`,
+          score: 0,
+          comment: `${data["input-73_comment_sub_193"]} || ${data["input-73_comment_sub_194"]} || ${data["input-73_comment_sub_195"]}`,
+        },
+      ];
+
+      const response = await axios.post(
+        "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
+        mapData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (response.status === 200) {
+        router.push("/assessment");
+      }
+    } catch (error) {
+      console.error("Error posting data:", error);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen w-full flex justify-center items-center">
@@ -134,7 +199,11 @@ const ParentComponent = () => {
             hukum yang berlaku
           </p>
         </div>
-        <form action="" className="flex flex-col gap-y-5">
+        <form
+          // action=""
+          className="flex flex-col gap-y-5"
+          onSubmit={onSubmit}
+        >
           {isData.map((item, index) => (
             <div key={index} className="">
               <Question
@@ -164,12 +233,15 @@ const ParentComponent = () => {
               onClick={handleBack}
               withIcon={"left"}
               variant="secondary"
+              type="button"
             />
             <Button
               label={"Berikutnya"}
-              onClick={handleNext}
+              // onClick={handleNext}
               withIcon={"right"}
-              disabled={!isDone}
+              // variant={!isDone && "disabeled"}
+              // disabled={!isDone}
+              type="submit"
             />
           </div>
         </form>
