@@ -6,6 +6,8 @@ import Button from "@/components/button";
 import { jwtDecode } from "jwt-decode";
 import { FaSpinner } from "react-icons/fa";
 import Sidebar from "@/components/sidebar";
+import axios from "axios";
+
 const ParentComponent = () => {
   const [isDone, setIsDone] = useState(false);
   const [answers, setAnswers] = useState({});
@@ -14,9 +16,12 @@ const ParentComponent = () => {
   const [activeAccordion, setActiveAccordion] = useState(null);
   const [username, setUsername] = useState("");
   const router = useRouter();
-  useEffect(() => {
-    const token = sessionStorage.getItem("accessToken");
+  const token =
+    typeof window !== "undefined"
+      ? sessionStorage.getItem("accessToken")
+      : null;
 
+  useEffect(() => {
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
@@ -111,6 +116,54 @@ const ParentComponent = () => {
     }
   };
 
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData.entries());
+
+      const mapData = [
+        {
+          instrumentId: 22,
+          value: data["input-18"],
+          score: 0,
+          comment: data["input-18_comment"],
+        },
+        {
+          instrumentId: 23,
+          value: data["input-19"],
+          score: 0,
+          comment: data["input-19_comment"],
+        },
+        {
+          instrumentId: 24,
+          value: data["input-20"],
+          score: 0,
+          comment: data["input-20_comment"],
+        },
+        {
+          instrumentId: 25,
+          value: data["input-21"],
+          score: 0,
+          comment: data["input-21_comment"],
+        },
+      ];
+
+      const response = await axios.post(
+        "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
+        mapData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (response.status === 200) {
+        router.push("/assessment/bagian-2");
+      }
+    } catch (error) {
+      console.error("Error posting data:", error);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen w-full flex justify-center items-center">
@@ -133,7 +186,11 @@ const ParentComponent = () => {
             Kebijakan dan Rencana Penanggulangan Bencana Nasional dan Daerah
           </p>
         </div>
-        <form action="" className="flex flex-col gap-y-5">
+        <form
+          // action=""
+          className="flex flex-col gap-y-5"
+          onSubmit={onSubmit}
+        >
           {isData.map((item, index) => (
             <div key={index} className="">
               <Question
@@ -163,12 +220,15 @@ const ParentComponent = () => {
               onClick={handleBack}
               withIcon={"left"}
               variant="secondary"
+              type="button"
             />
             <Button
               label={"Berikutnya"}
-              onClick={handleNext}
+              // onClick={handleNext}
               withIcon={"right"}
-              disabled={!isDone}
+              // variant={!isDone && "disabeled"}
+              // disabled={!isDone}
+              type="submit"
             />
           </div>
         </form>
