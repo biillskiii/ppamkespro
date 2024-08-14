@@ -64,15 +64,26 @@ const Viewer = () => {
           if (id > 195) return [];
 
           if (sub && Array.isArray(sub)) {
-            return sub.map((subItem, subIndex) => ({
-              id: number,
+            const subedArray = [
+              {
+                id: id,
+                number: "", // No number for non-sub items
+                question: item.question || "-",
+                value: item.value || "-",
+                comment: item.comment || "-",
+              },
+            ];
+            const subArr = sub.map((subItem, subIndex) => ({
+              // id: number,
               number: subIndex + 1,
-              question: item.question || "-",
+              // question: item.question || "-",
               question: subItem.question || "-",
               value: subItem.value || "-",
               comment: subItem.comment || "-",
             }));
-            
+            subedArray.push(...subArr);
+            console.log(subedArray)
+            return subedArray;
           }
           return [
             {
@@ -85,7 +96,7 @@ const Viewer = () => {
           ];
         });
 
-        console.log("Formatted Data:", formattedData); // Debugging
+        // console.log("Formatted Data:", formattedData); // Debugging
         setTableData(formattedData);
       } catch (error) {
         console.error("Failed to fetch data:", error);
