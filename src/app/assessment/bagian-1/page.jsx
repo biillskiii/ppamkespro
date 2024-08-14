@@ -6,6 +6,8 @@ import Button from "@/components/button";
 import { jwtDecode } from "jwt-decode";
 import { FaSpinner } from "react-icons/fa";
 import Sidebar from "@/components/sidebar";
+import axios from "axios";
+
 const ParentComponent = () => {
   const [isDone, setIsDone] = useState(false);
   const [answers, setAnswers] = useState({});
@@ -14,9 +16,9 @@ const ParentComponent = () => {
   const [activeAccordion, setActiveAccordion] = useState(null);
   const [username, setUsername] = useState("");
   const router = useRouter();
-  useEffect(() => {
-    const token = sessionStorage.getItem("accessToken");
+  const token = sessionStorage.getItem("accessToken");
 
+  useEffect(() => {
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
@@ -111,6 +113,72 @@ const ParentComponent = () => {
     }
   };
 
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData.entries());
+
+      const mapData = [
+        {
+          instrumentId: 5,
+          value: data["input-1"],
+          score: 0,
+          comment: data["input-1_comment"],
+        },
+        {
+          instrumentId: 6,
+          value: data["input-2"],
+          score: 0,
+          comment: data["input-2_comment"],
+        },
+        {
+          instrumentId: 7,
+          value: data["input-3"],
+          score: 0,
+          comment: data["input-3_comment"],
+        },
+        {
+          instrumentId: 8,
+          value: data["input-4"],
+          score: 0,
+          comment: data["input-4_comment"],
+        },
+        {
+          instrumentId: 9,
+          value: data["input-5"],
+          score: 0,
+          comment: data["input-5_comment"],
+        },
+        {
+          instrumentId: 10,
+          value: data["input-6"],
+          score: 0,
+          comment: data["input-6_comment"],
+        },
+        {
+          instrumentId: 11,
+          value: data["input-7"],
+          score: 0,
+          comment: data["input-7_comment"],
+        },
+      ];
+
+      const response = await axios.post(
+        "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
+        mapData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (response.status === 200) {
+        router.push("/assessment/bagian-1/assessment-2");
+      }
+    } catch (error) {
+      console.error("Error posting data:", error);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen w-full flex justify-center items-center">
@@ -133,7 +201,11 @@ const ParentComponent = () => {
             Kebijakan dan Rencana Penanggulangan Bencana Nasional dan Daerah
           </p>
         </div>
-        <form action="" className="flex flex-col gap-y-5">
+        <form
+          // action=""
+          className="flex flex-col gap-y-5"
+          onSubmit={onSubmit}
+        >
           {isData.map((item, index) => (
             <div key={index} className="">
               <Question
@@ -163,12 +235,15 @@ const ParentComponent = () => {
               onClick={handleBack}
               withIcon={"left"}
               variant="secondary"
+              type="button"
             />
             <Button
               label={"Berikutnya"}
-              onClick={handleNext}
+              // onClick={handleNext}
               withIcon={"right"}
-              disabled={!isDone}
+              // variant={!isDone && "disabeled"}
+              // disabled={!isDone}
+              type="submit"
             />
           </div>
         </form>

@@ -24,11 +24,11 @@ const DropdownInput = ({ type, value, name, options = [], placeholder }) => {
 
   const getTextColor = (index) => {
     switch (index) {
-      case 0: 
+      case 0:
         return "text-hijau";
-      case 1: 
+      case 1:
         return "text-merah";
-      case 2: 
+      case 2:
         return "text-abu";
       default:
         return "text-abu";
@@ -39,9 +39,9 @@ const DropdownInput = ({ type, value, name, options = [], placeholder }) => {
     switch (index) {
       case 0:
         return "bg-hijau text-white";
-      case 1: 
+      case 1:
         return "bg-merah text-white";
-      case 2: 
+      case 2:
         return "bg-abu text-white";
       default:
         return "bg-white";
@@ -50,6 +50,7 @@ const DropdownInput = ({ type, value, name, options = [], placeholder }) => {
 
   return (
     <div className="relative">
+      <input type="text" value={selectedValue} name={name} className="hidden" />
       <div
         onClick={toggleDropdown}
         style={{ width: "200px" }}
@@ -57,7 +58,9 @@ const DropdownInput = ({ type, value, name, options = [], placeholder }) => {
           "border p-2 rounded-md w-full cursor-pointer",
           "focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
           "text-black font-medium",
-          getBackgroundColor(options.findIndex(option => option.value === selectedValue)) || "bg-white"
+          getBackgroundColor(
+            options.findIndex((option) => option.value === selectedValue)
+          ) || "bg-white"
         )}
       >
         {selectedValue || (
