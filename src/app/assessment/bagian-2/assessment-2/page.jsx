@@ -6,6 +6,8 @@ import Button from "@/components/button";
 import { jwtDecode } from "jwt-decode";
 import { FaSpinner } from "react-icons/fa";
 import Sidebar from "@/components/sidebar";
+import axios from "axios";
+
 const ParentComponent = () => {
   const [isDone, setIsDone] = useState(false);
   const [answers, setAnswers] = useState({});
@@ -14,9 +16,12 @@ const ParentComponent = () => {
   const [activeAccordion, setActiveAccordion] = useState(null);
   const [username, setUsername] = useState("");
   const router = useRouter();
-  useEffect(() => {
-    const token = sessionStorage.getItem("accessToken");
+  const token =
+    typeof window !== "undefined"
+      ? sessionStorage.getItem("accessToken")
+      : null;
 
+  useEffect(() => {
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
@@ -111,6 +116,66 @@ const ParentComponent = () => {
     }
   };
 
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData.entries());
+
+      const mapData = [
+        {
+          instrumentId: 35,
+          value: data["input-31"],
+          score: 0,
+          comment: data["input-31_comment"],
+        },
+        {
+          instrumentId: 36,
+          value: null,
+          score: 0,
+          comment: data["input-32_comment"],
+        },
+        {
+          instrumentId: 37,
+          value: data["input-33"],
+          score: 0,
+          comment: data["input-33_comment"],
+        },
+        {
+          instrumentId: 38,
+          value: `${data["input-34_sub_41"]} || ${data["input-34_sub_42"]} || ${data["input-34_sub_43"]} || ${data["input-34_sub_44"]} || ${data["input-34_sub_45"]} || ${data["input-34_sub_46"]} || ${data["input-34_sub_47"]} || ${data["input-34_sub_48"]} || ${data["input-34_sub_49"]}`,
+          score: 0,
+          comment: `${data["input-34_comment_sub_41"]} || ${data["input-34_comment_sub_42"]} || ${data["input-34_comment_sub_43"]} || ${data["input-34_comment_sub_44"]} || ${data["input-34_comment_sub_45"]} || ${data["input-34_comment_sub_46"]} || ${data["input-34_comment_sub_47"]} || ${data["input-34_comment_sub_48"]} || ${data["input-34_comment_sub_49"]}`,
+        },
+        {
+          instrumentId: 39,
+          value: `${data["input-35_sub_51"]} || ${data["input-35_sub_52"]} || ${data["input-35_sub_53"]} || ${data["input-35_sub_54"]}`,
+          score: 0,
+          comment: `${data["input-35_comment_sub_51"]} || ${data["input-35_comment_sub_52"]} || ${data["input-35_comment_sub_53"]} || ${data["input-35_comment_sub_54"]}`,
+        },
+        {
+          instrumentId: 40,
+          value: `${data["input-36_sub_56"]} || ${data["input-36_sub_57"]} || ${data["input-36_sub_58"]}`,
+          score: 0,
+          comment: `${data["input-36_comment_sub_56"]} || ${data["input-36_comment_sub_57"]} || ${data["input-36_comment_sub_58"]}`,
+        },
+      ];
+
+      const response = await axios.post(
+        "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
+        mapData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (response.status === 200) {
+        router.push("/assessment/bagian-2/assessment-3");
+      }
+    } catch (error) {
+      console.error("Error posting data:", error);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen w-full flex justify-center items-center">
@@ -134,7 +199,11 @@ const ParentComponent = () => {
             para penyintas
           </p>
         </div>
-        <form action="" className="flex flex-col gap-y-5">
+        <form
+          // action=""
+          className="flex flex-col gap-y-5"
+          onSubmit={onSubmit}
+        >
           {isData.map((item, index) => (
             <div key={index} className="">
               <Question
@@ -164,12 +233,15 @@ const ParentComponent = () => {
               onClick={handleBack}
               withIcon={"left"}
               variant="secondary"
+              type="button"
             />
             <Button
               label={"Berikutnya"}
-              onClick={handleNext}
+              // onClick={handleNext}
               withIcon={"right"}
-              disabled={!isDone}
+              // variant={!isDone && "disabeled"}
+              // disabled={!isDone}
+              type="submit"
             />
           </div>
         </form>
