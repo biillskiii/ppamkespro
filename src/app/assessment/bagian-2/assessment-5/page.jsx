@@ -6,6 +6,8 @@ import Button from "@/components/button";
 import { jwtDecode } from "jwt-decode";
 import { FaSpinner } from "react-icons/fa";
 import Sidebar from "@/components/sidebar";
+import axios from "axios";
+
 const ParentComponent = () => {
   const [isDone, setIsDone] = useState(false);
   const [answers, setAnswers] = useState({});
@@ -14,9 +16,12 @@ const ParentComponent = () => {
   const [activeAccordion, setActiveAccordion] = useState(null);
   const [username, setUsername] = useState("");
   const router = useRouter();
-  useEffect(() => {
-    const token = sessionStorage.getItem("accessToken");
+  const token =
+    typeof window !== "undefined"
+      ? sessionStorage.getItem("accessToken")
+      : null;
 
+  useEffect(() => {
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
@@ -111,6 +116,60 @@ const ParentComponent = () => {
     }
   };
 
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData.entries());
+
+      const mapData = [
+        {
+          instrumentId: 52,
+          value: null,
+          score: 0,
+          comment: data["input-48_comment"],
+        },
+        {
+          instrumentId: 53,
+          value: data["input-49"],
+          score: 0,
+          comment: data["input-49_comment"],
+        },
+        {
+          instrumentId: 54,
+          value: `${data["input-50_sub_104"]} || ${data["input-50_sub_105"]} || ${data["input-50_sub_106"]} || ${data["input-50_sub_107"]} || ${data["input-50_sub_108"]} || ${data["input-50_sub_109"]}`,
+          score: 0,
+          comment: `${data["input-50_comment_sub_104"]} || ${data["input-50_comment_sub_105"]} || ${data["input-50_comment_sub_106"]} || ${data["input-50_comment_sub_107"]} || ${data["input-50_comment_sub_108"]} || ${data["input-50_comment_sub_109"]}`,
+        },
+        {
+          instrumentId: 55,
+          value: `${data["input-51_sub_111"]} || ${data["input-51_sub_112"]}`,
+          score: 0,
+          comment: `${data["input-51_comment_sub_111"]} || ${data["input-51_comment_sub_112"]}`,
+        },
+        {
+          instrumentId: 56,
+          value: `${data["input-52_sub_114"]} || ${data["input-52_sub_115"]} || ${data["input-52_sub_116"]}`,
+          score: 0,
+          comment: `${data["input-52_comment_sub_114"]} || ${data["input-52_comment_sub_115"]} || ${data["input-52_comment_sub_116"]}`,
+        },
+      ];
+
+      const response = await axios.post(
+        "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
+        mapData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (response.status === 200) {
+        router.push("/assessment/bagian-2/assessment-6");
+      }
+    } catch (error) {
+      console.error("Error posting data:", error);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen w-full flex justify-center items-center">
@@ -133,7 +192,11 @@ const ParentComponent = () => {
             Komponen PPAM 5: Mencegah kehamilan yang tidak diinginkan
           </p>
         </div>
-        <form action="" className="flex flex-col gap-y-5">
+        <form
+          // action=""
+          className="flex flex-col gap-y-5"
+          onSubmit={onSubmit}
+        >
           {isData.map((item, index) => (
             <div key={index} className="">
               <Question
@@ -163,12 +226,15 @@ const ParentComponent = () => {
               onClick={handleBack}
               withIcon={"left"}
               variant="secondary"
+              type="button"
             />
             <Button
               label={"Berikutnya"}
-              onClick={handleNext}
+              // onClick={handleNext}
               withIcon={"right"}
-              disabled={!isDone}
+              // variant={!isDone && "disabeled"}
+              // disabled={!isDone}
+              type="submit"
             />
           </div>
         </form>
