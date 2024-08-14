@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Button from "@/components/button"; // Ensure this component is correctly imported
 import Sidebar from "@/components/sidebar";
 import { FaSpinner } from "react-icons/fa";
+import axios from "axios";
 
 const ParentComponent = () => {
   const [isDone, setIsDone] = useState(false);
@@ -13,6 +14,7 @@ const ParentComponent = () => {
   const [isData, setData] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const router = useRouter();
+  const token = sessionStorage.getItem("accessToken");
 
   // Effect to fetch data from API
   useEffect(() => {
@@ -90,6 +92,54 @@ const ParentComponent = () => {
     }
   };
 
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData.entries());
+
+      const mapData = [
+        {
+          instrumentId: 18,
+          value: data["input-14"],
+          score: 0,
+          comment: data["input-14_comment"],
+        },
+        {
+          instrumentId: 19,
+          value: data["input-15"],
+          score: 0,
+          comment: data["input-15_comment"],
+        },
+        {
+          instrumentId: 20,
+          value: data["input-16"],
+          score: 0,
+          comment: data["input-16_comment"],
+        },
+        {
+          instrumentId: 21,
+          value: data["input-17"],
+          score: 0,
+          comment: data["input-17_comment"],
+        },
+      ];
+
+      const response = await axios.post(
+        "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
+        mapData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (response.status === 200) {
+        router.push("/assessment/bagian-1/assessment-4");
+      }
+    } catch (error) {
+      console.error("Error posting data:", error);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen w-full flex justify-center items-center">
@@ -112,7 +162,11 @@ const ParentComponent = () => {
             Data kespro di tingkat nasional dan sub-nasional
           </p>
         </div>
-        <form action="" className="flex flex-col gap-y-5">
+        <form
+          // action=""
+          className="flex flex-col gap-y-5"
+          onSubmit={onSubmit}
+        >
           {isData.map((item, index) => (
             <div key={index} className="">
               <Question
@@ -142,12 +196,15 @@ const ParentComponent = () => {
               onClick={handleBack}
               withIcon={"left"}
               variant="secondary"
+              type="button"
             />
             <Button
               label={"Berikutnya"}
-              onClick={handleNext}
+              // onClick={handleNext}
               withIcon={"right"}
-              disabled={!isDone}
+              // variant={!isDone && "disabeled"}
+              // disabled={!isDone}
+              type="submit"
             />
           </div>
         </form>
