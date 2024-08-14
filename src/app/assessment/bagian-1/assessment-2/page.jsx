@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Button from "@/components/button"; // Ensure this component is correctly imported
 import Sidebar from "@/components/sidebar";
 import { FaSpinner } from "react-icons/fa";
+import axios from "axios";
 
 const ParentComponent = () => {
   const [isDone, setIsDone] = useState(false);
@@ -13,6 +14,7 @@ const ParentComponent = () => {
   const [isData, setData] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const router = useRouter();
+  const token = sessionStorage.getItem("accessToken");
 
   // Effect to fetch data from API
   useEffect(() => {
@@ -90,6 +92,66 @@ const ParentComponent = () => {
     }
   };
 
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData.entries());
+
+      const mapData = [
+        {
+          instrumentId: 12,
+          value: data["input-8"],
+          score: 0,
+          comment: data["input-8_comment"],
+        },
+        {
+          instrumentId: 13,
+          value: data["input-9"],
+          score: 0,
+          comment: data["input-9_comment"],
+        },
+        {
+          instrumentId: 14,
+          value: `${data["input-10_sub_11"]} || ${data["input-10_sub_12"]} || ${data["input-10_sub_13"]}`,
+          score: 0,
+          comment: `${data["input-10_comment_sub_11"]} || ${data["input-10_comment_sub_12"]} || ${data["input-10_comment_sub_13"]}`,
+        },
+        {
+          instrumentId: 15,
+          value: `${data["input-11_sub_15"]} || ${data["input-11_sub_16"]} || ${data["input-11_sub_17"]}`,
+          score: 0,
+          comment: `${data["input-11_comment_sub_15"]} || ${data["input-11_comment_sub_16"]} || ${data["input-11_comment_sub_17"]}`,
+        },
+        {
+          instrumentId: 16,
+          value: data["input-12"],
+          score: 0,
+          comment: data["input-12_comment"],
+        },
+        {
+          instrumentId: 17,
+          value: data["input-13"],
+          score: 0,
+          comment: data["input-13_comment"],
+        },
+      ];
+
+      const response = await axios.post(
+        "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
+        mapData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (response.status === 200) {
+        router.push("/assessment/bagian-1/assessment-3");
+      }
+    } catch (error) {
+      console.error("Error posting data:", error);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen w-full flex justify-center items-center">
@@ -112,7 +174,11 @@ const ParentComponent = () => {
             Mekanisme Koordinasi Penanggulangan Bencana berkaitan dengan kespro
           </p>
         </div>
-        <form action="" className="flex flex-col gap-y-5">
+        <form
+          // action=""
+          className="flex flex-col gap-y-5"
+          onSubmit={onSubmit}
+        >
           {isData.map((item, index) => (
             <div key={index} className="">
               <Question
@@ -142,12 +208,15 @@ const ParentComponent = () => {
               onClick={handleBack}
               withIcon={"left"}
               variant="secondary"
+              type="button"
             />
             <Button
               label={"Berikutnya"}
-              onClick={handleNext}
+              // onClick={handleNext}
               withIcon={"right"}
-              disabled={!isDone}
+              // variant={!isDone && "disabeled"}
+              // disabled={!isDone}
+              type="submit"
             />
           </div>
         </form>

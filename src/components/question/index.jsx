@@ -126,7 +126,7 @@ const Question = ({
                       />
                       <TextInput
                         type="text"
-                        name={`${name}_comment`}
+                        name={`${name}_comment_sub_${subquestion.id}`}
                         placeholder={placeholder}
                         value={comment}
                         onChange={handleCommentChange}
@@ -147,7 +147,7 @@ const Question = ({
                       />
                       <TextInput
                         type="text"
-                        name={`${name}_comment`}
+                        name={`${name}_comment_sub_${subquestion.id}`}
                         placeholder={placeholder}
                         value={comment}
                         onChange={handleCommentChange}
