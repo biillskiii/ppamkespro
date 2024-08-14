@@ -6,6 +6,8 @@ import Button from "@/components/button";
 import { jwtDecode } from "jwt-decode";
 import { FaSpinner } from "react-icons/fa";
 import Sidebar from "@/components/sidebar";
+import axios from "axios";
+
 const ParentComponent = () => {
   const [isDone, setIsDone] = useState(false);
   const [answers, setAnswers] = useState({});
@@ -14,9 +16,12 @@ const ParentComponent = () => {
   const [activeAccordion, setActiveAccordion] = useState(null);
   const [username, setUsername] = useState("");
   const router = useRouter();
-  useEffect(() => {
-    const token = sessionStorage.getItem("accessToken");
+  const token =
+    typeof window !== "undefined"
+      ? sessionStorage.getItem("accessToken")
+      : null;
 
+  useEffect(() => {
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
@@ -111,6 +116,60 @@ const ParentComponent = () => {
     }
   };
 
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData.entries());
+
+      const mapData = [
+        {
+          instrumentId: 66,
+          value: null,
+          score: 0,
+          comment: data["input-63_comment"],
+        },
+        {
+          instrumentId: 67,
+          value: data["input-64"],
+          score: 0,
+          comment: data["input-64_comment"],
+        },
+        {
+          instrumentId: 68,
+          value: `${data["input-65_sub_166"]} || ${data["input-65_sub_167"]} || ${data["input-65_sub_168"]} || ${data["input-65_sub_169"]} || ${data["input-65_sub_170"]} || ${data["input-65_sub_171"]}`,
+          score: 0,
+          comment: `${data["input-65_comment_sub_166"]} || ${data["input-65_comment_sub_167"]} || ${data["input-65_comment_sub_168"]} || ${data["input-65_comment_sub_169"]} || ${data["input-65_comment_sub_170"]} || ${data["input-65_comment_sub_171"]}`,
+        },
+        {
+          instrumentId: 69,
+          value: `${data["input-66_sub_173"]} || ${data["input-66_sub_174"]} || ${data["input-66_sub_175"]} || ${data["input-66_sub_176"]} || ${data["input-66_sub_177"]} || ${data["input-66_sub_178"]} || ${data["input-66_sub_179"]}`,
+          score: 0,
+          comment: `${data["input-66_comment_sub_173"]} || ${data["input-66_comment_sub_174"]} || ${data["input-66_comment_sub_175"]} || ${data["input-66_comment_sub_176"]} || ${data["input-66_comment_sub_177"]} || ${data["input-66_comment_sub_178"]} || ${data["input-66_comment_sub_179"]}`,
+        },
+        {
+          instrumentId: 70,
+          value: `${data["input-67_sub_181"]} || ${data["input-67_sub_182"]} || ${data["input-67_sub_183"]}`,
+          score: 0,
+          comment: `${data["input-67_comment_sub_181"]} || ${data["input-67_comment_sub_182"]} || ${data["input-67_comment_sub_183"]}`,
+        },
+      ];
+
+      const response = await axios.post(
+        "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
+        mapData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (response.status === 200) {
+        router.push("/assessment/bagian-2/assessment-9");
+      }
+    } catch (error) {
+      console.error("Error posting data:", error);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen w-full flex justify-center items-center">
@@ -133,7 +192,11 @@ const ParentComponent = () => {
             Komponen PPAM 8: Layanan Minimum Kesehatan Lansia
           </p>
         </div>
-        <form action="" className="flex flex-col gap-y-5">
+        <form
+          // action=""
+          className="flex flex-col gap-y-5"
+          onSubmit={onSubmit}
+        >
           {isData.map((item, index) => (
             <div key={index} className="">
               <Question
@@ -163,12 +226,15 @@ const ParentComponent = () => {
               onClick={handleBack}
               withIcon={"left"}
               variant="secondary"
+              type="button"
             />
             <Button
               label={"Berikutnya"}
-              onClick={handleNext}
+              // onClick={handleNext}
               withIcon={"right"}
-              disabled={!isDone}
+              // variant={!isDone && "disabeled"}
+              // disabled={!isDone}
+              type="submit"
             />
           </div>
         </form>
