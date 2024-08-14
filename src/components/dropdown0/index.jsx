@@ -3,21 +3,28 @@ import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import { IoIosArrowDown } from "react-icons/io";
 
-const DropdownInput = ({ type, value, name, options = [], placeholder }) => {
-  const [selectedValue, setSelectedValue] = useState("");
+const DropdownInput = ({
+  type,
+  value,
+  name,
+  options = [],
+  placeholder,
+  selectedValue = "",
+  setSelectedValue,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const savedValue = localStorage.getItem(name);
     if (savedValue) {
-      setSelectedValue(savedValue);
+      setSelectedValue && setSelectedValue(savedValue);
     }
   }, [name]);
 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
   const handleSelectDropdown = (value) => {
-    setSelectedValue(value);
+    setSelectedValue && setSelectedValue(value);
     setIsOpen(false);
     localStorage.setItem(name, value);
   };

@@ -17,6 +17,8 @@ const Bagian0 = () => {
   const [answers, setAnswers] = useState({});
   const [isData, setData] = useState([]);
   const [isDataArea, setDataArea] = useState({});
+  const [isDataAreaLevel, setDataAreaLevel] = useState([]);
+  const [selectedLevel, setSelectedLevel] = useState("");
   const [isLoading, setLoading] = useState(false);
   const [activeAccordion, setActiveAccordion] = useState(null); // State untuk mengontrol accordion
   const router = useRouter();
@@ -68,13 +70,11 @@ const Bagian0 = () => {
       })
       .then((responseData) => {
         console.log("Data area fetched:", responseData);
-        const transformedNasional = responseData.data.nasional.map((item) => ({
-          value: item,
+        setDataArea(responseData.data);
+        const transformed = Object.keys(responseData.data).map((key) => ({
+          value: key,
         }));
-        setDataArea({
-          ...responseData.data,
-          nasional: transformedNasional,
-        });
+        setDataAreaLevel(transformed);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -211,8 +211,10 @@ const Bagian0 = () => {
             }
             name={"tingkat"}
             type={"dropdown"}
-            options={isDataArea.nasional}
-            suggestions={isDataArea.subnasional}
+            options={isDataAreaLevel}
+            suggestions={isDataArea[selectedLevel]}
+            selectedValue={selectedLevel}
+            setSelectedValue={setSelectedLevel}
             // onChange={{}}
           />
 

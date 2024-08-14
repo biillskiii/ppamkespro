@@ -12,6 +12,8 @@ const Question0 = ({
   placeholder,
   onChange,
   suggestions,
+  selectedValue,
+  setSelectedValue,
 }) => {
   const [answer, setAnswer] = useState("");
   const [comment, setComment] = useState("");
@@ -74,6 +76,8 @@ const Question0 = ({
               placeholder={placeholder}
               value={answer}
               onChange={(e) => handleAnswerChange(e.target.value)}
+              selectedValue={selectedValue}
+              setSelectedValue={setSelectedValue}
             />
             <TextInput
               type="text"
