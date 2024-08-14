@@ -38,17 +38,34 @@ const Table = ({ columns = [], data = [], type }) => {
 
   const totalPages = Math.ceil(data.length / rowsPerPage);
 
-  // Create an array of page numbers
+  // Calculate the range of page numbers to display
   const pageNumbers = Array.from(
     { length: totalPages },
     (_, index) => index + 1
   );
 
-  // Add the 'id' column if type is 'sub'
-  const adjustedColumns = type === 'sub'
-    ? [{ header: 'ID', accessor: 'id' }, ...columns]
-    : columns;
+  const getVisiblePageNumbers = () => {
+    const maxButtons = 5;
+    const halfRange = Math.floor(maxButtons / 2);
 
+    let start = Math.max(1, currentPage - halfRange);
+    let end = Math.min(totalPages, currentPage + halfRange);
+
+    // Adjust the start and end if there are not enough pages before or after the current page
+    if (end - start + 1 < maxButtons) {
+      if (start === 1) {
+        end = Math.min(maxButtons, totalPages);
+      } else if (end === totalPages) {
+        start = Math.max(1, totalPages - maxButtons + 1);
+      }
+    }
+
+    return pageNumbers.slice(start - 1, end);
+  };
+
+  const visiblePageNumbers = getVisiblePageNumbers();
+  const adjustedColumns =
+    type === "sub" ? [{ header: "ID", accessor: "id" }, ...columns] : columns;
   return (
     <div className="overflow-x-auto relative h-auto sm:rounded-lg">
       <table className="w-9/12 mx-auto my-20 text-sm text-gray-500 border-collapse border border-gray-200">
@@ -109,7 +126,7 @@ const Table = ({ columns = [], data = [], type }) => {
           </button>
 
           {/* Page Number Buttons */}
-          {pageNumbers.map((number) => (
+          {visiblePageNumbers.map((number) => (
             <button
               key={number}
               onClick={() => setCurrentPage(number)}
