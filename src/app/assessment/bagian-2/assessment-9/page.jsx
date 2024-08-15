@@ -195,7 +195,7 @@ const ParentComponent = () => {
       if (response.status === 200) {
         // Clear all localStorage items
         localStorage.clear();
-        router.push("/assessment");
+        router.push("/data-diri/");
       }
     } catch (error) {
       console.error("Error posting data:", error);

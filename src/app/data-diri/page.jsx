@@ -85,7 +85,7 @@ const Viewer = () => {
     setIsOpen(!isOpen);
   };
   const viewResult = () => {
-    router.push("/viewer");
+    router.push("/data-diri/viewer");
   };
   const handleLogout = () => {
     setIsLogin(false);
