@@ -32,12 +32,12 @@ const CheckboxInput = ({ options = [], name, value }) => {
   return (
     <div className="space-y-2">
       <div className="flex flex-row flex-wrap gap-6">
-        <input
+        {/* <input
           type="text"
           value={selectedValues.join(" || ")}
           // className="hidden"
           name={name}
-        />
+        /> */}
         {options.map((option, index) => (
           <label key={index} className="flex items-center cursor-pointer">
             <input
