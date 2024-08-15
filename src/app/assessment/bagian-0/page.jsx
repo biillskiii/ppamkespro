@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Question from "@/components/question"; // Pastikan komponen ini sudah terimport dengan benar
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { useRouter, usePathname } from "next/navigation"; // Import usePathname untuk mendapatkan route saat ini
@@ -27,6 +27,8 @@ const Bagian0 = () => {
     typeof window !== "undefined"
       ? sessionStorage.getItem("accessToken")
       : null;
+  const formRef = useRef(null);
+  const [isPushed, setIsPushed] = useState(false);
 
   // Effect untuk mengambil data dari API
   useEffect(() => {
@@ -168,16 +170,27 @@ const Bagian0 = () => {
       );
 
       if (response.status === 200) {
-        router.push("/assessment/bagian-1");
+        isPushed && router.push("/assessment/bagian-1");
       }
     } catch (error) {
       console.error("Error posting data:", error);
+    } finally {
+      setIsPushed(false);
+    }
+  };
+
+  const handleSidebarClick = () => {
+    if (formRef.current) {
+      setIsPushed(false);
+      formRef.current.dispatchEvent(
+        new Event("submit", { bubbles: true, cancelable: true })
+      );
     }
   };
 
   return (
     <div className="bg-[#F1F1F7] h-screen overflow-x-hidden">
-      <Sidebar activeId={0} />
+      <Sidebar activeId={0} onClick={handleSidebarClick} />
 
       <div className="w-full ml-[344px] space-y-6 p-4">
         <div className="bg-[#1446AB] pl-4 py-4 rounded-2xl w-[1048px] ">
@@ -187,7 +200,11 @@ const Bagian0 = () => {
         </div>
         <form
           // action=""
-          onSubmit={onSubmit}
+          ref={formRef}
+          onSubmit={(e) => {
+            onSubmit(e);
+            setIsPushed(true);
+          }}
           className="flex flex-col gap-y-5"
         >
           <div className="flex w-[70%] gap-x-4 ">
@@ -201,7 +218,6 @@ const Bagian0 = () => {
             <DatePicker
               // label={"2. Tanggal Penilaian"}
               name="tanggal"
-              
             />
           </div>
 

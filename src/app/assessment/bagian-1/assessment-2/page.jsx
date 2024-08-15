@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Question from "@/components/question"; // Ensure this component is correctly imported
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { useRouter } from "next/navigation";
@@ -18,6 +18,8 @@ const ParentComponent = () => {
     typeof window !== "undefined"
       ? sessionStorage.getItem("accessToken")
       : null;
+  const formRef = useRef(null);
+  const [isPushed, setIsPushed] = useState(false);
 
   // Effect to fetch data from API
   useEffect(() => {
@@ -172,10 +174,21 @@ const ParentComponent = () => {
       );
 
       if (response.status === 200) {
-        router.push("/assessment/bagian-1/assessment-3");
+        isPushed && router.push("/assessment/bagian-1/assessment-3");
       }
     } catch (error) {
       console.error("Error posting data:", error);
+    } finally {
+      setIsPushed(false);
+    }
+  };
+
+  const handleSidebarClick = () => {
+    if (formRef.current) {
+      setIsPushed(false);
+      formRef.current.dispatchEvent(
+        new Event("submit", { bubbles: true, cancelable: true })
+      );
     }
   };
 
@@ -189,7 +202,7 @@ const ParentComponent = () => {
 
   return (
     <div className="bg-[#F1F1F7] h-screen overflow-x-hidden">
-      <Sidebar activeId={2} />
+      <Sidebar activeId={2} onClick={handleSidebarClick} />
       <div className="w-full ml-[344px] space-y-6 p-4">
         <div className="bg-[#1446AB] p-4 rounded-2xl w-[1048px] h-[115px]">
           <p className="text-white font-extrabold text-xl">
@@ -203,8 +216,12 @@ const ParentComponent = () => {
         </div>
         <form
           // action=""
+          ref={formRef}
+          onSubmit={(e) => {
+            onSubmit(e);
+            setIsPushed(true);
+          }}
           className="flex flex-col gap-y-5"
-          onSubmit={onSubmit}
         >
           {isData.map((item, index) => (
             <div key={index} className="">

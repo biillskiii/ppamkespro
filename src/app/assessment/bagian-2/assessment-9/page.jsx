@@ -1,12 +1,12 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import Question from "@/components/question";
-import { useRouter } from "next/navigation";
 import Button from "@/components/button";
-import { jwtDecode } from "jwt-decode";
-import { FaSpinner } from "react-icons/fa";
+import Question from "@/components/question";
 import Sidebar from "@/components/sidebar";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { FaSpinner } from "react-icons/fa";
 
 const ParentComponent = () => {
   const [isDone, setIsDone] = useState(false);
@@ -16,6 +16,8 @@ const ParentComponent = () => {
   const [activeAccordion, setActiveAccordion] = useState(null);
   const [username, setUsername] = useState("");
   const router = useRouter();
+  const formRef = useRef(null);
+  const [isPushed, setIsPushed] = useState(false);
   const token =
     typeof window !== "undefined"
       ? sessionStorage.getItem("accessToken")
@@ -195,10 +197,21 @@ const ParentComponent = () => {
       if (response.status === 200) {
         // Clear all localStorage items
         localStorage.clear();
-        router.push("/data-diri/");
+        isPushed && router.push("/data-diri/");
       }
     } catch (error) {
       console.error("Error posting data:", error);
+    } finally {
+      setIsPushed(false);
+    }
+  };
+
+  const handleSidebarClick = () => {
+    if (formRef.current) {
+      setIsPushed(false);
+      formRef.current.dispatchEvent(
+        new Event("submit", { bubbles: true, cancelable: true })
+      );
     }
   };
 
@@ -212,7 +225,7 @@ const ParentComponent = () => {
 
   return (
     <div className="bg-[#F1F1F7] h-screen overflow-x-hidden">
-      <Sidebar activeId={1} />
+      <Sidebar activeId={1} onClick={handleSidebarClick} />
       <div className="w-full ml-[344px] space-y-6 p-4">
         <div className="bg-[#1446AB] p-4 rounded-2xl w-[1048px] h-[115px]">
           <p className="text-white font-extrabold text-xl">
@@ -228,7 +241,11 @@ const ParentComponent = () => {
         <form
           // action=""
           className="flex flex-col gap-y-5"
-          onSubmit={onSubmit}
+          onSubmit={(e) => {
+            onSubmit(e);
+            setIsPushed(true);
+          }}
+          ref={formRef}
         >
           {isData.map((item, index) => (
             <div key={index} className="">

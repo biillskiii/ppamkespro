@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Question from "@/components/question";
 import { useRouter } from "next/navigation";
 import Button from "@/components/button";
@@ -20,6 +20,9 @@ const ParentComponent = () => {
     typeof window !== "undefined"
       ? sessionStorage.getItem("accessToken")
       : null;
+
+  const formRef = useRef(null);
+  const [isPushed, setIsPushed] = useState(false);
 
   useEffect(() => {
     if (token) {
@@ -113,6 +116,15 @@ const ParentComponent = () => {
       }
     } catch (error) {
       console.error("Error posting data:", error);
+    }
+  };
+
+  const handleSidebarClick = () => {
+    if (formRef.current) {
+      setIsPushed(false);
+      formRef.current.dispatchEvent(
+        new Event("submit", { bubbles: true, cancelable: true })
+      );
     }
   };
 
@@ -247,10 +259,12 @@ const ParentComponent = () => {
       );
 
       if (response.status === 200) {
-        router.push("/assessment/bagian-2/assessment-3");
+        isPushed && router.push("/assessment/bagian-2/assessment-3");
       }
     } catch (error) {
       console.error("Error posting data:", error);
+    } finally {
+      setIsPushed(false);
     }
   };
 
@@ -264,7 +278,7 @@ const ParentComponent = () => {
 
   return (
     <div className="bg-[#F1F1F7] h-screen overflow-x-hidden">
-      <Sidebar activeId={6} />
+      <Sidebar activeId={6} onClick={handleSidebarClick} />
       <div className="w-full ml-[344px] space-y-6 p-4">
         <div className="bg-[#1446AB] p-4 rounded-2xl w-[1048px] h-[115px]">
           <p className="text-white font-extrabold text-xl">
@@ -278,9 +292,12 @@ const ParentComponent = () => {
           </p>
         </div>
         <form
-          // action=""
+          ref={formRef}
+          onSubmit={(e) => {
+            onSubmit(e);
+            setIsPushed(true);
+          }}
           className="flex flex-col gap-y-5"
-          onSubmit={onSubmit}
         >
           {isData.map((item, index) => (
             <div key={index} className="">
