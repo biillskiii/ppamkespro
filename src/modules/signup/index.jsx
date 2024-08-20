@@ -80,7 +80,8 @@ const Signup = () => {
     <div className="min-h-screen flex">
       <ToastContainer />
       {/* Left side with image background */}
-      <div className="w-[60%] relative">
+
+      <div className="w-[55%] relative">
         <div className="absolute top-0 right-0 bottom-0 left-0 -z-10">
           <Image
             src={Frame}
@@ -89,25 +90,25 @@ const Signup = () => {
             objectFit="cover"
           />
         </div>
+        <div className="flex justify-start pl-8 mt-10  items-center gap-x-3 lg:gap-x-5 z-50">
+          <Image src={Logo} alt="Logo" className="w-8 h-8 lg:w-10 lg:h-10" />
+          <p className="text-white font-semibold text-xs lg:text-base">
+            Assesmen <br /> Kesiapsiagaan
+          </p>
+        </div>
 
-        <div className="relative flex flex-col justify-center items-center min-h-screen z-10">
+        <div className="relative flex flex-col justify-center items-center min-h-screen -mt-24 z-10">
           <div className="w-full flex flex-col items-start justify-start">
-            <div className="flex justify-start pl-8 -mt-14 items-center gap-x-5">
-              <Image src={Logo} alt="Logo" width={40} height={40} />
-              <p className="text-white font-semibold text-base">
-                Assesment <br /> Kesiapsiagaan
-              </p>
-            </div>
             <div className="px-10 mx-auto space-y-12 flex flex-col mt-20 items-center z-20">
               <Image
                 src={IconLogin}
                 alt="Login Image"
-                width={450}
-                className=""
+                className="w-[50vw] max-w-[250px] lg:max-w-[400px] max-h-[50vh] object-contain"
               />
-              <p className=" text-center font-bold text-white text-4xl">
+
+              <p className="text-center font-bold text-white text-xs sm:text-sm md:text-lg lg:text-4xl ">
                 Instrumen Asessmen <br />
-                Kesiapsiagaan{" "}
+                Kesiapsiagaan
               </p>
             </div>
           </div>
@@ -115,7 +116,7 @@ const Signup = () => {
       </div>
 
       {/* Right side */}
-      <div className="w-[40%] bg-white flex flex-col justify-center items-center">
+      <div className="w-[40%] px-10 bg-white flex flex-col justify-center items-center">
         <div className="max-w-lg w-full">
           <div className="mb-6">
             <h2 className="text-2xl font-bold ">Daftar Akun</h2>
@@ -156,12 +157,12 @@ const Signup = () => {
               />
             </div>
 
-            <div className="flex items-center gap-x-12">
+            <div className="flex flex-wrap items-center gap-x-7 lg:gap-x-12">
               <div className="mb-6">
                 <PasswordInput
                   label={"Buat kata sandi"}
                   name={"password"}
-                  placeholder={"8 karakter di awali huruf besar"}
+                  placeholder={"Minimal 6 karakter"}
                   value={formData.password}
                   onChange={handleChange}
                 />
@@ -170,7 +171,7 @@ const Signup = () => {
                 <PasswordInput
                   label={"Masukan ulang kata sandi"}
                   name={"confirmPassword"}
-                  placeholder={"8 karakter di awali huruf besar"}
+                  placeholder={"Minimal 6 karakter"}
                   value={formData.confirmPassword}
                   onChange={handleChange}
                 />

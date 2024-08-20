@@ -88,7 +88,7 @@ const Viewer = () => {
               comment: subItem.comment || "-",
             }));
             subedArray.push(...subArr);
-            console.log(subedArray)
+            console.log(subedArray);
             return subedArray;
           }
           return [

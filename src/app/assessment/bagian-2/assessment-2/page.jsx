@@ -35,7 +35,7 @@ const ParentComponent = () => {
         console.error("Failed to decode token:", error);
       }
     } else {
-      router.push("/login");
+      router.push("/");
     }
   }, [router]);
   useEffect(() => {

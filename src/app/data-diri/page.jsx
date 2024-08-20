@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import { IoLogOutOutline } from "react-icons/io5";
 import Button from "@/components/button";
+
 const Viewer = () => {
   const router = useRouter();
   const [username, setUsername] = useState("");
@@ -16,7 +17,9 @@ const Viewer = () => {
   const [isLogin, setIsLogin] = useState(false);
 
   useEffect(() => {
+    console.log("Component mounted");
     const token = sessionStorage.getItem("accessToken");
+    console.log("Token:", token);
 
     if (token) {
       try {
@@ -34,6 +37,7 @@ const Viewer = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log("Fetching data");
         const token = sessionStorage.getItem("accessToken");
         const response = await fetch(
           "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
@@ -47,7 +51,7 @@ const Viewer = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const result = await response.json();
-        console.log("Fetched Data:", result); // Debugging
+        console.log("Fetched Data:", result);
         const { data } = result;
 
         if (!data || !Array.isArray(data)) {
@@ -55,21 +59,18 @@ const Viewer = () => {
           return;
         }
 
-        // Filter out items with number greater than 0
         const filteredData = data.filter((item) => item.number <= 0);
 
         const formattedData = filteredData.map((item) => {
-          // const no = item.number === 0 ? item.number : "N/A";
           const question = item.question || "-";
           return {
-            // id: no,
             question: question,
             value: item.value || "-",
             comment: item.comment || "-",
           };
         });
 
-        console.log("Formatted Data:", formattedData); // Debugging
+        console.log("Formatted Data:", formattedData);
         setTableData(formattedData);
       } catch (error) {
         console.error("Failed to fetch data:", error);
@@ -84,9 +85,12 @@ const Viewer = () => {
   const handleOpenLogout = () => {
     setIsOpen(!isOpen);
   };
-  const viewResult = () => {
-    router.push("/data-diri/viewer");
+
+  const handleResult = () => {
+    router.push("/viewer");
+    console.log("Button clicked");
   };
+
   const handleLogout = () => {
     setIsLogin(false);
     sessionStorage.removeItem("accessToken");
@@ -94,7 +98,6 @@ const Viewer = () => {
   };
 
   const columnConfig = [
-    // { header: "No.", accessor: "id" },
     { accessor: "question" },
     { accessor: "value" },
     { accessor: "comment" },
@@ -122,7 +125,7 @@ const Viewer = () => {
           <div className="w-32 mx-auto z-52">
             <Button
               label={"Lihat Hasil"}
-              onClick={viewResult}
+              onClick={handleResult}
               variant="primary"
             />
           </div>

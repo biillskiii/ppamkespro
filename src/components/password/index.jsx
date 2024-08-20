@@ -8,7 +8,7 @@ const PasswordInput = ({ name, placeholder, onChange, value, label }) => {
   return (
     <div>
       <label htmlFor="">{label}</label>
-      <div className="flex items-center border p-2 rounded-md w-full">
+      <div className="flex items-center border p-2 rounded-md w-auto">
         <input
           type={showPassword ? "text" : "password"}
           id={name}

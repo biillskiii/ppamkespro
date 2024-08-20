@@ -7,7 +7,7 @@ import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { FaSpinner } from "react-icons/fa";
-
+import Link from "next/link";
 const ParentComponent = () => {
   const [isDone, setIsDone] = useState(false);
   const [answers, setAnswers] = useState({});
@@ -34,7 +34,7 @@ const ParentComponent = () => {
         console.error("Failed to decode token:", error);
       }
     } else {
-      router.push("/login");
+      router.push("/");
     }
   }, [router]);
   useEffect(() => {
@@ -71,9 +71,9 @@ const ParentComponent = () => {
         setLoading(false);
       });
   }, []);
-  const toggleAccordion = (section) => {
-    setActiveAccordion(activeAccordion === section ? null : section);
-  };
+  // const toggleAccordion = (section) => {
+  //   setActiveAccordion(activeAccordion === section ? null : section);
+  // };
 
   useEffect(() => {
     if (isData.length > 0) {
@@ -95,28 +95,28 @@ const ParentComponent = () => {
     }));
   };
 
-  const handleNext = async () => {
-    try {
-      const response = await fetch(
-        "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(answers),
-        }
-      );
+  // const handleNext = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify(answers),
+  //       }
+  //     );
 
-      if (response.ok) {
-        router.push("/assessment/bagian-1/assessment2");
-      } else {
-        console.error("Error posting data:", response.statusText);
-      }
-    } catch (error) {
-      console.error("Error posting data:", error);
-    }
-  };
+  //     if (response.ok) {
+  //       router.push("/assessment/bagian-1/assessment2");
+  //     } else {
+  //       console.error("Error posting data:", response.statusText);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error posting data:", error);
+  //   }
+  // };
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -197,7 +197,8 @@ const ParentComponent = () => {
       if (response.status === 200) {
         // Clear all localStorage items
         localStorage.clear();
-        isPushed && router.push("/data-diri/");
+        setIsPushed(true);
+        router.push("/data-diri");
       }
     } catch (error) {
       console.error("Error posting data:", error);
@@ -239,8 +240,6 @@ const ParentComponent = () => {
           </p>
         </div>
         <form
-          // action=""
-          className="flex flex-col gap-y-5"
           onSubmit={(e) => {
             onSubmit(e);
             setIsPushed(true);
@@ -248,7 +247,7 @@ const ParentComponent = () => {
           ref={formRef}
         >
           {isData.map((item, index) => (
-            <div key={index} className="">
+            <div key={index}>
               <Question
                 type={item.type}
                 label={item.question}
@@ -265,7 +264,7 @@ const ParentComponent = () => {
                 placeholder="Komentar/Referensi/Rincian..."
                 onChange={(name, value) => handleInputChange(name, value)}
                 subname={item.subname}
-                subquestions={item.sub || []} // Pass subquestions if any
+                subquestions={item.sub || []}
               />
             </div>
           ))}
@@ -280,11 +279,9 @@ const ParentComponent = () => {
             />
             <Button
               label={"Submit"}
-              // onClick={handleNext}
               withIcon={"right"}
-              // variant={!isDone && "disabeled"}
-              // disabled={!isDone}
               type="submit"
+              // disabled={!isDone}
             />
           </div>
         </form>

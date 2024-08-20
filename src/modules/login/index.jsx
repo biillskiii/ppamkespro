@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import IconLogin from "../../../public/assets/test-icon.png";
 import Logo from "../../../public/assets/logo.png";
+import LogoUnnes from "../../../public/assets/logo-unnes.png";
 import Frame from "../../../public/assets/frame-3.png";
 import Button from "@/components/button";
 import TextInput from "@/components/input-login";
@@ -26,7 +27,10 @@ const Login = () => {
 
     // Validate inputs
     if (!username) {
-      setErrors((prev) => ({ ...prev, username: "Username is required" }));
+      setErrors((prev) => ({
+        ...prev,
+        username: "Username is required",
+      }));
       toast.error("Username is required");
       isValid = false;
     }
@@ -77,10 +81,10 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex">
+    <div className="h-screen flex overflow-hidden">
       <ToastContainer />
 
-      <div className="w-[60%] relative">
+      <div className="w-[55%] relative">
         <div className="absolute top-0 right-0 bottom-0 left-0 -z-10">
           <Image
             src={Frame}
@@ -90,32 +94,41 @@ const Login = () => {
           />
         </div>
 
-        <div className="relative flex flex-col justify-center items-center min-h-screen z-10">
-          <div className="w-full flex flex-col items-start justify-start ">
-            <div className="flex justify-start pl-8 -mt-14 items-center gap-x-5">
-              <Image src={Logo} alt="Logo" width={40} height={40} />
-              <p className="text-white font-semibold text-base">
-                Assesment <br /> Kesiapsiagaan
-              </p>
-            </div>
+        <div className="relative flex flex-col justify-center items-center min-h-screen -mt-10 z-10">
+          <div className="w-full flex flex-col items-start justify-start">
             <div className="px-10 mx-auto space-y-12 flex flex-col mt-20 items-center z-20">
               <Image
                 src={IconLogin}
                 alt="Login Image"
-                width={450}
-                className=""
+                className="w-[50vw] max-w-[250px] lg:max-w-[400px] max-h-[50vh] object-contain"
               />
-              <p className=" text-center font-bold text-white text-4xl">
+
+              <p className="text-center font-bold text-white text-xs sm:text-sm md:text-lg lg:text-4xl ">
                 Instrumen Asessmen <br />
-                Kesiapsiagaan{" "}
+                Kesiapsiagaan
               </p>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="w-[40%] bg-white flex flex-col justify-center items-center">
-        <div className="max-w-lg w-full">
+      <div className="w-[40%] bg-white flex flex-col justify-start items-center px-10">
+        <div className="flex justify-center bg-white shadow-lg px-5 rounded-lg py-2 mt-40  items-start gap-x-3 lg:gap-x-5 z-50">
+          <div className="bg-white shadow-lg rounded-full p-1">
+            <Image src={Logo} alt="Logo" className="w-8 h-8 lg:w-14 lg:h-14" />
+          </div>
+          <div className="bg-white rounded-full px-3 py-1">
+            <Image
+              src={LogoUnnes}
+              alt="Logo"
+              className="w-8 h-8 lg:w-10 lg:h-14 "
+            />
+          </div>
+          {/* <p className="text-white font-semibold text-xs lg:text-base">
+            Assesmen <br /> Kesiapsiagaan
+          </p> */}
+        </div>
+        <div className="max-w-lg w-full mt-10">
           <div className="mb-6">
             <h2 className="text-2xl font-bold ">Masuk Akun</h2>
             <p className="text-start text-base">
@@ -128,7 +141,7 @@ const Login = () => {
           <form onSubmit={handleLogin}>
             <div className="mb-4">
               <TextInput
-                label={"Masukan nama pengguna atau email pengguna"}
+                label={"Masukan nama pengguna"}
                 name={"username"}
                 placeholder={"Misal: John Doe atau johndoe@xyz.com"}
                 value={username}

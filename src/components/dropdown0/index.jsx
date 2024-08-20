@@ -51,7 +51,7 @@ const DropdownInput = ({
       {isOpen && (
         <ul
           className={clsx(
-            "absolute top-32 border border-gray-200 rounded-md bg-white w-full z-10",
+            "absolute top-10 border border-gray-200 rounded-md bg-white w-full z-10",
             "max-h-60 overflow-y-auto"
           )}
         >
@@ -62,7 +62,8 @@ const DropdownInput = ({
               className={clsx(
                 "px-4 py-2  cursor-pointer",
                 "hover:bg-abu", // Set hover background color to bg-abu
-                "text-base"
+                "text-base",
+                "hover:text-white"
               )}
             >
               {option.value}

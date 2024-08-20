@@ -2,10 +2,12 @@
 import React from "react";
 import clsx from "clsx";
 
-const TextInput = ({ type = "text", name, placeholder, label, value, onChange }) => {
+const TextInput = ({ type, name, placeholder, label, value, onChange }) => {
   return (
     <div className="w-full mb-4">
-      <label htmlFor={name} className="block mb-2">{label}</label>
+      <label htmlFor={name} className="block mb-2">
+        {label}
+      </label>
       <input
         type={type}
         id={name}

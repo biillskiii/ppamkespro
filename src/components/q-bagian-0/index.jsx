@@ -75,9 +75,9 @@ const Question0 = ({
               name={name}
               placeholder={placeholder}
               value={answer}
-              onChange={(e) => handleAnswerChange(e.target.value)}
-              selectedValue={selectedValue}
-              setSelectedValue={setSelectedValue}
+              onChange={(e) => handleAnswerChange(e.target.value)} // Pastikan handleAnswerChange menangani perubahan
+              selectedValue={selectedValue} // Pastikan Anda mengelola selectedValue di parent component
+              setSelectedValue={setSelectedValue} // Pastikan setSelectedValue tersedia
             />
             <TextInput
               type="text"
