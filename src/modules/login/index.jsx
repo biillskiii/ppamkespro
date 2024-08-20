@@ -113,22 +113,19 @@ const Login = () => {
       </div>
 
       <div className="w-[40%] bg-white flex flex-col justify-center items-center px-10">
-        <div className="flex justify-center bg-white shadow-lg px-5 rounded-lg py-2   items-start gap-x-3 lg:gap-x-5 z-50">
-          <div className="bg-white rounded-full p-1">
-            <Image src={Logo} alt="Logo" className="w-8 h-8 lg:w-14 lg:h-14" />
-          </div>
-          <div className="bg-white rounded-full px-3 py-1">
-            <Image
-              src={LogoUnnes}
-              alt="Logo"
-              className="w-8 h-8 lg:w-10 lg:h-14 "
-            />
-          </div>
+        <div className="flex justify-center  bg-white shadow-lg px-5 rounded-lg py-2 -mt-16   items-center gap-x-3 lg:gap-x-5 z-50">
+          <Image src={Logo} alt="Logo" className="w-8 h-8 lg:w-12 lg:h-12" />
+          <Image
+            src={LogoUnnes}
+            alt="Logo"
+            className="w-8 h-8 lg:w-10 lg:h-14 "
+          />
+
           {/* <p className="text-white font-semibold text-xs lg:text-base">
             Assesmen <br /> Kesiapsiagaan
           </p> */}
         </div>
-        <div className="max-w-lg w-full mt-10">
+        <div className="max-w-lg w-full mt-14">
           <div className="mb-6">
             <h2 className="text-2xl font-bold ">Masuk Akun</h2>
             <p className="text-start text-base">
