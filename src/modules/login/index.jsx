@@ -112,8 +112,8 @@ const Login = () => {
         </div>
       </div>
 
-      <div className="w-[40%] bg-white flex flex-col justify-start items-center px-10">
-        <div className="flex justify-center bg-white shadow-lg px-5 rounded-lg py-2 mt-40  items-start gap-x-3 lg:gap-x-5 z-50">
+      <div className="w-[40%] bg-white flex flex-col justify-center items-center px-10">
+        <div className="flex justify-center bg-white shadow-lg px-5 rounded-lg py-2   items-start gap-x-3 lg:gap-x-5 z-50">
           <div className="bg-white shadow-lg rounded-full p-1">
             <Image src={Logo} alt="Logo" className="w-8 h-8 lg:w-14 lg:h-14" />
           </div>
