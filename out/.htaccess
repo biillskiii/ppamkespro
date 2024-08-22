@@ -1,0 +1,7 @@
+RewriteEngine On
+RewriteRule ^data-diri/?$ /data-diri.html [L]
+RewriteRule ^viewer/?$ /viewer.html [L]
+RewriteRule ^signup/?$ /signup.html [L]
+RewriteRule ^assessment/?$ /assessment.html [L]
+# Use custom 404 page
+ErrorDocument 404 /404.html
