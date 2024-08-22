@@ -20,7 +20,7 @@ const ParentComponent = () => {
     typeof window !== "undefined"
       ? sessionStorage.getItem("accessToken")
       : null;
-
+  const [isPushed, setIsPushed] = useState(false);
   useEffect(() => {
     if (token) {
       try {
@@ -120,6 +120,7 @@ const ParentComponent = () => {
     e.preventDefault();
 
     try {
+      setIsPushed(true);
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData.entries());
 
@@ -250,6 +251,7 @@ const ParentComponent = () => {
         router.push("/assessment/bagian-2/assessment-4");
       }
     } catch (error) {
+      setIsPushed(false);
       console.error("Error posting data:", error);
     }
   };

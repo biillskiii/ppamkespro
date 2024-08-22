@@ -133,6 +133,7 @@ const Bagian0 = () => {
     e.preventDefault();
 
     try {
+      setIsPushed(true);
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData.entries());
 
@@ -170,7 +171,7 @@ const Bagian0 = () => {
       );
 
       if (response.status === 200) {
-        isPushed && router.push("/assessment/bagian-1");
+        router.push("/assessment/bagian-1");
       }
     } catch (error) {
       console.error("Error posting data:", error);

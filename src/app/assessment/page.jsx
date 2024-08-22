@@ -14,6 +14,7 @@ const Assessment = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const [username, setUsername] = useState("");
+  const [instansi, setInstansi] = useState("");
   const [status, setStatus] = useState("");
   const router = useRouter();
 
@@ -27,6 +28,7 @@ const Assessment = () => {
         const decodedToken = jwtDecode(token);
         console.log("Decoded Token:", decodedToken); // Debugging line
         setUsername(decodedToken.username || "");
+        setInstansi(decodedToken.institute || "");
         setStatus(decodedToken.status || "");
       } catch (error) {
         console.error("Failed to decode token:", error);
@@ -55,7 +57,12 @@ const Assessment = () => {
 
   return (
     <div>
-      <Navbar username={username} status={status} onClick={handleOpenLogout} />{" "}
+      <Navbar
+        username={username}
+        institute={instansi}
+        status={status}
+        onClick={handleOpenLogout}
+      />{" "}
       {isOpen && (
         <div className="absolute top-20 right-[218px] bg-merah rounded-b-lg p-4 py-4 w-[176px] ">
           <p

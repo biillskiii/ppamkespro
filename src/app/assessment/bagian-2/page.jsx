@@ -242,6 +242,7 @@ const ParentComponent = () => {
               <Question
                 type={item.type}
                 label={item.question}
+                no={item.number}
                 name={`input-${item.number}`}
                 options={
                   item.choice

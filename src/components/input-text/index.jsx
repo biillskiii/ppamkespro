@@ -20,7 +20,7 @@ const TextInput = ({ type, name, placeholder, label, suggestions = [] }) => {
   };
 
   return (
-    <div className="w-full mb-4">
+    <div className="w-full">
       {label && (
         <label htmlFor={name} className="block mb-2 text-gray-700">
           {label}

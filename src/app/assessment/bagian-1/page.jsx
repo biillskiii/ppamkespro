@@ -124,6 +124,7 @@ const ParentComponent = () => {
     e.preventDefault();
 
     try {
+      setIsPushed(true);
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData.entries());
 
@@ -179,7 +180,7 @@ const ParentComponent = () => {
       );
 
       if (response.status === 200) {
-        isPushed && router.push("/assessment/bagian-1/assessment-2");
+        router.push("/assessment/bagian-1/assessment-2");
       }
     } catch (error) {
       console.error("Error posting data:", error);
@@ -257,7 +258,7 @@ const ParentComponent = () => {
               onClick={handleBack}
               withIcon={"left"}
               variant="secondary"
-              type="button"
+              // type="button"
             />
             <Button
               label={"Berikutnya"}

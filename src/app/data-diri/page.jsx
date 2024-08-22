@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Navbar from "@/components/navbar";
-import Table from "@/components/table";
+import Table from "@/components/table-data";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import { IoLogOutOutline } from "react-icons/io5";
@@ -10,21 +10,20 @@ import Button from "@/components/button";
 const Viewer = () => {
   const router = useRouter();
   const [username, setUsername] = useState("");
+  const [instansi, setInstansi] = useState("");
   const [status, setStatus] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isLogin, setIsLogin] = useState(false);
 
   useEffect(() => {
-    console.log("Component mounted");
     const token = sessionStorage.getItem("accessToken");
-    console.log("Token:", token);
 
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
         setUsername(decodedToken.username || "");
+        setInstansi(decodedToken.institute || "");
         setStatus(decodedToken.status || "");
       } catch (error) {
         console.error("Failed to decode token:", error);
@@ -37,7 +36,6 @@ const Viewer = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log("Fetching data");
         const token = sessionStorage.getItem("accessToken");
         const response = await fetch(
           "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
@@ -51,7 +49,6 @@ const Viewer = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const result = await response.json();
-        console.log("Fetched Data:", result);
         const { data } = result;
 
         if (!data || !Array.isArray(data)) {
@@ -59,18 +56,37 @@ const Viewer = () => {
           return;
         }
 
-        const filteredData = data.filter((item) => item.number <= 0);
+        // Mengatur data berdasarkan ID question
+        const questions = {
+          196: { question: "", value: "", comment: "" },
+          197: { question: "", value: "", comment: "" },
+          198: { question: "", value: "", comment: "" },
+          199: { question: "", value: "", comment: "" },
+        };
 
-        const formattedData = filteredData.map((item) => {
-          const question = item.question || "-";
-          return {
-            question: question,
-            value: item.value || "-",
-            comment: item.comment || "-",
-          };
+        data.forEach((item) => {
+          if (questions[item.id]) {
+            questions[item.id].question = item.question || "";
+            questions[item.id].value = item.value || "";
+            questions[item.id].comment = item.comment || "";
+          }
         });
 
-        console.log("Formatted Data:", formattedData);
+        const formattedData = [
+          {
+            header1: questions[196].question,
+            header2: questions[197].question,
+            header3: questions[198].question,
+            header4: questions[199].question,
+          },
+          {
+            col5: `${questions[196].value} ${questions[196].comment}`,
+            col6: `${questions[197].value}  ${questions[197].comment}`,
+            col7: `${questions[198].value}  ${questions[198].comment}`,
+            col8: `${questions[199].value}  ${questions[199].comment}`,
+          },
+        ];
+
         setTableData(formattedData);
       } catch (error) {
         console.error("Failed to fetch data:", error);
@@ -88,24 +104,28 @@ const Viewer = () => {
 
   const handleResult = () => {
     router.push("/viewer");
-    console.log("Button clicked");
   };
 
   const handleLogout = () => {
-    setIsLogin(false);
     sessionStorage.removeItem("accessToken");
     router.push("/");
   };
 
   const columnConfig = [
-    { accessor: "question" },
-    { accessor: "value" },
-    { accessor: "comment" },
+    { header: "header1", accessor: "col5" },
+    { header: "header2", accessor: "col6" },
+    { header: "header3", accessor: "col7" },
+    { header: "header4", accessor: "col8" },
   ];
 
   return (
     <div>
-      <Navbar username={username} status={status} onClick={handleOpenLogout} />
+      <Navbar
+        username={username}
+        institute={instansi}
+        status={status}
+        onClick={handleOpenLogout}
+      />
       {isOpen && (
         <div className="absolute top-20 z-20 right-[218px] bg-red-500 rounded-b-lg p-4 py-4 w-[176px] ">
           <p
@@ -121,6 +141,9 @@ const Viewer = () => {
         <p>Loading...</p>
       ) : (
         <div>
+          <h1 className="text-3xl mt-14 font-bold text-center">
+            Data, <span>{username}</span> <span>{instansi}</span>
+          </h1>
           <Table columns={columnConfig} data={tableData} />
           <div className="w-32 mx-auto z-52">
             <Button

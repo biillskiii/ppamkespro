@@ -93,8 +93,19 @@ const Login = () => {
             objectFit="cover"
           />
         </div>
+        <div className="flex justify-center w-36 ml-5  bg-white shadow-xl px- rounded-2xl py-2 mt-10 items-center gap-x-3 lg:gap-x-5 z-50">
+          <Image src={Logo} alt="Logo" className="w-8 h-8 lg:w-12 lg:h-12" />
+          <Image
+            src={LogoUnnes}
+            alt="Logo"
+            className="w-8 h-8 lg:w-10 lg:h-14 "
+          />
 
-        <div className="relative flex flex-col justify-center items-center min-h-screen -mt-10 z-10">
+          {/* <p className="text-white font-semibold text-xs lg:text-base">
+            Assesmen <br /> Kesiapsiagaan
+          </p> */}
+        </div>
+        <div className="relative flex flex-col justify-center items-center min-h-screen -mt-32 z-10">
           <div className="w-full flex flex-col items-start justify-start">
             <div className="px-10 mx-auto space-y-12 flex flex-col mt-20 items-center z-20">
               <Image
@@ -113,18 +124,6 @@ const Login = () => {
       </div>
 
       <div className="w-[40%] bg-white flex flex-col justify-center items-center px-10">
-        <div className="flex justify-center  bg-white shadow-lg px-5 rounded-lg py-2 -mt-16   items-center gap-x-3 lg:gap-x-5 z-50">
-          <Image src={Logo} alt="Logo" className="w-8 h-8 lg:w-12 lg:h-12" />
-          <Image
-            src={LogoUnnes}
-            alt="Logo"
-            className="w-8 h-8 lg:w-10 lg:h-14 "
-          />
-
-          {/* <p className="text-white font-semibold text-xs lg:text-base">
-            Assesmen <br /> Kesiapsiagaan
-          </p> */}
-        </div>
         <div className="max-w-lg w-full mt-14">
           <div className="mb-6">
             <h2 className="text-2xl font-bold ">Masuk Akun</h2>

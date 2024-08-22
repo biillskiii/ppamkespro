@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import IconLogin from "../../../public/assets/test-icon.png";
 import Logo from "../../../public/assets/logo.png";
+import LogoUnnes from "../../../public/assets/logo-unnes.png";
 import Frame from "../../../public/assets/frame-3.png";
 import TextInput from "@/components/input-login";
 import PasswordInput from "@/components/password";
@@ -90,11 +91,17 @@ const Signup = () => {
             objectFit="cover"
           />
         </div>
-        <div className="flex justify-start pl-8 mt-10  items-center gap-x-3 lg:gap-x-5 z-50">
-          <Image src={Logo} alt="Logo" className="w-8 h-8 lg:w-10 lg:h-10" />
-          <p className="text-white font-semibold text-xs lg:text-base">
+        <div className="flex justify-center w-28 xl:w-36 ml-5  bg-white shadow-xl rounded-lg py-2 mt-10 items-center gap-x-3 lg:gap-x-5 z-50">
+          <Image src={Logo} alt="Logo" className="w-8 h-8 xl:w-12 xl:h-12" />
+          <Image
+            src={LogoUnnes}
+            alt="Logo"
+            className="w-8 h-11 xl:w-10 xl:h-14 "
+          />
+
+          {/* <p className="text-white font-semibold text-xs lg:text-base">
             Assesmen <br /> Kesiapsiagaan
-          </p>
+          </p> */}
         </div>
 
         <div className="relative flex flex-col justify-center items-center min-h-screen -mt-24 z-10">
@@ -157,8 +164,8 @@ const Signup = () => {
               />
             </div>
 
-            <div className="flex flex-wrap items-center gap-x-7 lg:gap-x-12">
-              <div className="mb-6">
+            <div className="flex flex-col xl:flex-row items-center gap-x-7 xl:gap-x-12">
+              <div className="mb-6 w-full">
                 <PasswordInput
                   label={"Buat kata sandi"}
                   name={"password"}
@@ -167,7 +174,7 @@ const Signup = () => {
                   onChange={handleChange}
                 />
               </div>
-              <div className="mb-6">
+              <div className="mb-6 w-full">
                 <PasswordInput
                   label={"Masukan ulang kata sandi"}
                   name={"confirmPassword"}

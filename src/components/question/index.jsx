@@ -97,12 +97,12 @@ const Question = ({
         )}
 
         {type === "sub" && (
-          <div className="w-full flex flex-col gap-y-4">
+          <div className="w-full flex flex-col gap-y-4 ">
             <div className="flex flex-col gap-y-2">
               {subquestions?.map((subquestion) => (
                 <div
                   key={subquestion.id}
-                  className="w-full flex flex-col items-start gap-x-2"
+                  className="w-full border border-border px-3 pt-2 pb-5 rounded-lg flex flex-col items-start gap-x-2"
                 >
                   <label
                     htmlFor={`${name}_sub_${subquestion.id}`}
@@ -111,7 +111,7 @@ const Question = ({
                     <li>{subquestion.question}</li>
                   </label>
                   {subquestion.type === "dropdown" && (
-                    <div className="flex items-center gap-x-5 w-full">
+                    <div className="flex flex-row items-center gap-x-5 w-full">
                       <DropdownInput
                         options={subquestion.choice?.map((choice) => ({
                           value: choice.value,
