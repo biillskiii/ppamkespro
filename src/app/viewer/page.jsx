@@ -14,7 +14,7 @@ const Viewer = () => {
   const [tableData, setTableData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isLogin, setIsLogin] = useState(false);
-
+  const [instansi, setInstansi] = useState("");
   useEffect(() => {
     const token = sessionStorage.getItem("accessToken");
 
@@ -22,6 +22,7 @@ const Viewer = () => {
       try {
         const decodedToken = jwtDecode(token);
         setUsername(decodedToken.username || "");
+        setInstansi(decodedToken.institute || "");
         setStatus(decodedToken.status || "");
       } catch (error) {
         console.error("Failed to decode token:", error);
@@ -133,7 +134,12 @@ const Viewer = () => {
 
   return (
     <div className="-z-50">
-      <Navbar username={username} status={status} onClick={handleOpenLogout} />
+      <Navbar
+        username={username}
+        status={status}
+        institute={instansi}
+        onClick={handleOpenLogout}
+      />
       {isOpen && (
         <div className="absolute top-20 z-20 right-[218px] bg-red-500 rounded-b-lg p-4 py-4 w-[176px] ">
           <p
