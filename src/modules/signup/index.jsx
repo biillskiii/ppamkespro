@@ -91,12 +91,12 @@ const Signup = () => {
             objectFit="cover"
           />
         </div>
-        <div className="flex justify-center w-28 xl:w-36 ml-5  bg-white shadow-xl rounded-lg py-2 mt-10 items-center gap-x-3 lg:gap-x-5 z-50">
-          <Image src={Logo} alt="Logo" className="w-8 h-8 xl:w-12 xl:h-12" />
+        <div className="flex justify-center w-28 ml-[350px]  bg-white shadow-xl px- rounded-2xl py-2 mt-10 items-center  lg:gap-x-5 z-50">
+          <Image src={Logo} alt="Logo" className="w-8 h-8 lg:w-9 lg:h-9" />
           <Image
             src={LogoUnnes}
             alt="Logo"
-            className="w-8 h-11 xl:w-10 xl:h-14 "
+            className="w-5 -ml-[8px]  h-4 lg:w-[30px] lg:h-[42px] "
           />
 
           {/* <p className="text-white font-semibold text-xs lg:text-base">

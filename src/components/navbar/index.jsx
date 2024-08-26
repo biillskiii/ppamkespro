@@ -10,9 +10,13 @@ const Navbar = ({ username, onClick, status, institute }) => {
   return (
     <div className="bg-[#1446AB] w-full px-12 text-white h-[110px] flex justify-between">
       <div className="flex items-center gap-x-2">
-        <div className="bg-white px-4 py-2 rounded-lg flex items-center gap-x-2">
-          <Image src={Logo} alt="logo" width={32} />
-          <Image src={LogoUnnes} alt="logo-unnes" width={32} />
+        <div className="px-4 py-2 rounded-lg flex items-center gap-x-2">
+          <div className="bg-white rounded-full w-10 h-10 flex justify-center items-center">
+            <Image src={Logo} alt="logo" width={32} />
+          </div>
+          <div className="bg-white rounded-full w-10 h-10 flex justify-center items-center p-2">
+            <Image src={LogoUnnes} alt="logo-unnes" width={32} />
+          </div>
         </div>
         <p className="text-base font-medium">Assessmen Kesiapsiagaan</p>
       </div>

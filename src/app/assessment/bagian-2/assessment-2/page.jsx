@@ -72,9 +72,6 @@ const ParentComponent = () => {
         setLoading(false);
       });
   }, []);
-  const toggleAccordion = (section) => {
-    setActiveAccordion(activeAccordion === section ? null : section);
-  };
 
   useEffect(() => {
     if (isData.length > 0) {
@@ -94,29 +91,6 @@ const ParentComponent = () => {
       ...prevAnswers,
       [name]: value,
     }));
-  };
-
-  const handleNext = async () => {
-    try {
-      const response = await fetch(
-        "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(answers),
-        }
-      );
-
-      if (response.ok) {
-        router.push("/assessment/bagian-1/assessment2");
-      } else {
-        console.error("Error posting data:", response.statusText);
-      }
-    } catch (error) {
-      console.error("Error posting data:", error);
-    }
   };
 
   const handleSidebarClick = () => {

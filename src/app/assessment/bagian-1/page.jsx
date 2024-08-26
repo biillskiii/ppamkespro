@@ -12,7 +12,7 @@ const ParentComponent = () => {
   const [isDone, setIsDone] = useState(false);
   const [answers, setAnswers] = useState({});
   const [isData, setData] = useState([]);
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(false); 
   const [activeAccordion, setActiveAccordion] = useState(null);
   const [username, setUsername] = useState("");
   const router = useRouter();
@@ -40,7 +40,7 @@ const ParentComponent = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch("https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/instrument")
+    fetch("http://103.123.63.7/api/instrument")
       .then((res) => {
         if (!res.ok) {
           throw new Error(`Network response was not ok: ${res.statusText}`);
@@ -174,7 +174,7 @@ const ParentComponent = () => {
       ];
 
       const response = await axios.post(
-        "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
+        "http://103.123.63.7/api/response",
         mapData,
         { headers: { Authorization: `Bearer ${token}` } }
       );

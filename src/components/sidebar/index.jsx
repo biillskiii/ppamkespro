@@ -117,18 +117,17 @@ const Assesstment = ({
     <button
       className="flex flex-col items-start h-8 w-full"
       onClick={() => {
-        handleNavigation(href, title === "Bagian I" ? title : null);
+        handleNavigation(href, title);
         onClick();
       }}
     >
-      <a
-        href="#"
+      <span
         className={`mb-2 ${
           isHighlighted ? "bg-white text-accent" : "bg-white text-accent"
         } rounded-lg py-2 text-start pl-2 font-semibold w-full`}
       >
         {title}
-      </a>
+      </span>
     </button>
     <p className="text-xs text-accent pl-2 pb-3">{desc}</p>
   </div>
@@ -155,7 +154,7 @@ const Menu = ({
       } py-4 px-4 rounded-lg font-semibold`}
       onClick={() => {
         if (title === "Bagian 0") {
-          handleNavigation(href);
+          handleNavigation(href, "Bagian II");
         } else {
           toggleAccordion(title);
         }
@@ -181,7 +180,7 @@ const Menu = ({
               desc={item.desc}
               href={item.href}
               handleNavigation={handleNavigation}
-              isHighlighted={isHighlighted}
+              isHighlighted={activeId === item.href}
               onClick={onClick}
             />
           ))}
@@ -210,7 +209,7 @@ const Sidebar = ({ activeId, onClick = () => {} }) => {
     });
   };
 
-  const handleNavigation = (href, section) => {
+  const handleNavigation = (href, section = null) => {
     router.push(href);
     if (section) {
       toggleAccordion(section);
