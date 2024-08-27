@@ -68,7 +68,7 @@ const Table = ({ columns = [], data = [], type }) => {
     type === "sub" ? [{ header: "ID", accessor: "id" }, ...columns] : columns;
   return (
     <div className="overflow-x-auto relative h-auto sm:rounded-lg">
-      <table className="w-9/12 mx-auto my-20 text-sm text-gray-500 border-collapse border border-gray-200">
+      <table className="w-9/12 mx-auto my-20 text-sm text-gray-500 border-collapse border border-gray-200 no-select">
         <thead className="text-xs text-white uppercase bg-accent">
           <tr>
             {adjustedColumns.map((column, index) => (
