@@ -105,34 +105,6 @@ const menus = [
   },
 ];
 
-const Assesstment = ({
-  title,
-  desc,
-  href,
-  handleNavigation,
-  isHighlighted,
-  onClick = () => {},
-}) => (
-  <div className="border-white border-2 -ml-5 mb-5 rounded-lg bg-white">
-    <button
-      className="flex flex-col items-start h-8 w-full"
-      onClick={() => {
-        handleNavigation(href, title);
-        onClick();
-      }}
-    >
-      <span
-        className={`mb-2 ${
-          isHighlighted ? "bg-white text-accent" : "bg-white text-accent"
-        } rounded-lg py-2 text-start pl-2 font-semibold w-full`}
-      >
-        {title}
-      </span>
-    </button>
-    <p className="text-xs text-accent pl-2 pb-3">{desc}</p>
-  </div>
-);
-
 const Menu = ({
   title,
   subMenu = [],
@@ -145,16 +117,21 @@ const Menu = ({
 }) => {
   const isActive = activeAccordion === title;
   const isHighlighted =
-    activeId === href || subMenu.some((item) => item.href === activeId);
+    (activeId === href && title === "Bagian 0") ||
+    (activeId !== href &&
+      title !== "Bagian 0" &&
+      subMenu.some((item) => item.href === activeId));
 
   return (
     <div
       className={`flex flex-col mt-10 w-10/12 cursor-pointer justify-center ${
-        isHighlighted ? "bg-accent text-white" : "bg-accent text-white"
+        isHighlighted
+          ? "bg-accent text-white"
+          : "bg-transparent border border-border text-accent"
       } py-4 px-4 rounded-lg font-semibold`}
       onClick={() => {
         if (title === "Bagian 0") {
-          handleNavigation(href, "Bagian II");
+          handleNavigation(href);
         } else {
           toggleAccordion(title);
         }
@@ -162,7 +139,11 @@ const Menu = ({
     >
       <div className="flex items-center h-auto justify-between">
         <div className="flex items-center h-full gap-x-2">
-          <FaCircleCheck size={24} color="#fff" /> <span>{title}</span>
+          <FaCircleCheck
+            size={24}
+            className={`${isHighlighted ? "text-gray-200" : "text-accent"}`}
+          />{" "}
+          <span>{title}</span>
         </div>
         {title !== "Bagian 0" &&
           (isActive ? (
@@ -190,6 +171,44 @@ const Menu = ({
   );
 };
 
+const Assesstment = ({
+  title,
+  desc,
+  href,
+  handleNavigation,
+  isHighlighted,
+  onClick = () => {},
+}) => (
+  <div
+    className={`border-white border-2 -ml-5 mb-5 rounded-lg ${
+      isHighlighted ? "bg-accent text-white" : "bg-white"
+    }`}
+  >
+    <button
+      className="flex flex-col items-start h-8 w-full"
+      onClick={() => {
+        handleNavigation(href, title);
+        onClick();
+      }}
+    >
+      <span
+        className={`mb-2 ${
+          isHighlighted ? "bg-accent text-white" : "bg-white text-accent"
+        } rounded-lg py-2 text-start pl-2 font-semibold w-full`}
+      >
+        {title}
+      </span>
+    </button>
+    <p
+      className={`text-xs ${
+        isHighlighted ? "text-white" : "text-accent"
+      } pl-2 pb-3`}
+    >
+      {desc}
+    </p>
+  </div>
+);
+
 const Sidebar = ({ activeId, onClick = () => {} }) => {
   const [activeAccordion, setActiveAccordion] = useState(null);
   const router = useRouter();
@@ -211,7 +230,7 @@ const Sidebar = ({ activeId, onClick = () => {} }) => {
 
   const handleNavigation = (href, section = null) => {
     router.push(href);
-    if (section) {
+    if (section && activeAccordion !== section) {
       toggleAccordion(section);
     }
   };

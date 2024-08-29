@@ -1,11 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import Question from "@/components/question"; // Pastikan komponen ini sudah terimport dengan benar
-import { IoMdArrowRoundBack } from "react-icons/io";
-import { useRouter, usePathname } from "next/navigation"; // Import usePathname untuk mendapatkan route saat ini
-import { FaCircleCheck } from "react-icons/fa6";
-import { IoIosArrowForward, IoIosArrowDown } from "react-icons/io";
-import Button from "@/components/button"; // Pastikan komponen ini sudah terimport dengan benar
+import { useRouter, usePathname } from "next/navigation";
+import Button from "@/components/button";
 import Question0 from "@/components/q-bagian-0";
 import DatePicker from "@/components/datepicker";
 import Sidebar from "@/components/sidebar";
@@ -13,24 +9,22 @@ import { FaSpinner } from "react-icons/fa";
 import axios from "axios";
 
 const Bagian0 = () => {
-  const [isDone, setIsDone] = useState(false);
   const [answers, setAnswers] = useState({});
   const [isData, setData] = useState([]);
   const [isDataArea, setDataArea] = useState({});
   const [isDataAreaLevel, setDataAreaLevel] = useState([]);
   const [selectedLevel, setSelectedLevel] = useState("");
   const [isLoading, setLoading] = useState(false);
-  const [activeAccordion, setActiveAccordion] = useState(null); // State untuk mengontrol accordion
   const router = useRouter();
-  const pathname = usePathname(); // Mendapatkan route saat ini
+  const pathname = usePathname();
   const token =
     typeof window !== "undefined"
       ? sessionStorage.getItem("accessToken")
       : null;
   const formRef = useRef(null);
   const [isPushed, setIsPushed] = useState(false);
+  const [activeId, setActiveId] = useState("/assessment/bagian-0/");
 
-  // Effect untuk mengambil data dari API
   useEffect(() => {
     setLoading(true);
 
@@ -83,7 +77,6 @@ const Bagian0 = () => {
       });
   }, []);
 
-  // Effect untuk memeriksa apakah semua pertanyaan telah dijawab
   useEffect(() => {
     if (isData.length > 0) {
       const allAnswered = isData.every((item) => answers[`input-${item.id}`]);
@@ -95,38 +88,12 @@ const Bagian0 = () => {
     router.push("/assessment");
   };
 
-  const handleInputChange = (name, value) => {
-    setAnswers((prevAnswers) => ({
-      ...prevAnswers,
-      [name]: value, // Menyimpan nilai input yang dipilih
-    }));
-  };
-
-  const handleNext = async () => {
-    try {
-      const response = await axios.post(
-        "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/instrument",
-        answers
-      );
-
-      if (response.status === 200) {
-        router.push("/assessment/bagian-1");
-      }
-    } catch (error) {
-      console.error("Error posting data:", error);
-    }
-  };
-
-  const toggleAccordion = (section) => {
-    setActiveAccordion(activeAccordion === section ? null : section);
-  };
-
   if (isLoading) {
     return (
       <div className="min-h-screen w-full flex justify-center items-center">
         <FaSpinner className="animate-spin text-accent" size={50} />
       </div>
-    ); // Tampilkan loading indikator saat data sedang diambil
+    );
   }
 
   const onSubmit = async (e) => {
@@ -191,7 +158,11 @@ const Bagian0 = () => {
 
   return (
     <div className="bg-[#F1F1F7] h-screen overflow-x-hidden">
-      <Sidebar activeId={0} onClick={handleSidebarClick} />
+      <Sidebar
+        activeId={activeId}
+        setActiveId={setActiveId}
+        onClick={handleSidebarClick}
+      />
 
       <div className="w-full ml-[344px] space-y-6 p-4">
         <div className="bg-[#1446AB] pl-4 py-4 rounded-2xl w-[1048px] ">
@@ -210,20 +181,17 @@ const Bagian0 = () => {
         >
           <div className="flex w-[70%] gap-x-4 ">
             <Question0
-              label={"1. Siapa yang Memimpin Penilaian?"}
+              label={"Siapa yang Memimpin Penilaian?"}
               type={"text"}
               placeholder={"Nama pemimpin penilaian..."}
               name={"pemipin"}
               // onChange={{}}
             />
-            <DatePicker
-              // label={"2. Tanggal Penilaian"}
-              name="tanggal"
-            />
+            <DatePicker name="tanggal" />
           </div>
 
           <Question0
-            label={"3. Pada tingkat apa penilaian dilakukan?"}
+            label={"Pada tingkat apa penilaian dilakukan?"}
             placeholder={
               "Masukan nama Provinsi (Jika Tingkat Nasional), Kabupaten/Kota (Jika Tingkat Sub Nasional)..."
             }
@@ -237,7 +205,7 @@ const Bagian0 = () => {
           />
 
           <Question0
-            label={"4. Peserta yang terlibat dalam penilaian?"}
+            label={"Peserta yang terlibat dalam penilaian?"}
             placeholder={"Nama peserta penilaian..."}
             name={"peserta"}
             type={"text"}

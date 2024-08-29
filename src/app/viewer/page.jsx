@@ -56,10 +56,9 @@ const Viewer = () => {
           return;
         }
 
-        // Initialize a set to track processed IDs
         const processedIds = new Set();
 
-        // Flatten and filter the data
+        
         const formattedData = data.flatMap((item) => {
           const { id, number, question, sub } = item;
           if (id > 195) return [];

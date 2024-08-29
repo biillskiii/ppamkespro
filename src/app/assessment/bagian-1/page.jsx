@@ -12,7 +12,7 @@ const ParentComponent = () => {
   const [isDone, setIsDone] = useState(false);
   const [answers, setAnswers] = useState({});
   const [isData, setData] = useState([]);
-  const [isLoading, setLoading] = useState(false); 
+  const [isLoading, setLoading] = useState(false);
   const [activeAccordion, setActiveAccordion] = useState(null);
   const [username, setUsername] = useState("");
   const router = useRouter();
@@ -22,7 +22,7 @@ const ParentComponent = () => {
       : null;
   const formRef = useRef(null);
   const [isPushed, setIsPushed] = useState(false);
-
+  const [activeId, setActiveId] = useState("/assessment/bagian-1/");
   useEffect(() => {
     if (token) {
       try {
@@ -73,10 +73,6 @@ const ParentComponent = () => {
       });
   }, []);
 
-  const toggleAccordion = (section) => {
-    setActiveAccordion(activeAccordion === section ? null : section);
-  };
-
   useEffect(() => {
     if (isData.length > 0) {
       const allAnswered = isData.every(
@@ -95,29 +91,6 @@ const ParentComponent = () => {
       ...prevAnswers,
       [name]: value,
     }));
-  };
-
-  const handleNext = async () => {
-    try {
-      const response = await fetch(
-        "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(answers),
-        }
-      );
-
-      if (response.ok) {
-        router.push("/assessment/bagian-1/assessment2");
-      } else {
-        console.error("Error posting data:", response.statusText);
-      }
-    } catch (error) {
-      console.error("Error posting data:", error);
-    }
   };
 
   const onSubmit = async (e) => {
@@ -208,7 +181,11 @@ const ParentComponent = () => {
 
   return (
     <div className="bg-[#F1F1F7] h-screen overflow-x-hidden">
-      <Sidebar activeId={1} onClick={handleSidebarClick} />
+      <Sidebar
+        activeId={activeId}
+        setActiveId={setActiveId}
+        onClick={handleSidebarClick}
+      />
       <div className="w-full ml-[344px] space-y-6 p-4">
         <div className="bg-[#1446AB] p-4 rounded-2xl w-[1048px] h-[115px]">
           <p className="text-white font-extrabold text-xl">

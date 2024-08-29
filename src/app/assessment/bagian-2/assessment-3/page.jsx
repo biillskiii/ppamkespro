@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Question from "@/components/question";
 import { useRouter } from "next/navigation";
 import Button from "@/components/button";
@@ -20,7 +20,9 @@ const ParentComponent = () => {
     typeof window !== "undefined"
       ? sessionStorage.getItem("accessToken")
       : null;
+  const formRef = useRef(null);
   const [isPushed, setIsPushed] = useState(false);
+  const [activeId, setActiveId] = useState("/assessment/bagian-2/assessment-3");
   useEffect(() => {
     if (token) {
       try {
@@ -92,27 +94,12 @@ const ParentComponent = () => {
       [name]: value,
     }));
   };
-
-  const handleNext = async () => {
-    try {
-      const response = await fetch(
-        "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(answers),
-        }
+  const handleSidebarClick = () => {
+    if (formRef.current) {
+      setIsPushed(false);
+      formRef.current.dispatchEvent(
+        new Event("submit", { bubbles: true, cancelable: true })
       );
-
-      if (response.ok) {
-        router.push("/assessment/bagian-1/assessment2");
-      } else {
-        console.error("Error posting data:", response.statusText);
-      }
-    } catch (error) {
-      console.error("Error posting data:", error);
     }
   };
 
@@ -266,7 +253,11 @@ const ParentComponent = () => {
 
   return (
     <div className="bg-[#F1F1F7] h-screen overflow-x-hidden">
-      <Sidebar activeId={7} />
+      <Sidebar
+        activeId={activeId}
+        setActiveId={setActiveId}
+        onClick={handleSidebarClick}
+      />
       <div className="w-full ml-[344px] space-y-6 p-4">
         <div className="bg-[#1446AB] p-4 rounded-2xl w-[1048px] h-[115px]">
           <p className="text-white font-extrabold text-xl">

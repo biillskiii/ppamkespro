@@ -20,7 +20,7 @@ const ParentComponent = () => {
       : null;
   const formRef = useRef(null);
   const [isPushed, setIsPushed] = useState(false);
-
+  const [activeId, setActiveId] = useState("/assessment/bagian-1/assessment-3");
   // Effect to fetch data from API
   useEffect(() => {
     setLoading(true); // Mark that data is being fetched
@@ -152,7 +152,11 @@ const ParentComponent = () => {
 
   return (
     <div className="bg-[#F1F1F7] h-screen overflow-x-hidden">
-      <Sidebar activeId={2} onClick={handleSidebarClick} />
+      <Sidebar
+        activeId={activeId}
+        setActiveId={setActiveId}
+        onClick={handleSidebarClick}
+      />
       <div className="w-full ml-[344px] space-y-6 p-4">
         <div className="bg-[#1446AB] p-4 rounded-2xl w-[1048px] h-[115px]">
           <p className="text-white font-extrabold text-xl">
