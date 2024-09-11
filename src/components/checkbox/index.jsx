@@ -3,41 +3,49 @@ import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { FaCheck } from "react-icons/fa";
 
-const CheckboxInput = ({ options = [], name, value }) => {
-  const [selectedValues, setSelectedValues] = useState([]);
+const CheckboxInput = ({ options = [], name, value = [], onChange }) => {
+  const [selectedValues, setSelectedValues] = useState(value);
 
+  // Load selected values from localStorage when the component mounts
   useEffect(() => {
-    const savedValues = localStorage.getItem(name);
-    if (savedValues) {
-      setSelectedValues(JSON.parse(savedValues));
+    try {
+      const storedValues = localStorage.getItem(name);
+      if (storedValues) {
+        setSelectedValues(JSON.parse(storedValues));
+      }
+    } catch (error) {
+      console.error("Failed to load from localStorage:", error);
     }
   }, [name]);
 
+  // Save selectedValues to localStorage when they change
   useEffect(() => {
-    if (selectedValues.length > 0) {
-      localStorage.setItem(name, JSON.stringify(selectedValues));
-    } else {
-      localStorage.removeItem(name);
+    try {
+      if (selectedValues.length > 0) {
+        localStorage.setItem(name, JSON.stringify(selectedValues));
+      } else {
+        localStorage.removeItem(name);
+      }
+    } catch (error) {
+      console.error("Failed to save to localStorage:", error);
     }
   }, [selectedValues, name]);
 
-  const handleSelectCheckbox = (value) => {
-    if (selectedValues.includes(value)) {
-      setSelectedValues(selectedValues.filter((val) => val !== value));
-    } else {
-      setSelectedValues([...selectedValues, value]);
+  // Handle checkbox selection change
+  const handleSelectCheckbox = (checkboxValue) => {
+    const newSelectedValues = selectedValues.includes(checkboxValue)
+      ? selectedValues.filter((val) => val !== checkboxValue)
+      : [...selectedValues, checkboxValue];
+
+    setSelectedValues(newSelectedValues);
+    if (onChange) {
+      onChange(newSelectedValues); // Notify parent component of the change
     }
   };
 
   return (
     <div className="space-y-2">
       <div className="flex flex-row flex-wrap gap-6">
-        {/* <input
-          type="text"
-          value={selectedValues.join(" || ")}
-          // className="hidden"
-          name={name}
-        /> */}
         {options.map((option, index) => (
           <label key={index} className="flex items-center cursor-pointer">
             <input
@@ -59,7 +67,9 @@ const CheckboxInput = ({ options = [], name, value }) => {
             >
               {selectedValues.includes(option.value) && <FaCheck size={12} />}
             </div>
-            <span className="text-gray-600">{option.value}</span>
+            <span className="text-gray-600">
+              {option.label || option.value}
+            </span>
           </label>
         ))}
       </div>

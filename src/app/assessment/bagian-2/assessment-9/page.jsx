@@ -28,7 +28,7 @@ const ParentComponent = () => {
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
-        console.log("Decoded Token:", decodedToken);
+        "Decoded Token:", decodedToken;
         setUsername(decodedToken.username || "");
         setStatus(decodedToken.status || "");
       } catch (error) {
@@ -40,7 +40,7 @@ const ParentComponent = () => {
   }, [router]);
   useEffect(() => {
     setLoading(true);
-    fetch("https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/instrument")
+    fetch("http://103.123.63.7/api/instrument")
       .then((res) => {
         if (!res.ok) {
           throw new Error(`Network response was not ok: ${res.statusText}`);
@@ -48,7 +48,7 @@ const ParentComponent = () => {
         return res.json();
       })
       .then((responseData) => {
-        console.log("Data fetched:", responseData);
+        "Data fetched:", responseData;
 
         if (responseData && Array.isArray(responseData.data)) {
           const data = responseData.data;
@@ -57,7 +57,7 @@ const ParentComponent = () => {
             (item) => item.number >= 68 && item.number <= 73
           );
 
-          console.log("Filtered Data:", filteredData);
+          "Filtered Data:", filteredData;
 
           setData(filteredData);
         } else {
@@ -86,11 +86,12 @@ const ParentComponent = () => {
   }, [answers, isData]);
 
   const handleBack = () => {
-    console.log("Back button clicked");
+    ("Back button clicked");
     router.push("/assessment/bagian-2/assessment-8");
   };
 
   const handleInputChange = (name, value) => {
+    "Input Changed:", name, value; // Debug: Log name and value
     setAnswers((prevAnswers) => ({
       ...prevAnswers,
       [name]: value,
@@ -119,91 +120,105 @@ const ParentComponent = () => {
   //     console.error("Error posting data:", error);
   //   }
   // };
-
   const onSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      // Convert FormData to a plain object
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData.entries());
-
+      data;
+      // Log form data for debugging
+      "Form Data:", data;
+      const getArrayValues = (prefix) => {
+        const values = [];
+        let index = 0;
+        while (data[`${prefix}-${index}`] !== undefined) {
+          values.push(data[`${prefix}-${index}`]);
+          index++;
+        }
+        return values;
+      };
+      // Prepare the data for API
       const mapData = [
         {
           instrumentId: 184,
-          value: data["input-68"],
-          score: 0,
-          comment: data["input-68_comment"],
+          value: data["input-68"] || "",
+          comment: data["input-68_comment"] || "",
         },
         {
           instrumentId: 185,
-          value: null,
-          score: 0,
-          comment: data["input-69_comment"],
+          value: data["input-69"] || "",
+          comment: data["input-69_comment"] || "",
         },
         {
           instrumentId: 186,
-          value: data["input-70"],
-          score: 0,
-          comment: data["input-70_comment"],
+          value: data["input-70"] || "",
+          comment: data["input-70_comment"] || "",
         },
         {
           instrumentId: 187,
-          value: data["input-71"],
-          score: 0,
-          comment: data["input-71_comment"],
+          value: data["input-71"] || "",
+          comment: data["input-71_comment"] || "",
         },
         {
           instrumentId: 189,
-          value: `${data["input-72_sub_189"]}`,
-          score: 0,
-          comment: `${data["input-72_comment_sub_189"]}`,
+          value: getArrayValues("input-72_sub_189"),
+          comment: data["input-72_comment_sub_189"] || "",
         },
         {
           instrumentId: 190,
-          value: `${data["input-72_sub_190"]}`,
-          score: 0,
-          comment: `${data["input-72_comment_sub_190"]}`,
+          value: getArrayValues("input-72_sub_190"),
+          comment: data["input-72_comment_sub_190"] || "",
         },
         {
           instrumentId: 191,
-          value: `${data["input-72_sub_191"]}`,
-          score: 0,
-          comment: `${data["input-72_comment_sub_191"]}`,
+          value: getArrayValues("input-72_sub_191"),
+          comment: data["input-72_comment_sub_191"] || "",
         },
         {
           instrumentId: 193,
-          value: `${data["input-73_sub_193"]}`,
-          score: 0,
-          comment: `${data["input-73_comment_sub_193"]}`,
+          value: data["input-73_sub_193"] || "",
+          comment: data["input-73_comment_sub_193"] || "",
         },
         {
           instrumentId: 194,
-          value: `${data["input-73_sub_194"]}`,
-          score: 0,
-          comment: `${data["input-73_comment_sub_194"]}`,
+          value: data["input-73_sub_194"] || "",
+          comment: data["input-73_comment_sub_194"] || "",
         },
         {
           instrumentId: 195,
-          value: `${data["input-73_sub_195"]}`,
-          score: 0,
-          comment: `${data["input-73_comment_sub_195"]}`,
+          value: data["input-73_sub_195"] || "",
+          comment: data["input-73_comment_sub_195"] || "",
         },
       ];
 
+      "Mapped Data:", mapData;
+
+      // Send the data as an object
       const response = await axios.post(
-        "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
-        mapData,
-        { headers: { Authorization: `Bearer ${token}` } }
+        "http://103.123.63.7/api/response",
+        mapData, // Send data as an object
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
       );
 
       if (response.status === 200) {
-        // Clear all localStorage items
         localStorage.clear();
         setIsPushed(true);
-        router.push("/data-diri");
+        router.push("/assessment/data-diri");
+      } else {
+        console.error("Error posting data:", response.statusText);
       }
     } catch (error) {
-      console.error("Error posting data:", error);
+      console.error(
+        "Error posting data:",
+        error.response ? error.response.data : error.message
+      );
     } finally {
       setIsPushed(false);
     }

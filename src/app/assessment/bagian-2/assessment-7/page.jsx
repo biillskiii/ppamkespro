@@ -27,7 +27,7 @@ const ParentComponent = () => {
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
-        console.log("Decoded Token:", decodedToken);
+      
         setUsername(decodedToken.username || "");
         setStatus(decodedToken.status || "");
       } catch (error) {
@@ -39,7 +39,7 @@ const ParentComponent = () => {
   }, [router]);
   useEffect(() => {
     setLoading(true);
-    fetch("https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/instrument")
+    fetch("http://103.123.63.7/api/instrument")
       .then((res) => {
         if (!res.ok) {
           throw new Error(`Network response was not ok: ${res.statusText}`);
@@ -47,7 +47,7 @@ const ParentComponent = () => {
         return res.json();
       })
       .then((responseData) => {
-        console.log("Data fetched:", responseData);
+      
 
         if (responseData && Array.isArray(responseData.data)) {
           const data = responseData.data;
@@ -56,7 +56,7 @@ const ParentComponent = () => {
             (item) => item.number >= 58 && item.number <= 62
           );
 
-          console.log("Filtered Data:", filteredData);
+       
 
           setData(filteredData);
         } else {
@@ -97,16 +97,13 @@ const ParentComponent = () => {
 
   const handleNext = async () => {
     try {
-      const response = await fetch(
-        "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(answers),
-        }
-      );
+      const response = await fetch("http://103.123.63.7/api/response", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(answers),
+      });
 
       if (response.ok) {
         router.push("/assessment/bagian-1/assessment2");
@@ -114,7 +111,7 @@ const ParentComponent = () => {
         console.error("Error posting data:", response.statusText);
       }
     } catch (error) {
-      console.error("Error posting data:", error);
+      toast.error("Failed to submit data. Please try again.");
     }
   };
 
@@ -134,7 +131,15 @@ const ParentComponent = () => {
       setIsPushed(true);
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData.entries());
-
+      const getArrayValues = (prefix) => {
+        const values = [];
+        let index = 0;
+        while (data[`${prefix}-${index}`] !== undefined) {
+          values.push(data[`${prefix}-${index}`]);
+          index++;
+        }
+        return values;
+      };
       const mapData = [
         {
           instrumentId: 138,
@@ -150,61 +155,61 @@ const ParentComponent = () => {
         },
         {
           instrumentId: 141,
-          value: `${data["input-60_sub_141"]}`,
+          value: getArrayValues("input-60_sub_141"),
           score: 0,
           comment: `${data["input-60_comment_sub_141"]}`,
         },
         {
           instrumentId: 142,
-          value: `${data["input-60_sub_142"]}`,
+          value: getArrayValues("input-60_sub_142"),
           score: 0,
           comment: `${data["input-60_comment_sub_142"]}`,
         },
         {
           instrumentId: 143,
-          value: `${data["input-60_sub_143"]}`,
+          value: getArrayValues("input-60_sub_143"),
           score: 0,
           comment: `${data["input-60_comment_sub_143"]}`,
         },
         {
           instrumentId: 144,
-          value: `${data["input-60_sub_144"]}`,
+          value: getArrayValues("input-60_sub_144"),
           score: 0,
           comment: `${data["input-60_comment_sub_144"]}`,
         },
         {
           instrumentId: 145,
-          value: `${data["input-60_sub_145"]}`,
+          value: getArrayValues("input-60_sub_145"),
           score: 0,
           comment: `${data["input-60_comment_sub_145"]}`,
         },
         {
           instrumentId: 146,
-          value: `${data["input-60_sub_146"]}`,
+          value: getArrayValues("input-60_sub_146"),
           score: 0,
           comment: `${data["input-60_comment_sub_146"]}`,
         },
         {
           instrumentId: 147,
-          value: `${data["input-60_sub_147"]}`,
+          value: getArrayValues("input-60_sub_147"),
           score: 0,
           comment: `${data["input-60_comment_sub_147"]}`,
         },
         {
           instrumentId: 148,
-          value: `${data["input-60_sub_148"]}`,
+          value: getArrayValues("input-60_sub_148"),
           score: 0,
           comment: `${data["input-60_comment_sub_148"]}`,
         },
         {
           instrumentId: 149,
-          value: `${data["input-60_sub_149"]}`,
+          value: getArrayValues("input-60_sub_149"),
           score: 0,
           comment: `${data["input-60_comment_sub_149"]}`,
         },
         {
           instrumentId: 150,
-          value: `${data["input-60_sub_150"]}`,
+          value: getArrayValues("input-60_sub_150"),
           score: 0,
           comment: `${data["input-60_comment_sub_150"]}`,
         },
@@ -271,7 +276,7 @@ const ParentComponent = () => {
       ];
 
       const response = await axios.post(
-        "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
+        "http://103.123.63.7/api/response",
         mapData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -351,7 +356,11 @@ const ParentComponent = () => {
               variant="secondary"
               type="button"
             />
-            <Button label={"Berikutnya"} withIcon={"right"} type="submit" />
+            <Button
+              label={"Berikutnya"}
+              withIcon={"right"}
+              onClick={handleNext}
+            />
           </div>
         </form>
       </div>

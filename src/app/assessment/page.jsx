@@ -26,7 +26,7 @@ const Assessment = () => {
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
-        console.log("Decoded Token:", decodedToken); // Debugging line
+     
         setUsername(decodedToken.username || "");
         setInstansi(decodedToken.institute || "");
         setStatus(decodedToken.status || "");

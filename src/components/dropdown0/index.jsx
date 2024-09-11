@@ -39,12 +39,13 @@ const DropdownInput = ({
           "border p-2 rounded-md w-full cursor-pointer",
           "focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
           "text-black font-medium",
-          "bg-white" // Keep the background white for the selected option
+          "bg-white",
+          "h-10"
         )}
       >
         {selectedValue || (
           <p className="flex items-center justify-between">
-            Pilih Salah Satu <IoIosArrowDown size={15} />
+            {placeholder} <IoIosArrowDown size={15} />
           </p>
         )}
       </div>
@@ -58,15 +59,15 @@ const DropdownInput = ({
           {options.map((option, index) => (
             <li
               key={index}
-              onClick={() => handleSelectDropdown(option.value)}
+              onClick={() => handleSelectDropdown(option)}
               className={clsx(
-                "px-4 py-2  cursor-pointer",
-                "hover:bg-abu", // Set hover background color to bg-abu
+                "px-4 py-2 cursor-pointer",
+                "hover:bg-abu",
                 "text-base",
                 "hover:text-white"
               )}
             >
-              {option.value}
+              {option}
             </li>
           ))}
         </ul>
@@ -74,5 +75,4 @@ const DropdownInput = ({
     </div>
   );
 };
-
 export default DropdownInput;

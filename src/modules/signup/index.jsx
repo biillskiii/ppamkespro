@@ -11,6 +11,7 @@ import Button from "@/components/button";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
+import DropdownInput from "@/components/dropdown0";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -19,7 +20,7 @@ const Signup = () => {
     institute: "",
     password: "",
     confirmPassword: "",
-    status: "submitter",
+    status: "",
   });
 
   const router = useRouter();
@@ -31,43 +32,53 @@ const Signup = () => {
       [name]: value,
     }));
   };
-
   const handleSignup = async (e) => {
     e.preventDefault();
 
+    // Validasi input yang diperlukan
     if (
       !formData.username ||
       !formData.email ||
       !formData.institute ||
       !formData.password ||
-      !formData.confirmPassword
+      !formData.confirmPassword ||
+      !formData.status
     ) {
       toast.error("Semua input wajib diisi!");
       return;
     }
 
+    // Validasi password dan konfirmasi password
     if (formData.password !== formData.confirmPassword) {
       toast.error("Password dan konfirmasi password tidak cocok!");
       return;
     }
 
+    // Validasi nilai status
+    const allowedStatuses = ["viewer", "submitter"];
+    if (!allowedStatuses.includes(formData.status)) {
+      toast.error("Status tidak valid!");
+      return;
+    }
+
     try {
-      const response = await fetch(
-        "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/account/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+      const response = await fetch("http://103.123.63.7/api/account/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
       const data = await response.json();
 
       if (response.ok) {
         toast.success("Pendaftaran akun berhasil!");
         router.push("/");
+      } else if (
+        data.message === "Unique constraint failed on the fields: (username)"
+      ) {
+        toast.error("Username sudah ada!");
       } else {
         toast.error(`Gagal mendaftar: ${data.message}`);
       }
@@ -80,7 +91,6 @@ const Signup = () => {
   return (
     <div className="min-h-screen flex">
       <ToastContainer />
-      {/* Left side with image background */}
 
       <div className="w-[55%] relative">
         <div className="absolute top-0 right-0 bottom-0 left-0 -z-10">
@@ -91,17 +101,13 @@ const Signup = () => {
             objectFit="cover"
           />
         </div>
-        <div className="flex justify-center w-28 ml-[350px]  bg-white shadow-xl px- rounded-2xl py-2 mt-10 items-center  lg:gap-x-5 z-50">
+        <div className="flex justify-center w-28 ml-[350px] bg-white shadow-xl px- rounded-2xl py-2 mt-10 items-center lg:gap-x-5 z-50">
           <Image src={Logo} alt="Logo" className="w-8 h-8 lg:w-9 lg:h-9" />
           <Image
             src={LogoUnnes}
             alt="Logo"
-            className="w-5 -ml-[8px]  h-4 lg:w-[30px] lg:h-[42px] "
+            className="w-5 -ml-[8px] h-4 lg:w-[30px] lg:h-[42px]"
           />
-
-          {/* <p className="text-white font-semibold text-xs lg:text-base">
-            Assesmen <br /> Kesiapsiagaan
-          </p> */}
         </div>
 
         <div className="relative flex flex-col justify-center items-center min-h-screen -mt-24 z-10">
@@ -113,7 +119,7 @@ const Signup = () => {
                 className="w-[50vw] max-w-[250px] lg:max-w-[400px] max-h-[50vh] object-contain"
               />
 
-              <p className="text-center font-bold text-white text-xs sm:text-sm md:text-lg lg:text-4xl ">
+              <p className="text-center font-bold text-white text-xs sm:text-sm md:text-lg lg:text-4xl">
                 Instrumen Asessmen <br />
                 Kesiapsiagaan
               </p>
@@ -126,7 +132,7 @@ const Signup = () => {
       <div className="w-[40%] px-10 bg-white flex flex-col justify-center items-center">
         <div className="max-w-lg w-full">
           <div className="mb-6">
-            <h2 className="text-2xl font-bold ">Daftar Akun</h2>
+            <h2 className="text-2xl font-bold">Daftar Akun</h2>
             <p className="text-start text-base">
               Sudah memiliki akun?{" "}
               <a href="/" className="font-bold text-accent">
@@ -184,6 +190,29 @@ const Signup = () => {
                 />
               </div>
             </div>
+
+            <div className="mb-6 w-full">
+              <label
+                htmlFor="status"
+                className="block text-gray-700 text-sm font-bold mb-2"
+              >
+                Pilih Peran
+              </label>
+              <DropdownInput
+                name={"status"}
+                placeholder={"Pilih Role..."}
+                type={"dropdown"}
+                selectedValue={formData.status}
+                setSelectedValue={(value) =>
+                  setFormData((prevData) => ({
+                    ...prevData,
+                    status: value.toLowerCase(),
+                  }))
+                }
+                options={["Viewer", "Submitter"]}
+              />
+            </div>
+
             <div className="flex w-full items-center justify-between">
               <Button label={"Daftar Akun"} type="submit" withIcon={false} />
             </div>

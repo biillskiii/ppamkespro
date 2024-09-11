@@ -73,7 +73,7 @@ const Question0 = ({
             <DropdownInput
               options={options}
               name={name}
-              placeholder={placeholder}
+              placeholder={"Pilih Salah Satu"}
               value={answer}
               onChange={(e) => handleAnswerChange(e.target.value)} // Pastikan handleAnswerChange menangani perubahan
               selectedValue={selectedValue} // Pastikan Anda mengelola selectedValue di parent component

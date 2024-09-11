@@ -27,7 +27,7 @@ const ParentComponent = () => {
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
-        console.log("Decoded Token:", decodedToken);
+       
         setUsername(decodedToken.username || "");
         setStatus(decodedToken.status || "");
       } catch (error) {
@@ -39,7 +39,7 @@ const ParentComponent = () => {
   }, [router]);
   useEffect(() => {
     setLoading(true);
-    fetch("https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/instrument")
+    fetch("http://103.123.63.7/api/instrument")
       .then((res) => {
         if (!res.ok) {
           throw new Error(`Network response was not ok: ${res.statusText}`);
@@ -47,7 +47,7 @@ const ParentComponent = () => {
         return res.json();
       })
       .then((responseData) => {
-        console.log("Data fetched:", responseData);
+       
 
         if (responseData && Array.isArray(responseData.data)) {
           const data = responseData.data;
@@ -56,7 +56,6 @@ const ParentComponent = () => {
             (item) => item.number >= 37 && item.number <= 42
           );
 
-          console.log("Filtered Data:", filteredData);
 
           setData(filteredData);
         } else {
@@ -94,6 +93,24 @@ const ParentComponent = () => {
       [name]: value,
     }));
   };
+  const handleNext = async () => {
+    try {
+      const response = await fetch("http://103.123.63.7/api/response", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(answers),
+      });
+
+      if (response.ok) {
+        router.push("/assessment/bagian-1/assessment2");
+      } else {
+      }
+    } catch (error) {
+      toast.error("Failed to submit data. Please try again.");
+    }
+  };
   const handleSidebarClick = () => {
     if (formRef.current) {
       setIsPushed(false);
@@ -110,7 +127,15 @@ const ParentComponent = () => {
       setIsPushed(true);
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData.entries());
-
+      const getArrayValues = (prefix) => {
+        const values = [];
+        let index = 0;
+        while (data[`${prefix}-${index}`] !== undefined) {
+          values.push(data[`${prefix}-${index}`]);
+          index++;
+        }
+        return values;
+      };
       const mapData = [
         {
           instrumentId: 59,
@@ -132,25 +157,25 @@ const ParentComponent = () => {
         },
         {
           instrumentId: 63,
-          value: `${data["input-40_sub_63"]}`,
+          value: getArrayValues("input-40_sub_63"),
           score: 0,
           comment: `${data["input-40_comment_sub_63"]}`,
         },
         {
           instrumentId: 64,
-          value: `${data["input-40_sub_64"]}`,
+          value: getArrayValues("input-40_sub_64"),
           score: 0,
           comment: `${data["input-40_comment_sub_64"]}`,
         },
         {
           instrumentId: 65,
-          value: `${data["input-40_sub_65"]}`,
+          value: getArrayValues("input-40_sub_65"),
           score: 0,
           comment: `${data["input-40_comment_sub_65"]}`,
         },
         {
           instrumentId: 66,
-          value: `${data["input-40_sub_66"]}`,
+          value: getArrayValues("input-40_sub_66"),
           score: 0,
           comment: `${data["input-40_comment_sub_66"]}`,
         },
@@ -229,7 +254,7 @@ const ParentComponent = () => {
       ];
 
       const response = await axios.post(
-        "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
+        "http://103.123.63.7/api/response",
         mapData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -308,11 +333,8 @@ const ParentComponent = () => {
             />
             <Button
               label={"Berikutnya"}
-              // onClick={handleNext}
+              onClick={handleNext}
               withIcon={"right"}
-              // variant={!isDone && "disabeled"}
-              // disabled={!isDone}
-              type="submit"
             />
           </div>
         </form>

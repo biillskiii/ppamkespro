@@ -27,7 +27,7 @@ const ParentComponent = () => {
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
-        console.log("Decoded Token:", decodedToken);
+    
         setUsername(decodedToken.username || "");
         setStatus(decodedToken.status || "");
       } catch (error) {
@@ -39,7 +39,7 @@ const ParentComponent = () => {
   }, [router]);
   useEffect(() => {
     setLoading(true);
-    fetch("https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/instrument")
+    fetch("http://103.123.63.7/api/instrument")
       .then((res) => {
         if (!res.ok) {
           throw new Error(`Network response was not ok: ${res.statusText}`);
@@ -47,7 +47,7 @@ const ParentComponent = () => {
         return res.json();
       })
       .then((responseData) => {
-        console.log("Data fetched:", responseData);
+      
 
         if (responseData && Array.isArray(responseData.data)) {
           const data = responseData.data;
@@ -56,7 +56,7 @@ const ParentComponent = () => {
             (item) => item.number >= 43 && item.number <= 47
           );
 
-          console.log("Filtered Data:", filteredData);
+       
 
           setData(filteredData);
         } else {
@@ -97,16 +97,13 @@ const ParentComponent = () => {
 
   const handleNext = async () => {
     try {
-      const response = await fetch(
-        "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(answers),
-        }
-      );
+      const response = await fetch("http://103.123.63.7/api/response", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(answers),
+      });
 
       if (response.ok) {
         router.push("/assessment/bagian-1/assessment2");
@@ -125,7 +122,15 @@ const ParentComponent = () => {
       setIsPushed(true);
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData.entries());
-
+      const getArrayValues = (prefix) => {
+        const values = [];
+        let index = 0;
+        while (data[`${prefix}-${index}`] !== undefined) {
+          values.push(data[`${prefix}-${index}`]);
+          index++;
+        }
+        return values;
+      };
       const mapData = [
         {
           instrumentId: 81,
@@ -141,31 +146,31 @@ const ParentComponent = () => {
         },
         {
           instrumentId: 84,
-          value: `${data["input-45_sub_84"]}`,
+          value: getArrayValues("input-45_sub_84"),
           score: 0,
           comment: `${data["input-45_comment_sub_84"]}`,
         },
         {
           instrumentId: 85,
-          value: `${data["input-45_sub_85"]}`,
+          value: getArrayValues("input-45_sub_85"),
           score: 0,
           comment: `${data["input-45_comment_sub_85"]}`,
         },
         {
           instrumentId: 86,
-          value: `${data["input-45_sub_86"]}`,
+          value: getArrayValues("input-45_sub_86"),
           score: 0,
           comment: `${data["input-45_comment_sub_86"]}`,
         },
         {
           instrumentId: 87,
-          value: `${data["input-45_sub_87"]}`,
+          value: getArrayValues("input-45_sub_87"),
           score: 0,
           comment: `${data["input-45_comment_sub_87"]}`,
         },
         {
           instrumentId: 88,
-          value: `${data["input-45_sub_88"]}`,
+          value: getArrayValues("input-45_sub_88"),
           score: 0,
           comment: `${data["input-45_comment_sub_88"]}`,
         },
@@ -232,7 +237,7 @@ const ParentComponent = () => {
       ];
 
       const response = await axios.post(
-        "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
+        "http://103.123.63.7/api/response",
         mapData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -322,7 +327,11 @@ const ParentComponent = () => {
               variant="secondary"
               type="button"
             />
-            <Button label={"Berikutnya"} type="submit" />
+            <Button
+              label={"Berikutnya"}
+              onClick={handleNext}
+              withIcon={"right"}
+            />
           </div>
         </form>
       </div>

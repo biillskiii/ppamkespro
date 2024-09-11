@@ -7,7 +7,6 @@ import Button from "@/components/button"; // Ensure this component is correctly 
 import Sidebar from "@/components/sidebar";
 import { FaSpinner } from "react-icons/fa";
 import axios from "axios";
-import { tr } from "date-fns/locale";
 
 const ParentComponent = () => {
   const [isDone, setIsDone] = useState(false);
@@ -25,7 +24,7 @@ const ParentComponent = () => {
   // Effect to fetch data from API
   useEffect(() => {
     setLoading(true); // Mark that data is being fetched
-    fetch("https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/instrument")
+    fetch("http://103.123.63.7/api/instrument")
       .then((res) => {
         if (!res.ok) {
           throw new Error(`Network response was not ok: ${res.statusText}`);
@@ -33,7 +32,7 @@ const ParentComponent = () => {
         return res.json();
       })
       .then((responseData) => {
-        console.log("Data fetched:", responseData);
+       
 
         if (responseData && Array.isArray(responseData.data)) {
           const data = responseData.data;
@@ -43,7 +42,7 @@ const ParentComponent = () => {
             (item) => item.number >= 8 && item.number <= 13
           );
 
-          console.log("Filtered Data:", filteredData);
+        
 
           setData(filteredData); // Set data to state
         } else {
@@ -86,12 +85,12 @@ const ParentComponent = () => {
   const handleNext = async () => {
     try {
       const response = await axios.post(
-        "http://127.0.0.1:3001/instrument",
+        "http://103.123.63.7/api/response",
         answers
       );
 
       if (response.status === 200) {
-        router.push("/assessment/bagian-1");
+        router.push("/assessment/bagian-1/assessment-3");
       }
     } catch (error) {
       console.error("Error posting data:", error);
@@ -170,7 +169,7 @@ const ParentComponent = () => {
       ];
 
       const response = await axios.post(
-        "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
+        "http://103.123.63.7/api/response",
         mapData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -262,11 +261,9 @@ const ParentComponent = () => {
             />
             <Button
               label={"Berikutnya"}
-              // onClick={handleNext}
               withIcon={"right"}
-              // variant={!isDone && "disabeled"}
-              disabled={!isDone}
-              type="submit"
+              variant="primary"
+              onClick={handleNext}
             />
           </div>
         </form>

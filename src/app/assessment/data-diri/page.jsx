@@ -37,57 +37,31 @@ const Viewer = () => {
     const fetchData = async () => {
       try {
         const token = sessionStorage.getItem("accessToken");
-        const response = await fetch(
-          "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await fetch("http://103.123.63.7/api/response", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const result = await response.json();
-        const { data } = result;
+        const { metadata } = result.data;
 
-        if (!data || !Array.isArray(data)) {
-          console.error("Unexpected data format:", data);
+        if (!metadata) {
+          console.error("Metadata not found:", result.data);
           return;
         }
 
-        // Mengatur data berdasarkan ID question
-        const questions = {
-          196: { question: "", value: "", comment: "" },
-          197: { question: "", value: "", comment: "" },
-          198: { question: "", value: "", comment: "" },
-          199: { question: "", value: "", comment: "" },
+        // Set the metadata values
+        const formattedData = {
+          leader: metadata.leader || "N/A", // Add safe access with optional chaining
+          participant: metadata.participants || "N/A",
+          date: metadata.date || "N/A",
+          area: metadata.area || "N/A",
         };
 
-        data.forEach((item) => {
-          if (questions[item.id]) {
-            questions[item.id].question = item.question || "";
-            questions[item.id].value = item.value || "";
-            questions[item.id].comment = item.comment || "";
-          }
-        });
-
-        const formattedData = [
-          {
-            header1: questions[196].question,
-            header2: questions[197].question,
-            header3: questions[198].question,
-            header4: questions[199].question,
-          },
-          {
-            col5: `${questions[196].value} ${questions[196].comment}`,
-            col6: `${questions[197].value}  ${questions[197].comment}`,
-            col7: `${questions[198].value}  ${questions[198].comment}`,
-            col8: `${questions[199].value}  ${questions[199].comment}`,
-          },
-        ];
-
-        setTableData(formattedData);
+        setTableData([formattedData]); // Using array since the Table expects an array
       } catch (error) {
         console.error("Failed to fetch data:", error);
       } finally {
@@ -103,7 +77,7 @@ const Viewer = () => {
   };
 
   const handleResult = () => {
-    router.push("/viewer");
+    router.push("/assessment/viewer");
   };
 
   const handleLogout = () => {
@@ -111,11 +85,12 @@ const Viewer = () => {
     router.push("/");
   };
 
+  // Update the column config to reflect the new data structure
   const columnConfig = [
-    { header: "header1", accessor: "col5" },
-    { header: "header2", accessor: "col6" },
-    { header: "header3", accessor: "col7" },
-    { header: "header4", accessor: "col8" },
+    { header: "Leader", accessor: "leader" },
+    { header: "Date", accessor: "date" },
+    { header: "Participants", accessor: "participant" },
+    { header: "Area", accessor: "area" },
   ];
 
   return (
@@ -142,7 +117,7 @@ const Viewer = () => {
       ) : (
         <div>
           <h1 className="text-3xl mt-14 font-bold text-center">
-            Data, <span>{username}</span> <span>{instansi}</span>
+            <span>{instansi}</span>
           </h1>
           <Table columns={columnConfig} data={tableData} />
           <div className="w-32 mx-auto z-52">

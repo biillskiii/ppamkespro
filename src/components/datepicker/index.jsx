@@ -39,9 +39,9 @@ const DatePicker = ({ title, name }) => {
   }, [selectedDate]);
 
   const toggleDatepicker = () => {
+    ("Toggling Datepicker");
     setShowDatepicker(!showDatepicker);
   };
-
   const handlePrevMonth = () => {
     setCurrentMonth(subMonths(currentMonth, 1));
   };
@@ -51,10 +51,10 @@ const DatePicker = ({ title, name }) => {
   };
 
   const handleDateSelect = (date) => {
+    "Date Selected:", date;
     setSelectedDate(date);
     setShowDatepicker(false);
   };
-
   const renderDays = () => {
     const days = ["MIN", "SEN", "SEL", "RAB", "KAM", "JUM", "SAB"];
     return days.map((day) => (

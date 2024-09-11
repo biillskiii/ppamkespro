@@ -24,7 +24,7 @@ const ParentComponent = () => {
   // Effect to fetch data from API
   useEffect(() => {
     setLoading(true); // Mark that data is being fetched
-    fetch("https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/instrument")
+    fetch("http://103.123.63.7/api/instrument")
       .then((res) => {
         if (!res.ok) {
           throw new Error(`Network response was not ok: ${res.statusText}`);
@@ -32,7 +32,7 @@ const ParentComponent = () => {
         return res.json();
       })
       .then((responseData) => {
-        console.log("Data fetched:", responseData);
+    
 
         if (responseData && Array.isArray(responseData.data)) {
           const data = responseData.data;
@@ -42,7 +42,7 @@ const ParentComponent = () => {
             (item) => item.number >= 14 && item.number <= 17
           );
 
-          console.log("Filtered Data:", filteredData);
+         
 
           setData(filteredData); // Set data to state
         } else {
@@ -118,7 +118,7 @@ const ParentComponent = () => {
       ];
 
       const response = await axios.post(
-        "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
+        "http://103.123.63.7/api/response",
         mapData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -132,7 +132,75 @@ const ParentComponent = () => {
       setIsPushed(false);
     }
   };
+  const handleNext = async () => {
+    try {
+      const response = await fetch("http://103.123.63.7/api/response", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(answers),
+      });
 
+      if (response.ok) {
+        router.push("/assessment/bagian-1/assessment2");
+      } else {
+        console.error("Error posting data:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error posting data:", error);
+      toast.error("Failed to submit data. Please try again.");
+    }
+  };
+  //   e.preventDefault();
+
+  //   try {
+  //     setIsPushed(true);
+  //     const formData = new FormData(e.target);
+  //     const data = Object.fromEntries(formData.entries());
+
+  //     const mapData = [
+  //       {
+  //         instrumentId: 20,
+  //         value: data["input-14"],
+  //         score: 0,
+  //         comment: data["input-14_comment"],
+  //       },
+  //       {
+  //         instrumentId: 21,
+  //         value: data["input-15"],
+  //         score: 0,
+  //         comment: data["input-15_comment"],
+  //       },
+  //       {
+  //         instrumentId: 22,
+  //         value: data["input-16"],
+  //         score: 0,
+  //         comment: data["input-16_comment"],
+  //       },
+  //       {
+  //         instrumentId: 23,
+  //         value: data["input-17"],
+  //         score: 0,
+  //         comment: data["input-17_comment"],
+  //       },
+  //     ];
+
+  //     const response = await axios.post(
+  //       "http://103.123.63.7/api/response",
+  //       mapData,
+  //       { headers: { Authorization: `Bearer ${token}` } }
+  //     );
+
+  //     if (response.status === 200) {
+  //       router.push("/assessment/bagian-1/assessment-4");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error posting data:", error);
+  //   } finally {
+  //     setIsPushed(false);
+  //   }
+  // };
   const handleSidebarClick = () => {
     if (formRef.current) {
       setIsPushed(false);
@@ -194,7 +262,7 @@ const ParentComponent = () => {
                 placeholder="Komentar/Referensi/Rincian..."
                 onChange={(name, value) => handleInputChange(name, value)}
                 subname={item.subname}
-                subquestions={item.sub || []} // Pass subquestions if any
+                subquestions={item.sub || []}
               />
             </div>
           ))}
@@ -207,7 +275,13 @@ const ParentComponent = () => {
               variant="secondary"
               type="button"
             />
-            <Button label={"Berikutnya"} withIcon={"right"} type="submit" />
+            <Button
+              variant="primary"
+              label={"Berikutnya"}
+              onClick={handleNext}
+              // type="submit"
+              withIcon={"right"}
+            />
           </div>
         </form>
       </div>

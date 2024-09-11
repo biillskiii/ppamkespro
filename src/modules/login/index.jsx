@@ -11,6 +11,7 @@ import PasswordInput from "@/components/password";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
+import { jwtDecode } from "jwt-decode";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -21,11 +22,7 @@ const Login = () => {
   const handleLogin = async (event) => {
     event.preventDefault();
     let isValid = true;
-
-    // Reset errors
     setErrors({ username: "", password: "" });
-
-    // Validate inputs
     if (!username) {
       setErrors((prev) => ({
         ...prev,
@@ -43,19 +40,16 @@ const Login = () => {
 
     if (isValid) {
       try {
-        const response = await fetch(
-          "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/account/login",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              username: username.trim(),
-              password: password.trim(),
-            }),
-          }
-        );
+        const response = await fetch("http://103.123.63.7/api/account/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: username.trim(),
+            password: password.trim(),
+          }),
+        });
 
         if (!response.ok) {
           const errorData = await response.json();
@@ -63,12 +57,24 @@ const Login = () => {
         }
 
         const data = await response.json();
-        console.log("Login successful", data);
+        "Login successful", data;
         toast.success("Login successful");
 
-        sessionStorage.setItem("accessToken", data.data.accessToken);
+        const { accessToken } = data.data;
+        sessionStorage.setItem("accessToken", accessToken);
 
-        router.push("/assessment");
+        const decodedToken = jwtDecode(accessToken);
+        const userRole = decodedToken.status;
+
+        if (userRole === "viewer") {
+          router.push("/view");
+        } else if (userRole === "admin") {
+          router.push("/admin");
+        } else if (userRole === "submitter") {
+          router.push("/assessment");
+        } else {
+          toast.error("Akun Anda Diblokir!");
+        }
       } catch (error) {
         console.error("Login failed:", error);
         toast.error("Login failed: " + error.message);

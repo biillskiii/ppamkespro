@@ -1,13 +1,14 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   IoMdArrowRoundBack,
   IoIosArrowDown,
   IoIosArrowForward,
 } from "react-icons/io";
-import { FaCircleCheck } from "react-icons/fa6";
+import { FaCircleCheck, FaSpinner } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
+import { debounce } from "lodash";
 
 const menus = [
   {
@@ -92,13 +93,13 @@ const menus = [
       {
         id: 12,
         title: "Asesmen 8",
-        desc: "Pertanyaan 63-67",
+        desc: "Pertanyaan 63–67",
         href: "/assessment/bagian-2/assessment-8",
       },
       {
         id: 13,
         title: "Asesmen 9",
-        desc: "Pertanyaan 68-73",
+        desc: "Pertanyaan 68–73",
         href: "/assessment/bagian-2/assessment-9",
       },
     ],
@@ -114,6 +115,7 @@ const Menu = ({
   toggleAccordion,
   handleNavigation,
   onClick = () => {},
+  isLoading,
 }) => {
   const isActive = activeAccordion === title;
   const isHighlighted =
@@ -163,6 +165,7 @@ const Menu = ({
               handleNavigation={handleNavigation}
               isHighlighted={activeId === item.href}
               onClick={onClick}
+              isLoading={isLoading}
             />
           ))}
         </div>
@@ -178,6 +181,7 @@ const Assesstment = ({
   handleNavigation,
   isHighlighted,
   onClick = () => {},
+  isLoading,
 }) => (
   <div
     className={`border-white border-2 -ml-5 mb-5 rounded-lg ${
@@ -196,7 +200,7 @@ const Assesstment = ({
           isHighlighted ? "bg-accent text-white" : "bg-white text-accent"
         } rounded-lg py-2 text-start pl-2 font-semibold w-full`}
       >
-        {title}
+        {isLoading ? <FaSpinner className="animate-spin" /> : title}
       </span>
     </button>
     <p
@@ -211,6 +215,7 @@ const Assesstment = ({
 
 const Sidebar = ({ activeId, onClick = () => {} }) => {
   const [activeAccordion, setActiveAccordion] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -228,15 +233,22 @@ const Sidebar = ({ activeId, onClick = () => {} }) => {
     });
   };
 
-  const handleNavigation = (href, section = null) => {
-    router.push(href);
-    if (section && activeAccordion !== section) {
-      toggleAccordion(section);
-    }
-  };
+  const handleNavigation = useCallback(
+    debounce((href, section = null) => {
+      setIsLoading(true); // Set loading state to true
+      router.push(href);
+      if (section && activeAccordion !== section) {
+        toggleAccordion(section);
+      }
+      setIsLoading(false); // Reset loading state after navigation
+    }, 300),
+    [activeAccordion, toggleAccordion, router]
+  );
 
   const handleBack = () => {
+    setIsLoading(true); // Set loading state to true
     router.push("/assessment");
+    setIsLoading(false); // Reset loading state after navigation
   };
 
   return (
@@ -245,7 +257,12 @@ const Sidebar = ({ activeId, onClick = () => {} }) => {
         className="flex items-center gap-x-2 font-medium cursor-pointer"
         onClick={handleBack}
       >
-        <IoMdArrowRoundBack size={15} /> Kembali
+        {isLoading ? (
+          <FaSpinner className="animate-spin" />
+        ) : (
+          <IoMdArrowRoundBack size={15} />
+        )}{" "}
+        Kembali
       </p>
       <h1 className="mt-8 flex items-center gap-x-2 text-2xl font-semibold">
         <svg
@@ -256,29 +273,31 @@ const Sidebar = ({ activeId, onClick = () => {} }) => {
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            d="M6.58649 10.0324L7.97352 11.4195L10.7476 8.64539M14.2152 10.7259H19.0698M6.58649 16.9676L7.97352 18.3546L10.7476 15.5805M14.2152 17.6611H19.0698M1.29863 17.5661C0.67129 14.8917 0.671291 12.1083 1.29863 9.43391C2.16729 5.73068 5.0588 2.83916 8.76204 1.9705C11.4365 1.34317 14.2198 1.34317 16.8942 1.9705C20.5975 2.83916 23.489 5.73068 24.3576 9.43391C24.985 12.1083 24.985 14.8917 24.3576 17.5661C23.489 21.2693 20.5975 24.1608 16.8942 25.0295C14.2198 25.6568 11.4365 25.6568 8.76204 25.0295C5.05881 24.1608 2.16729 21.2693 1.29863 17.5661Z"
-            stroke="#161616"
-            strokeWidth="1.5"
+            d="M6.58649 10.0324L7.97352 11.4195L10.7476 8.64539M14.2152 10.7259H19.0698M6.58649 16.9676L7.97352 18.3546L10.7476 15.5805M14.2152 17.6611H19.0698M1.29863 17.5661C0.67129 14.8917 0.671291 12.1083 1.29863 9.43391C2.16729 5.73068 5.0588 2.83916 8.76204 1.9705C11.4365 1.34317 14.2198 1.34317 16.8942 1.9705C20.5975 2.83916 23.489 5.73068 24.3576 9.43391C24.985 12.1083 24.985 14.8917 24.3576 17.5661C23.489 21.2693 20.5975 24.1608 16.8942 25.0295C14.2198 25.6568 11.4365 25.6568 8.76204 25.0295C5.0588 24.1608 2.16729 21.2693 1.29863 17.5661Z"
+            stroke="#1D1D1F"
+            strokeWidth="2"
             strokeLinecap="round"
-            strokeLinejoin="round"
           />
         </svg>
-        Assessment
+        Asesmen
       </h1>
-      <div className="mt-2 border-b-2 w-10/12 border-black"></div>
-      {menus.map((item, index) => (
-        <Menu
-          key={index}
-          title={item.title}
-          subMenu={item.subMenu}
-          href={item.href}
-          activeId={activeId}
-          activeAccordion={activeAccordion}
-          toggleAccordion={toggleAccordion}
-          handleNavigation={handleNavigation}
-          onClick={onClick}
-        />
-      ))}
+      <hr className="w-10/12 text-border mt-3" />
+      <div className="pb-5">
+        {menus.map((menu, index) => (
+          <Menu
+            key={index}
+            title={menu.title}
+            subMenu={menu.subMenu}
+            href={menu.href}
+            activeId={activeId}
+            activeAccordion={activeAccordion}
+            toggleAccordion={toggleAccordion}
+            handleNavigation={handleNavigation}
+            isLoading={isLoading}
+            onClick={onClick}
+          />
+        ))}
+      </div>
     </div>
   );
 };

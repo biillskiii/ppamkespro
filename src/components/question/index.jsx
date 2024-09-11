@@ -18,22 +18,38 @@ const Question = ({
   const [answer, setAnswer] = useState("");
   const [comment, setComment] = useState("");
   const [subAnswers, setSubAnswers] = useState({});
+  const [subComments, setSubComments] = useState({}); // To handle sub-question comments
 
+  // Main answer change handler
   const handleAnswerChange = (value) => {
+    "Checkbox Answer Changed:", value; // Debug: Log value
     setAnswer(value);
     onChange(name, value); // Notify parent component of the change
   };
 
+  // Main comment change handler
   const handleCommentChange = (e) => {
     setComment(e.target.value);
   };
 
+  // Sub-question answer change handler
   const handleSubAnswerChange = (subId, value) => {
+    "Sub-answer Changed:", subId, value;
+    // Debug: Log subId and value
     setSubAnswers((prevAnswers) => ({
       ...prevAnswers,
       [subId]: value,
     }));
     onChange(name, { ...subAnswers, [subId]: value }); // Notify parent component of the change
+  };
+
+  // Sub-question comment change handler
+  const handleSubCommentChange = (subId, e) => {
+    const { value } = e.target;
+    setSubComments((prevComments) => ({
+      ...prevComments,
+      [subId]: value,
+    }));
   };
 
   return (
@@ -97,7 +113,7 @@ const Question = ({
         )}
 
         {type === "sub" && (
-          <div className="w-full flex flex-col gap-y-4 ">
+          <div className="w-full flex flex-col gap-y-4">
             <div className="flex flex-col gap-y-2">
               {subquestions?.map((subquestion) => (
                 <div
@@ -110,6 +126,7 @@ const Question = ({
                   >
                     <li>{subquestion.question}</li>
                   </label>
+
                   {subquestion.type === "dropdown" && (
                     <div className="flex flex-row items-center gap-x-5 w-full">
                       <DropdownInput
@@ -128,13 +145,16 @@ const Question = ({
                         type="text"
                         name={`${name}_comment_sub_${subquestion.id}`}
                         placeholder={placeholder}
-                        value={comment}
-                        onChange={handleCommentChange}
+                        value={subComments[subquestion.id] || ""}
+                        onChange={(e) =>
+                          handleSubCommentChange(subquestion.id, e)
+                        }
                       />
                     </div>
                   )}
+
                   {subquestion.type === "checkbox" && (
-                    <div className="flex  flex-col items-start gap-y-3 justify-center w-full">
+                    <div className="flex flex-col items-start gap-y-3 justify-center w-full">
                       <CheckboxInput
                         options={subquestion.choice?.map((choice) => ({
                           value: choice,
@@ -149,8 +169,10 @@ const Question = ({
                         type="text"
                         name={`${name}_comment_sub_${subquestion.id}`}
                         placeholder={placeholder}
-                        value={comment}
-                        onChange={handleCommentChange}
+                        value={subComments[subquestion.id] || ""}
+                        onChange={(e) =>
+                          handleSubCommentChange(subquestion.id, e)
+                        }
                       />
                     </div>
                   )}

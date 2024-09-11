@@ -27,7 +27,7 @@ const ParentComponent = () => {
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
-        console.log("Decoded Token:", decodedToken);
+        "Decoded Token:", decodedToken;
         setUsername(decodedToken.username || "");
         setStatus(decodedToken.status || "");
       } catch (error) {
@@ -39,7 +39,7 @@ const ParentComponent = () => {
   }, [router]);
   useEffect(() => {
     setLoading(true);
-    fetch("https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/instrument")
+    fetch("http://103.123.63.7/api/instrument")
       .then((res) => {
         if (!res.ok) {
           throw new Error(`Network response was not ok: ${res.statusText}`);
@@ -47,7 +47,7 @@ const ParentComponent = () => {
         return res.json();
       })
       .then((responseData) => {
-        console.log("Data fetched:", responseData);
+        "Data fetched:", responseData;
 
         if (responseData && Array.isArray(responseData.data)) {
           const data = responseData.data;
@@ -56,7 +56,7 @@ const ParentComponent = () => {
             (item) => item.number >= 63 && item.number <= 67
           );
 
-          console.log("Filtered Data:", filteredData);
+          "Filtered Data:", filteredData;
 
           setData(filteredData);
         } else {
@@ -97,16 +97,13 @@ const ParentComponent = () => {
 
   const handleNext = async () => {
     try {
-      const response = await fetch(
-        "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(answers),
-        }
-      );
+      const response = await fetch("http://103.123.63.7/api/response", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(answers),
+      });
 
       if (response.ok) {
         router.push("/assessment/bagian-1/assessment2");
@@ -114,7 +111,7 @@ const ParentComponent = () => {
         console.error("Error posting data:", response.statusText);
       }
     } catch (error) {
-      console.error("Error posting data:", error);
+      toast.error("Failed to submit data. Please try again.");
     }
   };
 
@@ -125,7 +122,15 @@ const ParentComponent = () => {
       setIsPushed(true);
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData.entries());
-
+      const getArrayValues = (prefix) => {
+        const values = [];
+        let index = 0;
+        while (data[`${prefix}-${index}`] !== undefined) {
+          values.push(data[`${prefix}-${index}`]);
+          index++;
+        }
+        return values;
+      };
       const mapData = [
         {
           instrumentId: 163,
@@ -141,104 +146,104 @@ const ParentComponent = () => {
         },
         {
           instrumentId: 166,
-          value: `${data["input-65_sub_166"]}`,
+          value: getArrayValues("input-65_sub_166"),
           score: 0,
-          comment: `${data["input-65_comment_sub_166"]}`,
+          comment: data["input-65_comment_sub_166"],
         },
         {
           instrumentId: 167,
-          value: `${data["input-65_sub_167"]}`,
+          value: getArrayValues("input-65_sub_167"),
           score: 0,
-          comment: `${data["input-65_comment_sub_167"]}`,
+          comment: data["input-65_comment_sub_167"],
         },
         {
           instrumentId: 168,
-          value: `${data["input-65_sub_168"]}`,
+          value: getArrayValues("input-65_sub_168"),
           score: 0,
-          comment: `${data["input-65_comment_sub_168"]}`,
+          comment: data["input-65_comment_sub_168"],
         },
         {
           instrumentId: 169,
-          value: `${data["input-65_sub_169"]}`,
+          value: getArrayValues("input-65_sub_169"),
           score: 0,
-          comment: `${data["input-65_comment_sub_169"]}`,
+          comment: data["input-65_comment_sub_169"],
         },
         {
           instrumentId: 170,
-          value: `${data["input-65_sub_170"]}`,
+          value: getArrayValues("input-65_sub_170"),
           score: 0,
-          comment: `${data["input-65_comment_sub_170"]}`,
+          comment: data["input-65_comment_sub_170"],
         },
         {
           instrumentId: 171,
-          value: `${data["input-65_sub_171"]}`,
+          value: getArrayValues("input-65_sub_171"),
           score: 0,
-          comment: `${data["input-65_comment_sub_171"]}`,
+          comment: data["input-65_comment_sub_171"],
         },
         {
           instrumentId: 173,
-          value: `${data["input-66_sub_173"]}`,
+          value: data["input-66_sub_173"],
           score: 0,
-          comment: `${data["input-66_comment_sub_173"]}`,
+          comment: data["input-66_comment_sub_173"],
         },
         {
           instrumentId: 174,
-          value: `${data["input-66_sub_174"]}`,
+          value: data["input-66_sub_174"],
           score: 0,
-          comment: `${data["input-66_comment_sub_174"]}`,
+          comment: data["input-66_comment_sub_174"],
         },
         {
           instrumentId: 175,
-          value: `${data["input-66_sub_175"]}`,
+          value: data["input-66_sub_175"],
           score: 0,
-          comment: `${data["input-66_comment_sub_175"]}`,
+          comment: data["input-66_comment_sub_175"],
         },
         {
           instrumentId: 176,
-          value: `${data["input-66_sub_176"]}`,
+          value: data["input-66_sub_176"],
           score: 0,
-          comment: `${data["input-66_comment_sub_176"]}`,
+          comment: data["input-66_comment_sub_176"],
         },
         {
           instrumentId: 177,
-          value: `${data["input-66_sub_177"]}`,
+          value: data["input-66_sub_177"],
           score: 0,
-          comment: `${data["input-66_comment_sub_177"]}`,
+          comment: data["input-66_comment_sub_177"],
         },
         {
           instrumentId: 178,
-          value: `${data["input-66_sub_178"]}`,
+          value: data["input-66_sub_178"],
           score: 0,
-          comment: `${data["input-66_comment_sub_178"]}`,
+          comment: data["input-66_comment_sub_178"],
         },
         {
           instrumentId: 179,
-          value: `${data["input-66_sub_179"]}`,
+          value: data["input-66_sub_179"],
           score: 0,
-          comment: `${data["input-66_comment_sub_179"]}`,
+          comment: data["input-66_comment_sub_179"],
         },
         {
           instrumentId: 181,
-          value: `${data["input-67_sub_181"]}`,
+          value: data["input-67_sub_181"],
           score: 0,
-          comment: `${data["input-67_comment_sub_181"]}`,
+          comment: data["input-67_comment_sub_181"],
         },
         {
           instrumentId: 182,
-          value: `${data["input-67_sub_182"]}`,
+          value: data["input-67_sub_182"],
           score: 0,
-          comment: `${data["input-67_comment_sub_182"]}`,
+          comment: data["input-67_comment_sub_182"],
         },
         {
           instrumentId: 183,
-          value: `${data["input-67_sub_183"]}`,
+          value: data["input-67_sub_183"],
           score: 0,
-          comment: `${data["input-67_comment_sub_183"]}`,
+          comment: data["input-67_comment_sub_183"],
         },
       ];
 
       const response = await axios.post(
-        "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
+        "http://103.123.63.7/api/response",
         mapData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -330,11 +335,8 @@ const ParentComponent = () => {
             />
             <Button
               label={"Berikutnya"}
-              // onClick={handleNext}
+              onClick={handleNext}
               withIcon={"right"}
-              // variant={!isDone && "disabeled"}
-              // disabled={!isDone}
-              type="submit"
             />
           </div>
         </form>

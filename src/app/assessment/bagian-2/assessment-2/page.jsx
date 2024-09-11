@@ -28,7 +28,7 @@ const ParentComponent = () => {
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
-        console.log("Decoded Token:", decodedToken);
+       
         setUsername(decodedToken.username || "");
         setStatus(decodedToken.status || "");
       } catch (error) {
@@ -40,7 +40,7 @@ const ParentComponent = () => {
   }, [router]);
   useEffect(() => {
     setLoading(true);
-    fetch("https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/instrument")
+    fetch("http://103.123.63.7/api/instrument")
       .then((res) => {
         if (!res.ok) {
           throw new Error(`Network response was not ok: ${res.statusText}`);
@@ -48,7 +48,7 @@ const ParentComponent = () => {
         return res.json();
       })
       .then((responseData) => {
-        console.log("Data fetched:", responseData);
+       
 
         if (responseData && Array.isArray(responseData.data)) {
           const data = responseData.data;
@@ -57,7 +57,7 @@ const ParentComponent = () => {
             (item) => item.number >= 31 && item.number <= 36
           );
 
-          console.log("Filtered Data:", filteredData);
+       
 
           setData(filteredData);
         } else {
@@ -92,7 +92,24 @@ const ParentComponent = () => {
       [name]: value,
     }));
   };
+  const handleNext = async () => {
+    try {
+      const response = await fetch("http://103.123.63.7/api/response", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(answers),
+      });
 
+      if (response.ok) {
+        router.push("/assessment/bagian-1/assessment2");
+      } else {
+      }
+    } catch (error) {
+      toast.error("Failed to submit data. Please try again.");
+    }
+  };
   const handleSidebarClick = () => {
     if (formRef.current) {
       setIsPushed(false);
@@ -109,7 +126,15 @@ const ParentComponent = () => {
       setIsPushed(true);
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData.entries());
-
+      const getArrayValues = (prefix) => {
+        const values = [];
+        let index = 0;
+        while (data[`${prefix}-${index}`] !== undefined) {
+          values.push(data[`${prefix}-${index}`]);
+          index++;
+        }
+        return values;
+      };
       const mapData = [
         {
           instrumentId: 37,
@@ -131,55 +156,55 @@ const ParentComponent = () => {
         },
         {
           instrumentId: 41,
-          value: `${data["input-34_sub_41"]}`,
+          value: getArrayValues("input-34_sub_41"),
           score: 0,
           comment: `${data["input-34_comment_sub_41"]}`,
         },
         {
           instrumentId: 42,
-          value: `${data["input-34_sub_42"]}`,
+          value: getArrayValues("input-34_sub_42"),
           score: 0,
           comment: `${data["input-34_comment_sub_42"]}`,
         },
         {
           instrumentId: 43,
-          value: `${data["input-34_sub_43"]}`,
+          value: getArrayValues("input-34_sub_43"),
           score: 0,
           comment: `${data["input-34_comment_sub_43"]}`,
         },
         {
           instrumentId: 44,
-          value: `${data["input-34_sub_44"]}`,
+          value: getArrayValues("input-34_sub_44"),
           score: 0,
           comment: `${data["input-34_comment_sub_44"]}`,
         },
         {
           instrumentId: 45,
-          value: `${data["input-34_sub_45"]}`,
+          value: getArrayValues("input-34_sub_45"),
           score: 0,
           comment: `${data["input-34_comment_sub_45"]}`,
         },
         {
           instrumentId: 46,
-          value: `${data["input-34_sub_46"]}`,
+          value: getArrayValues("input-34_sub_46"),
           score: 0,
           comment: `${data["input-34_comment_sub_46"]}`,
         },
         {
           instrumentId: 47,
-          value: `${data["input-34_sub_47"]}`,
+          value: getArrayValues("input-34_sub_47"),
           score: 0,
           comment: `${data["input-34_comment_sub_47"]}`,
         },
         {
           instrumentId: 48,
-          value: `${data["input-34_sub_48"]}`,
+          value: getArrayValues("input-34_sub_48"),
           score: 0,
           comment: `${data["input-34_comment_sub_48"]}`,
         },
         {
           instrumentId: 49,
-          value: `${data["input-34_sub_49"]}`,
+          value: getArrayValues("input-34_sub_49"),
           score: 0,
           comment: `${data["input-34_comment_sub_49"]}`,
         },
@@ -228,7 +253,7 @@ const ParentComponent = () => {
       ];
 
       const response = await axios.post(
-        "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
+        "http://103.123.63.7/api/response",
         mapData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -311,11 +336,8 @@ const ParentComponent = () => {
             />
             <Button
               label={"Berikutnya"}
-              // onClick={handleNext}
+              onClick={handleNext}
               withIcon={"right"}
-              // variant={!isDone && "disabeled"}
-              // disabled={!isDone}
-              type="submit"
             />
           </div>
         </form>

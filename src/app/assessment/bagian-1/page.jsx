@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Question from "@/components/question";
 import { useRouter } from "next/navigation";
 import Button from "@/components/button";
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from "jwt-decode"; // Adjust the import to `jwt-decode` for proper usage
 import { FaSpinner } from "react-icons/fa";
 import Sidebar from "@/components/sidebar";
 import axios from "axios";
@@ -16,18 +16,16 @@ const ParentComponent = () => {
   const [activeAccordion, setActiveAccordion] = useState(null);
   const [username, setUsername] = useState("");
   const router = useRouter();
-  const token =
-    typeof window !== "undefined"
-      ? sessionStorage.getItem("accessToken")
-      : null;
+  const token = sessionStorage.getItem("accessToken");
   const formRef = useRef(null);
   const [isPushed, setIsPushed] = useState(false);
   const [activeId, setActiveId] = useState("/assessment/bagian-1/");
+
   useEffect(() => {
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
-        console.log("Decoded Token:", decodedToken);
+     
         setUsername(decodedToken.username || "");
         setStatus(decodedToken.status || "");
       } catch (error) {
@@ -48,7 +46,6 @@ const ParentComponent = () => {
         return res.json();
       })
       .then((responseData) => {
-        console.log("Data fetched:", responseData);
 
         if (responseData && Array.isArray(responseData.data)) {
           const data = responseData.data;
@@ -57,7 +54,7 @@ const ParentComponent = () => {
             (item) => item.number >= 1 && item.number <= 7
           );
 
-          console.log("Filtered Data:", filteredData);
+    
 
           setData(filteredData);
         } else {
@@ -95,7 +92,7 @@ const ParentComponent = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-
+    // setIsPushed(true);
     try {
       setIsPushed(true);
       const formData = new FormData(e.target);
@@ -153,6 +150,7 @@ const ParentComponent = () => {
       );
 
       if (response.status === 200) {
+        setIsPushed(true);
         router.push("/assessment/bagian-1/assessment-2");
       }
     } catch (error) {
@@ -161,7 +159,24 @@ const ParentComponent = () => {
       setIsPushed(false);
     }
   };
+  const handleNext = async () => {
+    try {
+      const response = await fetch("http://103.123.63.7/api/response", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(answers),
+      });
 
+      if (response.ok) {
+        router.push("/assessment/bagian-1/assessment2");
+      } else {
+      }
+    } catch (error) {
+      toast.error("Failed to submit data. Please try again.");
+    }
+  };
   const handleSidebarClick = () => {
     if (formRef.current) {
       setIsPushed(false);
@@ -198,12 +213,8 @@ const ParentComponent = () => {
           </p>
         </div>
         <form
-          // action=""
           ref={formRef}
-          onSubmit={(e) => {
-            onSubmit(e);
-            setIsPushed(true);
-          }}
+          onSubmit={onSubmit}
           className="flex flex-col gap-y-5"
         >
           {isData.map((item, index) => (
@@ -235,15 +246,11 @@ const ParentComponent = () => {
               onClick={handleBack}
               withIcon={"left"}
               variant="secondary"
-              // type="button"
             />
             <Button
               label={"Berikutnya"}
-              // onClick={handleNext}
               withIcon={"right"}
-              // variant={!isDone && "disabeled"}
-              // disabled={!isDone}
-              type="submit"
+              onClick={handleNext}
             />
           </div>
         </form>

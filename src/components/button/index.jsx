@@ -39,9 +39,9 @@ const Button = ({
         "flex items-center w-full justify-center gap-2",
         "rounded-lg px-4 py-2 font-semibold",
         getButtonClasses(),
-        { "cursor-not-allowed": disabled === true } // Disable pointer events for secondary variant
+        { "cursor-not-allowed": disabled === true }
       )}
-      onClick={variant === "secondary" ? undefined : onClick} // Disable onClick for secondary variant
+      onClick={onClick}
       type={type}
       disabled={disabled}
     >

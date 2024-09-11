@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
 const Table = ({ columns = [], data = [], type }) => {
-  console.log("Table Data:", data); // Debugging
+  "Table Data:", data; // Debugging
 
   const rowsPerPage = 7;
   const [currentPage, setCurrentPage] = useState(1);

@@ -7,14 +7,16 @@ import DatePicker from "@/components/datepicker";
 import Sidebar from "@/components/sidebar";
 import { FaSpinner } from "react-icons/fa";
 import axios from "axios";
-
+import { formatISO } from "date-fns";
 const Bagian0 = () => {
   const [answers, setAnswers] = useState({});
   const [isData, setData] = useState([]);
   const [isDataArea, setDataArea] = useState({});
   const [isDataAreaLevel, setDataAreaLevel] = useState([]);
   const [selectedLevel, setSelectedLevel] = useState("");
+  const [activeId, setActiveId] = useState("/assessment/bagian-0/");
   const [isLoading, setLoading] = useState(false);
+  const [isDone, setIsDone] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const token =
@@ -23,12 +25,15 @@ const Bagian0 = () => {
       : null;
   const formRef = useRef(null);
   const [isPushed, setIsPushed] = useState(false);
-  const [activeId, setActiveId] = useState("/assessment/bagian-0/");
-
+  const [selectedOption, setSelectedOption] = useState("");
+  const dropdownOptions = isDataAreaLevel.map((item) => ({
+    value: item.value,
+    label: item.name,
+  }));
   useEffect(() => {
     setLoading(true);
 
-    fetch("http://localhost:3001/instrument")
+    fetch("http://103.123.63.7/api/instrument")
       .then((res) => {
         if (!res.ok) {
           throw new Error(`Network response was not ok: ${res.statusText}`);
@@ -36,14 +41,12 @@ const Bagian0 = () => {
         return res.json();
       })
       .then((responseData) => {
-        console.log("Data instrument fetched:", responseData);
-
         if (responseData && Array.isArray(responseData.data)) {
           const data = responseData.data;
           const filteredData = data.filter(
             (item) => item.number >= 1 && item.number <= 7
           );
-          console.log("Filtered Data:", filteredData); // Log data yang telah difilter
+
           setData(filteredData);
         } else {
           console.error("Invalid data format received:", responseData);
@@ -57,7 +60,7 @@ const Bagian0 = () => {
         setLoading(false);
       });
 
-    fetch("https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/instrument/area")
+    fetch("http://103.123.63.7/api/instrument/area")
       .then((res) => {
         if (!res.ok) {
           throw new Error(`Network response was not ok: ${res.statusText}`);
@@ -65,10 +68,10 @@ const Bagian0 = () => {
         return res.json();
       })
       .then((responseData) => {
-        console.log("Data area fetched:", responseData);
         setDataArea(responseData.data);
         const transformed = Object.keys(responseData.data).map((key) => ({
           value: key,
+          name: responseData.data[key].name,
         }));
         setDataAreaLevel(transformed);
       })
@@ -88,14 +91,32 @@ const Bagian0 = () => {
     router.push("/assessment");
   };
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen w-full flex justify-center items-center">
-        <FaSpinner className="animate-spin text-accent" size={50} />
-      </div>
-    );
-  }
+  // const handleNext = async () => {
+  //   try {
+  //     if (formRef.current) {
+  //       formRef.current.dispatchEvent(
+  //         new Event("submit", { bubbles: true, cancelable: true })
+  //       );
+  //     }
 
+  //     if (isDone) {
+  //       const response = await axios.post(
+  //         "http://103.123.63.7/api/response",
+  //         answers,
+  //         { headers: { Authorization: `Bearer ${token}` } }
+  //       );
+
+  //       if (response.status === 200) {
+  //         router.push("/assessment/bagian-1");
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error(
+  //       "Error posting data:",
+  //       error.response ? error.response.data : error.message
+  //     );
+  //   }
+  // };
   const onSubmit = async (e) => {
     e.preventDefault();
 
@@ -104,35 +125,20 @@ const Bagian0 = () => {
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData.entries());
 
-      const mapData = [
-        {
-          instrumentId: 196,
-          value: null,
-          score: 0,
-          comment: data.pemipin_comment,
-        },
-        {
-          instrumentId: 197,
-          value: data.tanggal,
-          score: 0,
-          comment: null,
-        },
-        {
-          instrumentId: 198,
-          value: data.tingkat,
-          score: 0,
-          comment: data.tingkat_comment,
-        },
-        {
-          instrumentId: 199,
-          value: null,
-          score: 0,
-          comment: data.peserta_comment,
-        },
-      ];
+      // Debug: log data dari form
 
+      // Convert date to ISO 8601 format
+      const formattedDate = formatISO(new Date(data["date"]));
+
+      // Construct the mapData object with the correct values
+      const mapData = {
+        leader: data["leader_comment"] || "", // Ensure default value or validation
+        participant: data["participant_comment"] || "",
+        date: formattedDate || "", // Ensure this is in ISO string format
+        area: data["area_comment"] || "",
+      };
       const response = await axios.post(
-        "https://swhytbiyrgsovsl-evfpthsuvq-et.a.run.app/response",
+        "http://103.123.63.7/api/response/metadata",
         mapData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -141,7 +147,10 @@ const Bagian0 = () => {
         router.push("/assessment/bagian-1");
       }
     } catch (error) {
-      console.error("Error posting data:", error);
+      console.error(
+        "Error posting data:",
+        error.response ? error.response.data : error.message
+      );
     } finally {
       setIsPushed(false);
     }
@@ -171,7 +180,6 @@ const Bagian0 = () => {
           </p>
         </div>
         <form
-          // action=""
           ref={formRef}
           onSubmit={(e) => {
             onSubmit(e);
@@ -184,36 +192,33 @@ const Bagian0 = () => {
               label={"Siapa yang Memimpin Penilaian?"}
               type={"text"}
               placeholder={"Nama pemimpin penilaian..."}
-              name={"pemipin"}
-              // onChange={{}}
+              name={"leader"}
             />
-            <DatePicker name="tanggal" />
+            <DatePicker name="date" />
           </div>
 
           <Question0
             label={"Pada tingkat apa penilaian dilakukan?"}
             placeholder={
-              "Masukan nama Provinsi (Jika Tingkat Nasional), Kabupaten/Kota (Jika Tingkat Sub Nasional)..."
+              isDataArea[selectedLevel]?.name ||
+              "Masukan nama Provinsi atau Kabupaten/Kota..."
             }
-            name={"tingkat"}
+            name={"area"}
             type={"dropdown"}
-            options={isDataAreaLevel}
-            suggestions={isDataArea[selectedLevel]}
-            selectedValue={selectedLevel}
-            setSelectedValue={setSelectedLevel}
-            // onChange={{}}
+            options={isDataAreaLevel.map((item) => item.value)}
+            suggestions={isDataArea[selectedOption]}
+            selectedValue={selectedOption}
+            setSelectedValue={setSelectedOption}
           />
 
           <Question0
             label={"Peserta yang terlibat dalam penilaian?"}
             placeholder={"Nama peserta penilaian..."}
-            name={"peserta"}
+            name={"participant"}
             type={"text"}
-            // options={{}}
-            // onChange={{}}
           />
 
-          <div className="flex  items-center ml-80 my-10 gap-x-5 w-3/12">
+          <div className="flex items-center ml-80 my-10 gap-x-5 w-3/12">
             <Button
               label={"Sebelumnya"}
               onClick={handleBack}
@@ -222,12 +227,7 @@ const Bagian0 = () => {
               type="button"
               disabled
             />
-            <Button
-              label={"Berikutnya"}
-              // onClick={handleNext}
-              withIcon={"right"}
-              type="submit"
-            />
+            <Button label={"Berikutnya"} type="submit" />
           </div>
         </form>
       </div>
