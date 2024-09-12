@@ -17,13 +17,13 @@ const ParentComponent = () => {
   const formRef = useRef(null);
   const [isPushed, setIsPushed] = useState(false);
   const [activeId, setActiveId] = useState("/assessment/bagian-1/");
-  const [token, setToken] = useState();
 
   useEffect(() => {
+    const token = sessionStorage.getItem("accessToken");
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
-     
+
         setUsername(decodedToken.username || "");
         setStatus(decodedToken.status || "");
       } catch (error) {
@@ -35,8 +35,6 @@ const ParentComponent = () => {
   }, [router]);
 
   useEffect(() => {
-    setToken(sessionStorage.getItem("accessToken"));
-
     setLoading(true);
     fetch("http://103.123.63.7/api/instrument")
       .then((res) => {
@@ -46,15 +44,12 @@ const ParentComponent = () => {
         return res.json();
       })
       .then((responseData) => {
-
         if (responseData && Array.isArray(responseData.data)) {
           const data = responseData.data;
 
           const filteredData = data.filter(
             (item) => item.number >= 1 && item.number <= 7
           );
-
-    
 
           setData(filteredData);
         } else {
@@ -69,7 +64,6 @@ const ParentComponent = () => {
         setLoading(false);
       });
   }, []);
-
   useEffect(() => {
     if (isData.length > 0) {
       const allAnswered = isData.every(
