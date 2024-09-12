@@ -7,6 +7,7 @@ import Image from "next/image";
 import Pending from "../.././../public/assets/amico.png";
 import ApprovedImage from "../.././../public/assets/approved.png";
 import RejectedImage from "../.././../public/assets/reject.png";
+import NoAccess from "../.././../public/assets/no-access.png";
 import { jwtDecode } from "jwt-decode";
 import { FaSpinner } from "react-icons/fa";
 import { FaClipboardList } from "react-icons/fa";
@@ -19,10 +20,12 @@ const StatusPage = () => {
   const [username, setUsername] = useState("");
   const [userRole, setUserRole] = useState("");
   const [rejectReason, setRejectReason] = useState(null); // State untuk alasan penolakan
+  const [isLoading, setIsLoading] = useState(false); // State untuk alasan penolakan
   const router = useRouter();
 
   useEffect(() => {
     const token = sessionStorage.getItem("accessToken");
+    setIsLoading(true);
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
@@ -88,6 +91,7 @@ const StatusPage = () => {
         router.push("/login");
       }
     }
+    setIsLoading(false);
   };
 
   const handleAjuan = () => {
@@ -245,8 +249,37 @@ const StatusPage = () => {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <FaSpinner className="animate-spin text-6xl text-accent" />
+    <div className="">
+      {isLoading ? (
+        <div className="flex items-center justify-center min-h-screen">
+          <FaSpinner className="animate-spin text-6xl text-accent" />
+        </div>
+      ) : (
+        <div className="w-full ">
+          <Navbar />
+          <div className="flex flex-col mt-20 gap-y-1 items-center text-center">
+            <Image
+              src={NoAccess}
+              alt="no access"
+              width={500}
+              className="mb-10"
+            />
+            <h1 className="font-extrabold text-2xl">
+              Anda belum mengajukan permintaan akses data
+            </h1>
+            <p className="font-medium text-sm mb-5">
+              Ajukan permintaan sekarang untuk mengakses data instrumen asesmen
+              PPAM yang Anda butuhkan.
+            </p>
+            <button
+              className="mx-auto uppercase px-6 py-3 rounded-lg bg-accent text-white"
+              onClick={handleAjuan}
+            >
+              Buat Pengajuan Baru
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

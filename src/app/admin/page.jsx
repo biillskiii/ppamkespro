@@ -9,7 +9,6 @@ import { FaClipboardList } from "react-icons/fa";
 import { HiMiniInboxArrowDown } from "react-icons/hi2";
 import { FaUserGear } from "react-icons/fa6";
 import TextInput from "@/components/input-text";
-import { reject } from "lodash";
 const Admin = () => {
   const [data, setData] = useState([]);
   const [username, setUsername] = useState("");
@@ -57,7 +56,6 @@ const Admin = () => {
         },
       })
       .then((response) => {
-      
         if (response.data && response.data.data) {
           setData(response.data.data);
         }
@@ -82,7 +80,6 @@ const Admin = () => {
         }
       )
       .then((response) => {
-       
         setData((prevData) =>
           prevData.map((item) =>
             item.username === username ? { ...item, status: "approved" } : item
@@ -116,7 +113,6 @@ const Admin = () => {
         }
       )
       .then((response) => {
-      
         setData((prevData) =>
           prevData.map((item) =>
             item.username === selectedUser
@@ -241,14 +237,14 @@ const Admin = () => {
                   {filter === "Ditolak" && (
                     <th className="py-2 border-b">Alasan Penolakan</th>
                   )}
-                  {filter === "Diterima" && "Ditolak" ? (
+                  {filter === "Diterima" && filter === "Ditolak" ? (
                     <th className="py-2 border-b hidden">Tindakan</th>
                   ) : (
                     <th className="py-2 border-b">Tindakan</th>
                   )}
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="border-2">
                 {filteredData.map((item, index) => (
                   <tr key={index}>
                     <td className="py-2 border-b text-center">{index + 1}</td>
@@ -263,9 +259,11 @@ const Admin = () => {
                     >
                       {item.status}
                     </td>
-                    <td className="py-2 border-b text-center">
-                      {item.rejectReason}
-                    </td>
+                    {filter === "Ditolak" &&
+                      (<td className="py-2 border-b text-center">
+                        {item.rejectReason}
+                      </td>)
+                    }
 
                     <td className="py-2 border-b text-center">
                       {item.status === "pending" && (

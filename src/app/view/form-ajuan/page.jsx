@@ -18,10 +18,12 @@ const FormAjuan = () => {
   const [status, setStatus] = useState("");
   const [error, setError] = useState("");
   const [hasSubmitted, setHasSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     const token = sessionStorage.getItem("accessToken");
+    setIsLoading(true);
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
@@ -42,6 +44,7 @@ const FormAjuan = () => {
     } else {
       router.push("/");
     }
+    setIsLoading(false);
   }, [router]);
 
   const checkSubmissionStatus = async (token) => {
@@ -91,7 +94,7 @@ const FormAjuan = () => {
 
       if (response.status === 201) {
         setHasSubmitted(true);
-        router.push("/view/status-ajuan");
+        router.push("/view");
       } else {
         throw new Error(`Unexpected response status: ${response.status}`);
       }
@@ -145,35 +148,43 @@ const FormAjuan = () => {
 
   return (
     <div>
-      <ToastContainer />
-      <Navbar username={username} status={status} />
-      <div className="flex px-52 flex-col items-center justify-start mt-20 h-screen">
-        <h1 className="font-bold text-3xl">Ajukan Permintaan Akses Baru</h1>
-        <p className="mb-20">
-          Lengkapi informasi di bawah untuk mengajukan permintaan akses data
-          asesmen PPAM
-        </p>
-        <form className="w-full" onSubmit={handleSubmit}>
-          <TextInput
-            label={"Alasan Pengajuan"}
-            name={"reason"}
-            placeholder={"Masukkan alasan pengajuan"}
-            type={"text"}
-            onChange={handleInputChange}
-            value={inputValue}
-            required // Ensures the field is required
-          />
-          {error && <p className="text-red-500 mt-2">{error}</p>}
-          <div className="mt-5 mx-auto w-52">
-            <Button
-              label={isSubmitting ? "Mengirim..." : "KIRIM PENGAJUAN"}
-              type={"submit"}
-              variant={inputValue ? "primary" : "disabled"}
-              disabled={isSubmitting || !inputValue.trim()}
-            />
+      {isLoading ? (
+        <div className="flex items-center justify-center min-h-screen">
+          <FaSpinner className="animate-spin text-6xl text-accent" />
+        </div>
+      ) : (
+        <div>
+          <ToastContainer />
+          <Navbar username={username} status={status} />
+          <div className="flex px-52 flex-col items-center justify-start mt-20 h-screen">
+            <h1 className="font-bold text-3xl">Ajukan Permintaan Akses Baru</h1>
+            <p className="mb-20">
+              Lengkapi informasi di bawah untuk mengajukan permintaan akses data
+              asesmen PPAM
+            </p>
+            <form className="w-full" onSubmit={handleSubmit}>
+              <TextInput
+                label={"Alasan Pengajuan"}
+                name={"reason"}
+                placeholder={"Masukkan alasan pengajuan"}
+                type={"text"}
+                onChange={handleInputChange}
+                value={inputValue}
+                required // Ensures the field is required
+              />
+              {error && <p className="text-red-500 mt-2">{error}</p>}
+              <div className="mt-5 mx-auto w-52">
+                <Button
+                  label={isSubmitting ? "Mengirim..." : "KIRIM PENGAJUAN"}
+                  type="submit"
+                  variant={inputValue ? "primary" : "disabled"}
+                  disabled={isSubmitting || !inputValue.trim()}
+                />
+              </div>
+            </form>
           </div>
-        </form>
-      </div>
+        </div>
+      )}
     </div>
   );
 };
