@@ -103,7 +103,7 @@ const Admin = () => {
       <Navbar />
       <div className="flex flex-1">
         {/* Sidebar */}
-        <div className="w-64 bg-white ">
+        <div className="w-80 bg-white ">
           <nav className="flex flex-col p-4">
             <Link
               href="/admin"
@@ -129,8 +129,8 @@ const Admin = () => {
         </div>
 
         {/* Main Content */}
-        <main className="flex-1 bg-gray-100 p-8">
-          <div className="max-w-6xl mx-auto ">
+        <main className="w-full  bg-gray-100 p-8">
+          <div className="me-auto ">
             <h1 className="text-xl font-semibold mb-4">Daftar Data Asesmen</h1>
             <p className="text-gray-600 mb-6">
               Temukan data asesmen kesiapsiagaan dengan mudah.
@@ -141,7 +141,7 @@ const Admin = () => {
               <div className="relative w-1/2">
                 <input
                   type="text"
-                  placeholder="Cari data (nama lembaga/provinsi/kota/kabupaten)..."
+                  placeholder="Cari data Kontributor"
                   className="w-full p-2 pl-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                   onChange={handleSearch}
                 />

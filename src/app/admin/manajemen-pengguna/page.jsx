@@ -17,7 +17,7 @@ const Admin = () => {
   const [filter, setFilter] = useState("viewer" && "submitter");
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [userToBlock, setUserToBlock] = useState(null); // For tracking user to block
+  const [userToBlock, setUserToBlock] = useState(null);
 
   const router = useRouter();
 
@@ -68,7 +68,6 @@ const Admin = () => {
         },
       })
       .then((response) => {
-     
         if (response.data && response.data.data) {
           setData(response.data.data);
         }
@@ -168,9 +167,17 @@ const Admin = () => {
               >
                 Submitter
               </button>
+              <button
+                className={`rounded-lg px-6 py-2 ${
+                  filter === "blocked"
+                    ? "bg-accent text-white"
+                    : "bg-gray-200 text-black"
+                }`}
+                onClick={() => setFilter("blocked")}
+              >
+                Di Blokir
+              </button>
             </div>
-
-            <button className="btn btn-primary">+ Pengguna</button>
           </div>
 
           {/* Table */}
@@ -190,7 +197,9 @@ const Admin = () => {
                   <tr key={index} className="border-b relative">
                     <td className="px-6 py-4">{user.id}</td>
                     <td className="px-6 py-4">{user.username}</td>
-                    <td className="px-6 py-4 capitalize">{user.status}</td>
+                    <td className="px-6 py-4 capitalize font-semibold">
+                      {user.status}
+                    </td>
                     <td className="px-6 py-4">{user.email}</td>
                     <td className="px-6 py-4">
                       <button
@@ -204,14 +213,29 @@ const Admin = () => {
                       </button>
 
                       {selectedUserId === user.id && (
-                        <div className="absolute right-3 top-0 mt-2 bg-red-500 text-white border rounded-md shadow-lg z-10">
+                        <div
+                          className={`absolute right-3 top-0 mt-2 ${
+                            user.status !== "blocked"
+                              ? "bg-red-500"
+                              : "bg-green-500"
+                          } text-white border rounded-md shadow-lg z-10`}
+                        >
                           <ul>
-                            <li
-                              className="p-2 cursor-pointer"
-                              onClick={() => openBlockModal(user.username)}
-                            >
-                              Block
-                            </li>
+                            {user.status === "blocked" ? (
+                              <li
+                                className="p-2 cursor-pointer"
+                                onClick={() => openReviveModal(user.username)}
+                              >
+                                Revive
+                              </li>
+                            ) : (
+                              <li
+                                className="p-2 cursor-pointer"
+                                onClick={() => openBlockModal(user.username)}
+                              >
+                                Block
+                              </li>
+                            )}
                           </ul>
                         </div>
                       )}
