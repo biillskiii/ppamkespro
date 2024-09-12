@@ -9,13 +9,12 @@ import Link from "next/link";
 import { MdMoveToInbox } from "react-icons/md";
 import { FaClipboardList } from "react-icons/fa6";
 import { IoMdArrowRoundBack } from "react-icons/io";
-const Admin = () => {
-  const [tableData, setTableData] = useState([]); // Use tableData instead of data
+const Admin = ({ params }) => {
+  const [tableData, setTableData] = useState([]);
   const [username, setUsername] = useState("");
   const [status, setStatus] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
-
   useEffect(() => {
     const token = sessionStorage.getItem("accessToken");
     if (token) {
@@ -42,21 +41,16 @@ const Admin = () => {
     const fetchData = async () => {
       try {
         const token = sessionStorage.getItem("accessToken");
-        const response = await fetch(
-          `http://103.123.63.7/api/response/${username}`,
+        const response = await axios.get(
+          `http://103.123.63.7/api/response/${params.username}`, // Fetching data based on username
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           }
         );
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const result = await response.json();
-        "Fetched Data:", result;
-        const { data } = result;
-
+        console.log(params.username);
+        const { data } = response.data;
         if (!data || !Array.isArray(data)) {
           console.error("Unexpected data format:", data);
           return;
@@ -64,46 +58,46 @@ const Admin = () => {
 
         const processedIds = new Set();
 
-        const formattedData = data.flatMap((item) => {
-          const { id, number, question, sub } = item;
-          if (id > 195) return [];
-
+        const formattedData = data.flatMap((item, index) => {
+          const { id, question, sub } = item;
+          if (id > 195) return []; // Skip items with id > 195
           const shouldDisplayId = !processedIds.has(id);
           if (shouldDisplayId) {
             processedIds.add(id);
           }
+          // Set the main item (Pertanyaan utama)
+          const mainItem = {
+            id: index + 1,
+            number: "",
+            question: question || "-",
+            value: "-",
+            comment: "-",
+          };
 
+          // Check if sub-items exist
           if (sub && Array.isArray(sub)) {
-            const subedArray = [
-              {
-                id: id,
-                number: "",
-                question: question || "-",
-                value: item.value || "-",
-                comment: item.comment || "-",
-              },
-            ];
-            const subArr = sub.map((subItem, subIndex) => ({
-              number: subIndex + 1,
-              question: subItem.question || "-",
-              value: subItem.value || "-",
-              comment: subItem.comment || "-",
-            }));
-            subedArray.push(...subArr);
-            return subedArray;
+            // Process the sub-items
+            const subItems = sub.map((subItem, subIndex) => {
+              const shouldDisplayId = !processedIds.has(id);
+              const response =
+                subItem.respons.length > 0 ? subItem.respons[0] : {};
+              return {
+                id: shouldDisplayId ? id : "",
+                number: "*",
+                question: subItem.question || "-",
+                value: response.value || "-",
+                comment: response.comment || "-",
+              };
+            });
+
+            // Return main item followed by its sub-items
+            return [mainItem, ...subItems];
           }
-          return [
-            {
-              id: shouldDisplayId ? id : "",
-              number: "",
-              question: question || "-",
-              value: item.value || "-",
-              comment: item.comment || "-",
-            },
-          ];
+
+          return [mainItem]; // Return only the main item if no sub-items
         });
 
-        setTableData(formattedData); // Update tableData, not data
+        setTableData(formattedData);
       } catch (error) {
         console.error("Failed to fetch data:", error);
       } finally {
@@ -111,15 +105,17 @@ const Admin = () => {
       }
     };
 
-    fetchData();
-  }, [username]);
+    if (params.username) {
+      fetchData();
+    }
+  }, [params.username]);
 
   const handleBack = () => {
-    router.push("/admin/data-assessment");
+    router.push("/view/data-assessmen");
   };
 
   const columnConfig = [
-    { header: "No.", accessor: "number" },
+    { header: "No.", accessor: "number" }, // No. column configuration
     { header: "Pertanyaan", accessor: "question" },
     { header: "Jawaban", accessor: "value" },
     { header: "Komentar", accessor: "comment" },
