@@ -5,7 +5,6 @@ import Button from "@/components/button";
 import Question0 from "@/components/q-bagian-0";
 import DatePicker from "@/components/datepicker";
 import Sidebar from "@/components/sidebar";
-import { FaSpinner } from "react-icons/fa";
 import axios from "axios";
 import { formatISO } from "date-fns";
 const Bagian0 = () => {

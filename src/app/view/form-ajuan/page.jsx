@@ -10,7 +10,7 @@ import { jwtDecode } from "jwt-decode"; // Note: jwtDecode is not destructured
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Pending from "../../../../public/assets/amico.png"; // Replace with actual path to your image
-
+import { FaSpinner } from "react-icons/fa";
 const FormAjuan = () => {
   const [inputValue, setInputValue] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
