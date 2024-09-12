@@ -13,13 +13,11 @@ const ParentComponent = () => {
   const [answers, setAnswers] = useState({});
   const [isData, setData] = useState([]);
   const [isLoading, setLoading] = useState(false);
-  const [activeAccordion, setActiveAccordion] = useState(null);
-  const [username, setUsername] = useState("");
   const router = useRouter();
-  const token = sessionStorage.getItem("accessToken");
   const formRef = useRef(null);
   const [isPushed, setIsPushed] = useState(false);
   const [activeId, setActiveId] = useState("/assessment/bagian-1/");
+  const [token, setToken] = useState();
 
   useEffect(() => {
     if (token) {
@@ -37,6 +35,8 @@ const ParentComponent = () => {
   }, [router]);
 
   useEffect(() => {
+    setToken(sessionStorage.getItem("accessToken"));
+
     setLoading(true);
     fetch("http://103.123.63.7/api/instrument")
       .then((res) => {
