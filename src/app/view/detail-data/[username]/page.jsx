@@ -42,7 +42,7 @@ const Admin = ({ params }) => {
       try {
         const token = sessionStorage.getItem("accessToken");
         const response = await axios.get(
-          `https://103.123.63.7/api/response/${params.username}`, // Fetching data based on username
+          `https://ppamkespro.com/api/response/${params.username}`, // Fetching data based on username
           {
             headers: {
               Authorization: `Bearer ${token}`,

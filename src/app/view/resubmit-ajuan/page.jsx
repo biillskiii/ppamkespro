@@ -46,9 +46,12 @@ const FormAjuan = () => {
 
   const checkSubmissionStatus = async (token) => {
     try {
-      const response = await axios.get("https://103.123.63.7/api/view-status", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(
+        "https://ppamkespro.com/api/view-status",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       // Update state based on the response
       if (response.data.submissionStatus === "submitted") {
@@ -85,7 +88,7 @@ const FormAjuan = () => {
       }
 
       const response = await axios.put(
-        "https://103.123.63.7/api/view-access",
+        "https://ppamkespro.com/api/view-access",
         { status: "resubmit", reason: inputValue },
         {
           headers: { Authorization: `Bearer ${token}` },

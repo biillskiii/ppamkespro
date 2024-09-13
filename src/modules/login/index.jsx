@@ -40,16 +40,19 @@ const Login = () => {
 
     if (isValid) {
       try {
-        const response = await fetch("https://103.123.63.7/api/account/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            username: username.trim(),
-            password: password.trim(),
-          }),
-        });
+        const response = await fetch(
+          "https://ppamkespro.com/api/account/login",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              username: username.trim(),
+              password: password.trim(),
+            }),
+          }
+        );
 
         if (!response.ok) {
           const errorData = await response.json();

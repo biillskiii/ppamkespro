@@ -24,7 +24,7 @@ const ParentComponent = () => {
   // Effect to fetch data from API
   useEffect(() => {
     setLoading(true); // Mark that data is being fetched
-    fetch("https://103.123.63.7/api/instrument")
+    fetch("https://ppamkespro.com/api/instrument")
       .then((res) => {
         if (!res.ok) {
           throw new Error(`Network response was not ok: ${res.statusText}`);
@@ -81,7 +81,7 @@ const ParentComponent = () => {
   const handleNext = async () => {
     try {
       const response = await axios.post(
-        "https://103.123.63.7/api/response",
+        "https://ppamkespro.com/api/response",
         answers
       );
 
@@ -165,7 +165,7 @@ const ParentComponent = () => {
       ];
 
       const response = await axios.post(
-        "https://103.123.63.7/api/response",
+        "https://ppamkespro.com/api/response",
         mapData,
         { headers: { Authorization: `Bearer ${token}` } }
       );

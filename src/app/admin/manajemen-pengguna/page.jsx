@@ -50,7 +50,7 @@ const Admin = () => {
       return;
     }
 
-    let url = "https://103.123.63.7/api/account?";
+    let url = "https://ppamkespro.com/api/account?";
     if (filterType === "viewer") {
       url += "viewer=true";
     } else if (filterType === "submitter") {
@@ -58,7 +58,7 @@ const Admin = () => {
     } else if (filterType === "blocked") {
       url += "blocked=true";
     } else {
-      url = "https://103.123.63.7/api/account";
+      url = "https://ppamkespro.com/api/account";
     }
 
     axios
@@ -89,7 +89,7 @@ const Admin = () => {
   const blockUser = () => {
     axios
       .put(
-        `https://103.123.63.7/api/account/block/${userToBlock}`,
+        `https://ppamkespro.com/api/account/block/${userToBlock}`,
         {},
         {
           headers: {

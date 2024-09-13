@@ -32,7 +32,7 @@ const Bagian0 = () => {
   useEffect(() => {
     setLoading(true);
 
-    fetch("https://103.123.63.7/api/instrument")
+    fetch("https://ppamkespro.com/api/instrument")
       .then((res) => {
         if (!res.ok) {
           throw new Error(`Network response was not ok: ${res.statusText}`);
@@ -59,7 +59,7 @@ const Bagian0 = () => {
         setLoading(false);
       });
 
-    fetch("https://103.123.63.7/api/instrument/area")
+    fetch("https://ppamkespro.com/api/instrument/area")
       .then((res) => {
         if (!res.ok) {
           throw new Error(`Network response was not ok: ${res.statusText}`);
@@ -100,7 +100,7 @@ const Bagian0 = () => {
 
   //     if (isDone) {
   //       const response = await axios.post(
-  //         "https://103.123.63.7/api/response",
+  //         "https://ppamkespro.com/api/response",
   //         answers,
   //         { headers: { Authorization: `Bearer ${token}` } }
   //       );
@@ -137,7 +137,7 @@ const Bagian0 = () => {
         area: data["area_comment"] || "",
       };
       const response = await axios.post(
-        "https://103.123.63.7/api/response/metadata",
+        "https://ppamkespro.com/api/response/metadata",
         mapData,
         { headers: { Authorization: `Bearer ${token}` } }
       );

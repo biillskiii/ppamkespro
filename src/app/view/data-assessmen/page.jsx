@@ -64,7 +64,7 @@ const DataViewer = () => {
     }
 
     axios
-      .get("https://103.123.63.7/api/response/metadata", {
+      .get("https://ppamkespro.com/api/response/metadata", {
         headers: {
           Authorization: `Bearer ${token}`,
         },

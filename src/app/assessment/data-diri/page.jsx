@@ -37,7 +37,7 @@ const Viewer = () => {
     const fetchData = async () => {
       try {
         const token = sessionStorage.getItem("accessToken");
-        const response = await fetch("https://103.123.63.7/api/response", {
+        const response = await fetch("https://ppamkespro.com/api/response", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

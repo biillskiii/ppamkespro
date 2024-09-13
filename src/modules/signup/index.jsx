@@ -63,7 +63,7 @@ const Signup = () => {
 
     try {
       const response = await fetch(
-        "https://103.123.63.7/api/account/register",
+        "https://ppamkespro.com/api/account/register",
         {
           method: "POST",
           headers: {

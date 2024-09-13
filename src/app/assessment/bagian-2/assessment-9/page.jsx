@@ -40,7 +40,7 @@ const ParentComponent = () => {
   }, [router]);
   useEffect(() => {
     setLoading(true);
-    fetch("https://103.123.63.7/api/instrument")
+    fetch("https://ppamkespro.com/api/instrument")
       .then((res) => {
         if (!res.ok) {
           throw new Error(`Network response was not ok: ${res.statusText}`);
@@ -197,7 +197,7 @@ const ParentComponent = () => {
 
       // Send the data as an object
       const response = await axios.post(
-        "https://103.123.63.7/api/response",
+        "https://ppamkespro.com/api/response",
         mapData, // Send data as an object
         {
           headers: {

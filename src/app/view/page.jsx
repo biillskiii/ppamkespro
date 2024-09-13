@@ -69,11 +69,14 @@ const StatusPage = () => {
     }
 
     try {
-      const response = await axios.get("https://103.123.63.7/api/view-access", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        "https://ppamkespro.com/api/view-access",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       response.data;
       setAccessStatus(response.data.data.status);
       setDate(response.data.data.date);
