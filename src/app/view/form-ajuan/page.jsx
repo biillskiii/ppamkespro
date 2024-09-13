@@ -49,7 +49,7 @@ const FormAjuan = () => {
 
   const checkSubmissionStatus = async (token) => {
     try {
-      const response = await axios.get("http://103.123.63.7/api/view-status", {
+      const response = await axios.get("https://103.123.63.7/api/view-status", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -85,7 +85,7 @@ const FormAjuan = () => {
       }
 
       const response = await axios.post(
-        "http://103.123.63.7/api/view-access",
+        "https://103.123.63.7/api/view-access",
         { reason: inputValue },
         {
           headers: { Authorization: `Bearer ${token}` },

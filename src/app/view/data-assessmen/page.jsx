@@ -64,7 +64,7 @@ const DataViewer = () => {
     }
 
     axios
-      .get("http://103.123.63.7/api/response/metadata", {
+      .get("https://103.123.63.7/api/response/metadata", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -136,7 +136,7 @@ const DataViewer = () => {
                 <svg
                   className="absolute left-3 top-2 w-5 h-5 text-gray-500"
                   fill="currentColor"
-                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns="https://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
                 >
                   <path

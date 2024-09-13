@@ -50,7 +50,7 @@ const Admin = () => {
     }
 
     axios
-      .get("http://103.123.63.7/api/view-access", {
+      .get("https://103.123.63.7/api/view-access", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -69,7 +69,7 @@ const Admin = () => {
     const token = sessionStorage.getItem("accessToken");
     axios
       .put(
-        `http://103.123.63.7/api/view-access/${username}`,
+        `https://103.123.63.7/api/view-access/${username}`,
         {
           status: "approve",
         },
@@ -101,7 +101,7 @@ const Admin = () => {
 
     axios
       .put(
-        `http://103.123.63.7/api/view-access/${selectedUser}`,
+        `https://103.123.63.7/api/view-access/${selectedUser}`,
         {
           status: "reject",
           rejectReason: rejectReason,
@@ -259,11 +259,11 @@ const Admin = () => {
                     >
                       {item.status}
                     </td>
-                    {filter === "Ditolak" &&
-                      (<td className="py-2 border-b text-center">
+                    {filter === "Ditolak" && (
+                      <td className="py-2 border-b text-center">
                         {item.rejectReason}
-                      </td>)
-                    }
+                      </td>
+                    )}
 
                     <td className="py-2 border-b text-center">
                       {item.status === "pending" && (

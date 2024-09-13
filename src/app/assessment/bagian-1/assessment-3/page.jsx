@@ -24,7 +24,7 @@ const ParentComponent = () => {
   // Effect to fetch data from API
   useEffect(() => {
     setLoading(true); // Mark that data is being fetched
-    fetch("http://103.123.63.7/api/instrument")
+    fetch("https://103.123.63.7/api/instrument")
       .then((res) => {
         if (!res.ok) {
           throw new Error(`Network response was not ok: ${res.statusText}`);
@@ -32,8 +32,6 @@ const ParentComponent = () => {
         return res.json();
       })
       .then((responseData) => {
-    
-
         if (responseData && Array.isArray(responseData.data)) {
           const data = responseData.data;
 
@@ -41,8 +39,6 @@ const ParentComponent = () => {
           const filteredData = data.filter(
             (item) => item.number >= 14 && item.number <= 17
           );
-
-         
 
           setData(filteredData); // Set data to state
         } else {
@@ -118,7 +114,7 @@ const ParentComponent = () => {
       ];
 
       const response = await axios.post(
-        "http://103.123.63.7/api/response",
+        "https://103.123.63.7/api/response",
         mapData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -134,7 +130,7 @@ const ParentComponent = () => {
   };
   const handleNext = async () => {
     try {
-      const response = await fetch("http://103.123.63.7/api/response", {
+      const response = await fetch("https://103.123.63.7/api/response", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -187,7 +183,7 @@ const ParentComponent = () => {
   //     ];
 
   //     const response = await axios.post(
-  //       "http://103.123.63.7/api/response",
+  //       "https://103.123.63.7/api/response",
   //       mapData,
   //       { headers: { Authorization: `Bearer ${token}` } }
   //     );

@@ -69,7 +69,7 @@ const StatusPage = () => {
     }
 
     try {
-      const response = await axios.get("http://103.123.63.7/api/view-access", {
+      const response = await axios.get("https://103.123.63.7/api/view-access", {
         headers: {
           Authorization: `Bearer ${token}`,
         },

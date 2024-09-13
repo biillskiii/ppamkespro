@@ -50,7 +50,7 @@ const Admin = () => {
       return;
     }
 
-    let url = "http://103.123.63.7/api/account?";
+    let url = "https://103.123.63.7/api/account?";
     if (filterType === "viewer") {
       url += "viewer=true";
     } else if (filterType === "submitter") {
@@ -58,7 +58,7 @@ const Admin = () => {
     } else if (filterType === "blocked") {
       url += "blocked=true";
     } else {
-      url = "http://103.123.63.7/api/account";
+      url = "https://103.123.63.7/api/account";
     }
 
     axios
@@ -89,7 +89,7 @@ const Admin = () => {
   const blockUser = () => {
     axios
       .put(
-        `http://103.123.63.7/api/account/block/${userToBlock}`,
+        `https://103.123.63.7/api/account/block/${userToBlock}`,
         {},
         {
           headers: {
