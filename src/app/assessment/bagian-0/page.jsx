@@ -172,7 +172,7 @@ const Bagian0 = () => {
         onClick={handleSidebarClick}
       />
 
-      <div className="w-full ml-[344px] space-y-6 p-4">
+      <div className="container w-[1048px] ml-[344px] space-y-6 p-4">
         <div className="bg-[#1446AB] pl-4 py-4 rounded-2xl w-[1048px] ">
           <p className="text-white font-extrabold text-xl">
             Bagian 0 - Informasi umum
@@ -186,7 +186,7 @@ const Bagian0 = () => {
           }}
           className="flex flex-col gap-y-5"
         >
-          <div className="flex w-[70%] gap-x-4 ">
+          <div className="flex w-[1048px] gap-x-4 ">
             <Question0
               label={"Siapa yang Memimpin Penilaian?"}
               type={"text"}

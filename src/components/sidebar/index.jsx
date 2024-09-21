@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback,  } from "react";
 import {
   IoMdArrowRoundBack,
   IoIosArrowDown,
@@ -129,8 +129,8 @@ const Menu = ({
       className={`flex flex-col mt-10 w-10/12 cursor-pointer justify-center ${
         isHighlighted
           ? isActive
-            ? "border-2 text-accent" // Tetap putih ketika accordion terbuka
-            : "bg-accent text-white" // Berubah menjadi bg-accent ketika accordion tertutup
+            ? "border-2 text-accent"
+            : "bg-accent text-white"
           : "bg-transparent border border-border text-accent"
       } py-4 px-4 rounded-lg font-semibold`}
       onClick={() => {

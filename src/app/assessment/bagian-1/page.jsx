@@ -22,10 +22,6 @@ const ParentComponent = () => {
     const token = sessionStorage.getItem("accessToken");
     if (token) {
       try {
-        const decodedToken = jwtDecode(token);
-
-        setUsername(decodedToken.username || "");
-        setStatus(decodedToken.status || "");
       } catch (error) {
         console.error("Failed to decode token:", error);
       }
@@ -86,9 +82,15 @@ const ParentComponent = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    // setIsPushed(true);
     try {
       setIsPushed(true);
+
+      // Fetch the token from sessionStorage
+      const token = sessionStorage.getItem("accessToken");
+      if (!token) {
+        throw new Error("No token found in sessionStorage");
+      }
+
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData.entries());
 
@@ -140,7 +142,9 @@ const ParentComponent = () => {
       const response = await axios.post(
         "https://ppamkespro.com/api/response",
         mapData,
-        { headers: { Authorization: `Bearer ${token}` } }
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
 
       if (response.status === 200) {
@@ -153,10 +157,12 @@ const ParentComponent = () => {
       setIsPushed(false);
     }
   };
+
   const handleNext = async () => {
     try {
       const response = await fetch("https://ppamkespro.com/api/response", {
         method: "POST",
+        mapData,
         headers: {
           "Content-Type": "application/json",
         },
@@ -168,7 +174,7 @@ const ParentComponent = () => {
       } else {
       }
     } catch (error) {
-      toast.error("Failed to submit data. Please try again.");
+      console.error("Failed to submit data. Please try again.");
     }
   };
   const handleSidebarClick = () => {
@@ -229,7 +235,7 @@ const ParentComponent = () => {
                 placeholder="Komentar/Referensi/Rincian..."
                 onChange={(name, value) => handleInputChange(name, value)}
                 subname={item.subname}
-                subquestions={item.sub || []} // Pass subquestions if any
+                subquestions={item.sub || []}
               />
             </div>
           ))}
