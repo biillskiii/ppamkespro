@@ -330,11 +330,7 @@ const ParentComponent = () => {
               variant="secondary"
               type="button"
             />
-            <Button
-              label={"Berikutnya"}
-              onClick={handleNext}
-              withIcon={"right"}
-            />
+            <Button label={"Berikutnya"} type="submit" withIcon={"right"} />
           </div>
         </form>
       </div>

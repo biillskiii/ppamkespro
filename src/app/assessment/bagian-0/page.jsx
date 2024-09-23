@@ -7,11 +7,13 @@ import DatePicker from "@/components/datepicker";
 import Sidebar from "@/components/sidebar";
 import axios from "axios";
 import { formatISO } from "date-fns";
+
 const Bagian0 = () => {
   const [answers, setAnswers] = useState({});
   const [isData, setData] = useState([]);
-  const [isDataArea, setDataArea] = useState({});
+  const [isDataArea, setDataArea] = useState([]); 
   const [isDataAreaLevel, setDataAreaLevel] = useState([]);
+  const [selectedProvinceId, setSelectedProvinceId] = useState();
   const [selectedLevel, setSelectedLevel] = useState("");
   const [activeId, setActiveId] = useState("/assessment/bagian-0/");
   const [isLoading, setLoading] = useState(false);
@@ -25,40 +27,9 @@ const Bagian0 = () => {
   const formRef = useRef(null);
   const [isPushed, setIsPushed] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
-  const dropdownOptions = isDataAreaLevel.map((item) => ({
-    value: item.value,
-    label: item.name,
-  }));
+
   useEffect(() => {
     setLoading(true);
-
-    fetch("https://ppamkespro.com/api/instrument")
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`Network response was not ok: ${res.statusText}`);
-        }
-        return res.json();
-      })
-      .then((responseData) => {
-        if (responseData && Array.isArray(responseData.data)) {
-          const data = responseData.data;
-          const filteredData = data.filter(
-            (item) => item.number >= 1 && item.number <= 7
-          );
-
-          setData(filteredData);
-        } else {
-          console.error("Invalid data format received:", responseData);
-          throw new Error("Invalid data format");
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-
     fetch("https://ppamkespro.com/api/instrument/area")
       .then((res) => {
         if (!res.ok) {
@@ -68,14 +39,13 @@ const Bagian0 = () => {
       })
       .then((responseData) => {
         setDataArea(responseData.data);
-        const transformed = Object.keys(responseData.data).map((key) => ({
-          value: key,
-          name: responseData.data[key].name,
-        }));
-        setDataAreaLevel(transformed);
+        console.log(responseData.data);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, []);
 
@@ -90,32 +60,6 @@ const Bagian0 = () => {
     router.push("/assessment");
   };
 
-  // const handleNext = async () => {
-  //   try {
-  //     if (formRef.current) {
-  //       formRef.current.dispatchEvent(
-  //         new Event("submit", { bubbles: true, cancelable: true })
-  //       );
-  //     }
-
-  //     if (isDone) {
-  //       const response = await axios.post(
-  //         "https://ppamkespro.com/api/response",
-  //         answers,
-  //         { headers: { Authorization: `Bearer ${token}` } }
-  //       );
-
-  //       if (response.status === 200) {
-  //         router.push("/assessment/bagian-1");
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error(
-  //       "Error posting data:",
-  //       error.response ? error.response.data : error.message
-  //     );
-  //   }
-  // };
   const onSubmit = async (e) => {
     e.preventDefault();
 
@@ -124,18 +68,16 @@ const Bagian0 = () => {
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData.entries());
 
-      // Debug: log data dari form
-
-      // Convert date to ISO 8601 format
       const formattedDate = formatISO(new Date(data["date"]));
 
-      // Construct the mapData object with the correct values
       const mapData = {
-        leader: data["leader_comment"] || "", // Ensure default value or validation
+        leader: data["leader_comment"] || "",
         participant: data["participant_comment"] || "",
-        date: formattedDate || "", // Ensure this is in ISO string format
-        area: data["area_comment"] || "",
+        date: formattedDate || "",
+        provinceId: selectedProvinceId,
+        city: data["area_city"],
       };
+
       const response = await axios.post(
         "https://ppamkespro.com/api/response/metadata",
         mapData,
@@ -198,18 +140,18 @@ const Bagian0 = () => {
 
           <Question0
             label={"Pada tingkat apa penilaian dilakukan?"}
-            placeholder={
-              isDataArea[selectedLevel]?.name ||
-              "Masukan nama Provinsi atau Kabupaten/Kota..."
-            }
+            placeholder={"Masukan nama Provinsi atau Kabupaten/Kota..."}
             name={"area"}
             type={"dropdown"}
-            options={isDataAreaLevel.map((item) => item.value)}
-            suggestions={isDataArea[selectedOption]}
-            selectedValue={selectedOption}
-            setSelectedValue={setSelectedOption}
+            options={isDataArea.map((province) => ({
+              value: province.id,
+              label: province.name, 
+            }))}
+            selectedValue={selectedProvinceId}
+            setSelectedValue={(option) => {
+              setSelectedProvinceId(option.value); 
+            }}
           />
-
           <Question0
             label={"Peserta yang terlibat dalam penilaian?"}
             placeholder={"Nama peserta penilaian..."}

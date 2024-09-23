@@ -274,7 +274,7 @@ const ParentComponent = () => {
             <Button
               variant="primary"
               label={"Berikutnya"}
-              onClick={handleNext}
+              type="submit"
               // type="submit"
               withIcon={"right"}
             />

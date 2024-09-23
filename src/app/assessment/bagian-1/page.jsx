@@ -162,10 +162,6 @@ const ParentComponent = () => {
     try {
       const response = await fetch("https://ppamkespro.com/api/response", {
         method: "POST",
-        mapData,
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify(answers),
       });
 
@@ -250,7 +246,7 @@ const ParentComponent = () => {
             <Button
               label={"Berikutnya"}
               withIcon={"right"}
-              onClick={handleNext}
+              type="submit"
             />
           </div>
         </form>

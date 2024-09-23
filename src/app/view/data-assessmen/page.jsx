@@ -7,6 +7,7 @@ import Navbar from "@/components/navbar";
 import { MdMoveToInbox } from "react-icons/md";
 import { FaClipboardList } from "react-icons/fa6";
 import axios from "axios";
+
 const DataViewer = () => {
   const router = useRouter();
   const [data, setData] = useState([]);
@@ -17,6 +18,7 @@ const DataViewer = () => {
   const [approvalDate, setApprovalDate] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+
   useEffect(() => {
     const token = sessionStorage.getItem("accessToken");
     if (token) {
@@ -39,23 +41,7 @@ const DataViewer = () => {
       router.push("/");
     }
   }, [router]);
-  const filteredData = data
-    .filter((item) =>
-      item.responder.username.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    .filter((item) => {
-      if (selectedFilter === "tanggal") {
-        return true;
-      }
-      if (selectedFilter === "skor") {
-        return true;
-      }
-      return true;
-    });
-  const paginatedData = filteredData.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+
   useEffect(() => {
     const token = sessionStorage.getItem("accessToken");
     if (!token) {
@@ -70,15 +56,31 @@ const DataViewer = () => {
         },
       })
       .then((response) => {
-        "API Response:", response.data;
-        if (response.data && response.data.data) {
-          setData(response.data.data);
+        if (response.data && Array.isArray(response.data.data.responses)) {
+          setData(response.data.data.responses);
+        } else {
+          console.error(
+            "Expected responses to be an array, got:",
+            response.data
+          );
+          setData([]);
         }
       })
       .catch((error) => {
         console.error("Error fetching data:", error.message);
       });
   }, [router]);
+
+  const filteredData = Array.isArray(data)
+    ? data.filter((item) =>
+        item.submitter.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : [];
+
+  const paginatedData = filteredData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -91,13 +93,14 @@ const DataViewer = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+
   const handleDetailData = (item) => {
-    router.push(`/view/detail-data/${item.responder.username}`);
+    router.push(`/view/detail-data/${item.submitter}`);
   };
+
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar username={username} status={status} />{" "}
-      {/* Tampilkan status role */}
+      <Navbar username={username} status={status} />
       <div className="flex flex-1">
         <div className="w-64 bg-white">
           <nav className="flex flex-col p-4">
@@ -118,7 +121,7 @@ const DataViewer = () => {
           </nav>
         </div>
         <main className="flex-1 p-8 bg-[#F1F1F7]">
-          <div className="max-w-6xl mx-auto ">
+          <div className="max-w-6xl mx-auto">
             <h1 className="text-xl font-semibold mb-4">Daftar Data Asesmen</h1>
             <p className="text-gray-600 mb-6">
               Temukan data asesmen kesiapsiagaan dengan mudah.
@@ -136,7 +139,7 @@ const DataViewer = () => {
                 <svg
                   className="absolute left-3 top-2 w-5 h-5 text-gray-500"
                   fill="currentColor"
-                  xmlns="https://www.w3.org/2000/svg"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
                 >
                   <path
@@ -158,35 +161,37 @@ const DataViewer = () => {
             </div>
 
             {/* Table */}
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="text-gray-600">
-                  <th className="py-2 border-b">#Nomor</th>
-                  <th className="py-2 border-b">Kontributor</th>
-                  <th className="py-2 border-b">Selesai</th>
-                  <th className="py-2 border-b">Skor</th>
-                  <th className="py-2 border-b"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {paginatedData.map((item) => (
-                  <tr key={item.id} className="hover:bg-gray-50">
-                    <td className="py-2 border-b">{item.id}</td>
-                    <td className="py-2 border-b">{item.responder.username}</td>
-                    <td className="py-2 border-b">{item.date}</td>
-                    <td className="py-2 border-b">{item.skor || "-"}</td>
-                    <td className="py-2 border-b">
-                      <button
-                        onClick={() => handleDetailData(item)}
-                        className="text-blue-500 bg-white rounded-lg border-2 border-border flex justify-center items-center w-8 h-8"
-                      >
-                        →
-                      </button>
-                    </td>
+            {filteredData.length === 0 ? (
+              <p>Loading data...</p>
+            ) : (
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="text-gray-600">
+                    <th className="py-2 border-b">Participant</th>
+                    <th className="py-2 border-b">Selesai</th>
+                    <th className="py-2 border-b">Skor</th>
+                    <th className="py-2 border-b"></th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {paginatedData.map((item) => (
+                    <tr key={item.id} className="hover:bg-gray-50">
+                      <td className="py-2 border-b">{item.submitter}</td>
+                      <td className="py-2 border-b">{item.date}</td>
+                      <td className="py-2 border-b">{item.skor || "-"}</td>
+                      <td className="py-2 border-b">
+                        <button
+                          onClick={() => handleDetailData(item)}
+                          className="text-blue-500 bg-white rounded-lg border-2 border-border flex justify-center items-center w-8 h-8"
+                        >
+                          →
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
 
             {/* Pagination */}
             <div className="flex justify-between items-center mt-4">

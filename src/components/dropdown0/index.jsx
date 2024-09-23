@@ -19,7 +19,7 @@ const DropdownInput = ({
     if (savedValue) {
       setSelectedValue && setSelectedValue(savedValue);
     }
-  }, [name]);
+  }, [name, setSelectedValue]);
 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
@@ -30,11 +30,10 @@ const DropdownInput = ({
   };
 
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <input type="text" value={selectedValue} name={name} className="hidden" />
       <div
         onClick={toggleDropdown}
-        style={{ width: "200px" }}
         className={clsx(
           "border p-2 rounded-md w-full cursor-pointer",
           "focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
@@ -75,4 +74,5 @@ const DropdownInput = ({
     </div>
   );
 };
+
 export default DropdownInput;

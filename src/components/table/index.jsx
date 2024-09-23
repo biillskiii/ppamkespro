@@ -4,7 +4,7 @@ import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 const Table = ({ columns = [], data = [], type }) => {
   "Table Data:", data; // Debugging
 
-  const rowsPerPage = 7;
+  const rowsPerPage = 50;
   const [currentPage, setCurrentPage] = useState(1);
 
   // Function to get the current page's data
@@ -64,11 +64,10 @@ const Table = ({ columns = [], data = [], type }) => {
   };
 
   const visiblePageNumbers = getVisiblePageNumbers();
-  const adjustedColumns =
-    type === "sub" ? [{ header: "ID", accessor: "id" }, ...columns] : columns;
+  const adjustedColumns = type === "sub" ? [...columns] : columns;
   return (
     <div className="overflow-x-auto relative h-auto sm:rounded-lg">
-      <table className="w-9/12 mx-auto my-20 text-sm text-gray-500 border-collapse border border-gray-200 no-select">
+      <table className="w-9/12 mx-auto mt-20 text-sm text-gray-500 border-collapse border border-gray-200 no-select">
         <thead className="text-xs text-white uppercase bg-accent">
           <tr>
             {adjustedColumns.map((column, index) => (
@@ -112,46 +111,6 @@ const Table = ({ columns = [], data = [], type }) => {
           )}
         </tbody>
       </table>
-
-      {/* Pagination Controls */}
-      {totalPages > 1 && (
-        <div className="flex mb-20 flex-wrap justify-center items-center mt-4 space-x-2">
-          {/* Previous Button */}
-          <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-            className="px-2 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400"
-          >
-            <IoIosArrowBack size={20} />
-          </button>
-
-          {/* Page Number Buttons */}
-          {visiblePageNumbers.map((number) => (
-            <button
-              key={number}
-              onClick={() => setCurrentPage(number)}
-              className={`px-3.5 py-1.5 border border-gray-300 rounded ${
-                currentPage === number
-                  ? "bg-accent text-white"
-                  : "bg-gray-200 text-gray-700"
-              } hover:bg-accent hover:text-white`}
-            >
-              {number}
-            </button>
-          ))}
-
-          {/* Next Button */}
-          <button
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-            }
-            disabled={currentPage === totalPages}
-            className="px-2 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400"
-          >
-            <IoIosArrowForward size={20} />
-          </button>
-        </div>
-      )}
     </div>
   );
 };

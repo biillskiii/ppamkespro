@@ -259,7 +259,7 @@ const ParentComponent = () => {
               label={"Berikutnya"}
               withIcon={"right"}
               variant="primary"
-              onClick={handleNext}
+              type="submit"
             />
           </div>
         </form>

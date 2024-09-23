@@ -94,6 +94,7 @@ const ParentComponent = () => {
     try {
       const response = await fetch("https://ppamkespro.com/api/response", {
         method: "POST",
+        mapData,
         headers: {
           "Content-Type": "application/json",
         },
@@ -101,18 +102,21 @@ const ParentComponent = () => {
       });
 
       if (response.ok) {
-        router.push("/assessment/bagian-1/assessment2");
-      } else {
-        console.error("Error posting data:", response.statusText);
+        router.push("/assessment/bagian-2/assessment=");
       }
     } catch (error) {
-      toast.error("Failed to submit data. Please try again.");
+      console.error("Failed to submit data. Please try again.");
     }
   };
   const onSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      setIsPushed(true)
+      const token = sessionStorage.getItem("accessToken");
+      if (!token) {
+        throw new Error("No token found in sessionStorage");
+      }
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData.entries());
 
@@ -266,7 +270,7 @@ const ParentComponent = () => {
             <Button
               label={"Berikutnya"}
               withIcon={"right"}
-              onClick={handleNext}
+              type="submit"
             />
           </div>
         </form>

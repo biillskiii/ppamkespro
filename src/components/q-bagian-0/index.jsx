@@ -1,5 +1,4 @@
-"use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CheckboxInput from "../checkbox";
 import DropdownInput from "../dropdown0";
 import TextInput from "../input-text";
@@ -11,16 +10,40 @@ const Question0 = ({
   name,
   placeholder,
   onChange,
-  suggestions,
+  suggestions = [], // Default empty array for suggestions
   selectedValue,
   setSelectedValue,
 }) => {
   const [answer, setAnswer] = useState("");
   const [comment, setComment] = useState("");
+  const [showSubNasional, setShowSubNasional] = useState(false);
+  const [subNasionalValue, setSubNasionalValue] = useState("");
+  const [cityValue, setCityValue] = useState("");
+
+  useEffect(() => {
+    if (selectedValue === "Sub Nasional") {
+      setShowSubNasional(true);
+    } else {
+      setShowSubNasional(false);
+      setSubNasionalValue("");
+      setCityValue("");
+    }
+  }, [selectedValue]);
+
+  const handleSubNasionalChange = (value) => {
+    setSubNasionalValue(value);
+    onChange(`${name}_sub_nasional`, value);
+    setCityValue(""); // Reset city value when province changes
+  };
+
+  const handleCityChange = (value) => {
+    setCityValue(value);
+    onChange(`${name}_city`, value);
+  };
 
   const handleAnswerChange = (value) => {
     setAnswer(value);
-    onChange(name, value); // Notify parent component of the change
+    onChange(name, value);
   };
 
   const handleCommentChange = (e) => {
@@ -69,24 +92,42 @@ const Question0 = ({
         )}
 
         {type === "dropdown" && (
-          <div className="w-full flex flex-row justify-center items-start gap-x-2">
-            <DropdownInput
-              options={options}
-              name={name}
-              placeholder={"Pilih Salah Satu"}
-              value={answer}
-              onChange={(e) => handleAnswerChange(e.target.value)} // Pastikan handleAnswerChange menangani perubahan
-              selectedValue={selectedValue} // Pastikan Anda mengelola selectedValue di parent component
-              setSelectedValue={setSelectedValue} // Pastikan setSelectedValue tersedia
-            />
-            <TextInput
-              type="text"
-              name={`${name}_comment`}
-              placeholder={placeholder}
-              value={comment}
-              onChange={handleCommentChange}
-              suggestions={suggestions}
-            />
+          <div className="w-full flex flex-col items-start gap-y-2">
+            <div className="w-full flex flex-row justify-start items-start gap-x-2">
+              <DropdownInput
+                options={options}
+                name={name}
+                placeholder={"Pilih Salah Satu"}
+                value={answer}
+                onChange={(e) => handleAnswerChange(e.target.value)}
+                selectedValue={selectedValue}
+                setSelectedValue={setSelectedValue}
+              />
+              {Array.isArray(suggestions) && showSubNasional && (
+                <DropdownInput
+                  options={suggestions.map((prov) => prov.name)}
+                  name={`${name}_sub_nasional`}
+                  placeholder={"Pilih Provinsi"}
+                  value={subNasionalValue}
+                  onChange={(e) => handleSubNasionalChange(e.target.value)}
+                  selectedValue={subNasionalValue}
+                  setSelectedValue={setSubNasionalValue}
+                />
+              )}
+            </div>
+            {showSubNasional && Array.isArray(suggestions) && (
+              <TextInput
+                name={`${name}_city`}
+                placeholder="Cari Kota"
+                value={cityValue}
+                onChange={(e) => handleCityChange(e.target.value)}
+                suggestions={
+                  suggestions
+                    .find((prov) => prov.name === subNasionalValue)
+                    ?.Cities.map((city) => city.name) || []
+                }
+              />
+            )}
           </div>
         )}
       </div>

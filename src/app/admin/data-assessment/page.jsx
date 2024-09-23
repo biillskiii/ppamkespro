@@ -57,8 +57,14 @@ const Admin = () => {
         },
       })
       .then((response) => {
-        if (response.data && response.data.data) {
-          setData(response.data.data);
+        if (response.data && Array.isArray(response.data.data.responses)) {
+          setData(response.data.data.responses);
+        } else {
+          console.error(
+            "Expected responses to be an array, got:",
+            response.data
+          );
+          setData([]);
         }
       })
       .catch((error) => {
@@ -68,14 +74,14 @@ const Admin = () => {
 
   const filteredData = data
     .filter((item) =>
-      item.responder.username.toLowerCase().includes(searchTerm.toLowerCase())
+      item.submitter.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .filter((item) => {
       if (selectedFilter === "tanggal") {
-        return true; // Implement date filtering logic
+        return true;
       }
       if (selectedFilter === "skor") {
-        return true; // Implement score filtering logic
+        return true;
       }
       return true;
     });
@@ -172,8 +178,7 @@ const Admin = () => {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="text-gray-600">
-                  <th className="py-2 border-b">#Nomor</th>
-                  <th className="py-2 border-b">Kontributor</th>
+                  <th className="py-2 border-b">Participant</th>
                   <th className="py-2 border-b">Selesai</th>
                   <th className="py-2 border-b">Skor</th>
                   <th className="py-2 border-b"></th>
@@ -182,14 +187,11 @@ const Admin = () => {
               <tbody>
                 {paginatedData.map((item) => (
                   <tr key={item.id} className="hover:bg-gray-50">
-                    <td className="py-2 border-b">{item.id}</td>
-                    <td className="py-2 border-b">{item.responder.username}</td>
+                    <td className="py-2 border-b">{item.submitter}</td>
                     <td className="py-2 border-b">{item.date}</td>
                     <td className="py-2 border-b">{item.skor || "-"}</td>
                     <td className="py-2 border-b">
-                      <Link
-                        href={`/admin/detail-data/${item.responder.username}`}
-                      >
+                      <Link href={`/admin/detail-data/${item.submitter}`}>
                         <button className="text-blue-500 bg-white rounded-lg border-2 border-border flex justify-center items-center w-8 h-8">
                           →
                         </button>

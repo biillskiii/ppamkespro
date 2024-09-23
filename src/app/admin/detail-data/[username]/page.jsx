@@ -2,28 +2,32 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "@/components/navbar";
-import Table from "@/components/table"; // Assuming you have a table component
+import Table from "@/components/table";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
+import { FaFileDownload, FaClipboardList } from "react-icons/fa";
 import { IoMdArrowRoundBack } from "react-icons/io";
+import { HiMiniInboxArrowDown } from "react-icons/hi2";
+import { FaUserGear } from "react-icons/fa6";
+import Link from "next/link";
+import * as XLSX from "xlsx";
 
 const DetailData = ({ params }) => {
-  const [tableData, setTableData] = useState([]);
-  const [username, setUsername] = useState("");
-  const [status, setStatus] = useState("");
+  const [tableData, setTableData] = useState({});
+  const [currentAssessment, setCurrentAssessment] = useState("1");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   const router = useRouter();
+
   useEffect(() => {
     const token = sessionStorage.getItem("accessToken");
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
         const userRole = decodedToken.status || "";
-
-        if (userRole === "admin") {
-          setUsername(decodedToken.username || "");
-          setStatus(decodedToken.status || "");
-        } else {
+        if (userRole !== "admin") {
           router.push("/403");
         }
       } catch (error) {
@@ -40,64 +44,54 @@ const DetailData = ({ params }) => {
       try {
         const token = sessionStorage.getItem("accessToken");
         const response = await axios.get(
-          `https://ppamkespro.com/api/response/${params.username}`, // Fetching data based on username
+          `https://ppamkespro.com/api/response/${params.username}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           }
         );
-        console.log(params.username);
-        const { data } = response.data;
-        if (!data || !Array.isArray(data)) {
-          console.error("Unexpected data format:", data);
-          return;
-        }
 
-        const processedIds = new Set();
+        const { responses } = response.data.data;
 
-        const formattedData = data.flatMap((item, index) => {
-          const { id, question, sub } = item;
-          if (id > 195) return []; // Skip items with id > 195
-          const shouldDisplayId = !processedIds.has(id);
-          if (shouldDisplayId) {
-            processedIds.add(id);
-          }
-          // Set the main item (Pertanyaan utama)
-          const mainItem = {
-            id: index + 1,
-            number: "",
-            question: question || "-",
-            value: "-",
-            comment: "-",
-          };
-
-          // Check if sub-items exist
-          if (sub && Array.isArray(sub)) {
-            // Process the sub-items
-            const subItems = sub.map((subItem, subIndex) => {
-              const shouldDisplayId = !processedIds.has(id);
-              const response =
-                subItem.respons.length > 0 ? subItem.respons[0] : {};
-              return {
-                id: shouldDisplayId ? id : "",
-                number: "*",
-                question: subItem.question || "-",
-                value: response.value || "-",
-                comment: response.comment || "-",
+        if (responses && typeof responses === "object") {
+          const formattedData = Object.keys(responses).reduce((acc, key) => {
+            acc[key] = responses[key].flatMap((item) => {
+              const baseItem = {
+                number: item.number,
+                question: item.question || "-",
+                value: item.value || "-",
+                comment: item.comment || "-",
+                isSub: false,
               };
+
+              if (item.sub && Array.isArray(item.sub)) {
+                const subItems = item.sub.map((subItem) => {
+                  const subValue = subItem.value || "-";
+
+                  return {
+                    number: "*",
+                    question: `${subItem.question || "-"}`,
+                    value: subValue,
+                    comment: subItem.comment || "-",
+                    isSub: true,
+                  };
+                });
+                return [baseItem, ...subItems];
+              }
+
+              return [baseItem];
             });
+            return acc;
+          }, {});
 
-            // Return main item followed by its sub-items
-            return [mainItem, ...subItems];
-          }
-
-          return [mainItem]; // Return only the main item if no sub-items
-        });
-
-        setTableData(formattedData);
+          setTableData(formattedData);
+        } else {
+          console.error("Unexpected response format:", responses);
+        }
       } catch (error) {
         console.error("Failed to fetch data:", error);
+        setError("Failed to fetch data.");
       } finally {
         setIsLoading(false);
       }
@@ -108,32 +102,164 @@ const DetailData = ({ params }) => {
     }
   }, [params.username]);
 
-  const handleBack = () => {
-    router.push("/admin/data-assessment");
+  // Ensure safe access to current assessment data
+  const currentAssessmentData = Array.isArray(tableData[currentAssessment])
+    ? tableData[currentAssessment]
+    : [];
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = currentAssessmentData.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+  const handleNextPage = () => {
+    if (currentAssessment.length === itemsPerPage) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    setCurrentAssessment((prevPage) => (prevPage > 1 ? prevPage - 1 : 1));
+  };
+
+  const downloadXLSX = () => {
+    if (Object.keys(tableData).length > 0) {
+      const wb = XLSX.utils.book_new();
+
+      const headerStyle = {
+        fill: { fgColor: { rgb: "0000FF" } },
+        font: { color: { rgb: "FFFFFF" }, bold: true },
+      };
+
+      Object.keys(tableData).forEach((assessment) => {
+        const assessmentData = tableData[assessment].filter(
+          (item) => !item.isSub
+        );
+        const ws = XLSX.utils.json_to_sheet(assessmentData);
+
+        // Apply header style
+        ws["!rows"] = [{ hpt: 20, hpx: 20 }];
+        ws["A1"].s = headerStyle; // Assuming the first header is in A1
+
+        Object.keys(ws).forEach((key) => {
+          if (key[0] === "!") return;
+          const cell = ws[key];
+
+          if (cell.v === "Iya" || cell.v === "Ideal") {
+            cell.s = { fill: { fgColor: { rgb: "00FF00" } } };
+          } else if (cell.v === "tidak" || cell.v === "tidak memadai") {
+            cell.s = { fill: { fgColor: { rgb: "FF0000" } } };
+          } else if (cell.v === "tidak tahu") {
+            cell.s = { fill: { fgColor: { rgb: "808080" } } };
+          }
+        });
+
+        XLSX.utils.book_append_sheet(wb, ws, `Assessment ${assessment}`);
+      });
+
+      XLSX.writeFile(wb, `${params.username}_data.xlsx`);
+    }
   };
 
   const columnConfig = [
-    { header: "No.", accessor: "number" }, // No. column configuration
+    { header: "No.", accessor: "number" },
     { header: "Pertanyaan", accessor: "question" },
     { header: "Jawaban", accessor: "value" },
     { header: "Komentar", accessor: "comment" },
   ];
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col w-full min-h-screen">
       <Navbar />
-      <div className="p-8">
-        <button
-          onClick={handleBack}
-          className="flex items-center mb-4 text-blue-500"
-        >
-          <IoMdArrowRoundBack className="mr-2" /> Back to Data Assessment
-        </button>
-        {isLoading ? (
-          <p>Loading...</p>
-        ) : (
-          <Table type={"sub"} data={tableData} columns={columnConfig} />
-        )}
+      <div className="flex">
+        <div className="w-80 bg-white">
+          <nav className="flex flex-col p-4">
+            <Link
+              href="/admin"
+              className="flex items-center gap-x-3 py-2 px-4 hover:text-accent"
+            >
+              <HiMiniInboxArrowDown />
+              Tinjauan Permintaan
+            </Link>
+            <Link
+              href="/admin/data-assessment"
+              className="py-2 px-4 flex items-center gap-x-3 text-accent"
+            >
+              <FaClipboardList />
+              Data Assessment
+            </Link>
+            <Link
+              href="/admin/manajemen-pengguna"
+              className="py-2 px-4 flex items-center gap-x-3 hover:text-accent"
+            >
+              <FaUserGear /> User Management
+            </Link>
+          </nav>
+        </div>
+        <div className="flex w-full flex-col bg-gray-100 p-8">
+          <div className="flex justify-between">
+            <button
+              onClick={() => router.push("/admin/data-assessment")}
+              className="flex items-center mb-4 text-blue-500"
+            >
+              <IoMdArrowRoundBack className="mr-2" /> Back to Data Assessment
+            </button>
+            <button
+              onClick={downloadXLSX}
+              disabled={currentItems.length === 0}
+              className={`bg-white border-accent border-2 text-accent px-4 py-2 rounded flex items-center ${
+                currentItems.length === 0 ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+            >
+              <FaFileDownload className="mr-2" /> Download XLSX
+            </button>
+          </div>
+          {isLoading ? (
+            <p>Loading...</p>
+          ) : error ? (
+            <p className="text-red-500">{error}</p>
+          ) : (
+            <>
+              <Table type={"sub"} data={currentItems} columns={columnConfig} />
+              <div className="flex justify-center items-end gap-x-5">
+                <button
+                  onClick={handlePrevPage}
+                  disabled={currentPage === 1}
+                  className="px-4 py-2 bg-blue-500 text-white rounded"
+                >
+                  Previous
+                </button>
+
+                <div className="mt-4">
+                  {Object.keys(tableData).map((assessment) => (
+                    <button
+                      key={assessment}
+                      onClick={() => {
+                        setCurrentAssessment(assessment);
+                        setCurrentPage(1); // Reset page to 1 when changing assessment
+                      }}
+                      className={`mr-2 px-4 py-2 rounded ${
+                        currentAssessment === assessment
+                          ? "bg-blue-500 text-white"
+                          : "bg-gray-300"
+                      }`}
+                    >
+                      {assessment}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  onClick={handleNextPage}
+                  disabled={currentItems.length < itemsPerPage}
+                  className="px-4 py-2 bg-blue-500 text-white rounded"
+                >
+                  Next
+                </button>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
