@@ -127,34 +127,9 @@ const DetailData = ({ params }) => {
     if (Object.keys(tableData).length > 0) {
       const wb = XLSX.utils.book_new();
 
-      const headerStyle = {
-        fill: { fgColor: { rgb: "0000FF" } },
-        font: { color: { rgb: "FFFFFF" }, bold: true },
-      };
-
       Object.keys(tableData).forEach((assessment) => {
-        const assessmentData = tableData[assessment].filter(
-          (item) => !item.isSub
-        );
+        const assessmentData = tableData[assessment];
         const ws = XLSX.utils.json_to_sheet(assessmentData);
-
-        // Apply header style
-        ws["!rows"] = [{ hpt: 20, hpx: 20 }];
-        ws["A1"].s = headerStyle; // Assuming the first header is in A1
-
-        Object.keys(ws).forEach((key) => {
-          if (key[0] === "!") return;
-          const cell = ws[key];
-
-          if (cell.v === "Iya" || cell.v === "Ideal") {
-            cell.s = { fill: { fgColor: { rgb: "00FF00" } } };
-          } else if (cell.v === "tidak" || cell.v === "tidak memadai") {
-            cell.s = { fill: { fgColor: { rgb: "FF0000" } } };
-          } else if (cell.v === "tidak tahu") {
-            cell.s = { fill: { fgColor: { rgb: "808080" } } };
-          }
-        });
-
         XLSX.utils.book_append_sheet(wb, ws, `Assessment ${assessment}`);
       });
 
