@@ -114,19 +114,20 @@ const Question0 = ({
                   setSelectedValue={setSubNasionalValue}
                 />
               )}
+         
             </div>
-            {showSubNasional && Array.isArray(suggestions) && (
-              <TextInput
-                name={`${name}_city`}
-                placeholder="Cari Kota"
-                value={cityValue}
-                onChange={(e) => handleCityChange(e.target.value)}
-                suggestions={
-                  suggestions
-                    .find((prov) => prov.name === subNasionalValue)
-                    ?.Cities.map((city) => city.name) || []
-                }
-              />
+            {subNasionalValue && Array.isArray(suggestions) && (
+             <TextInput
+             name={`${name}_city`}
+             placeholder="Cari Kota"
+             value={cityValue}
+             onChange={(e) => handleCityChange(e.target.value)}
+             suggestions={
+               suggestions
+                 .find((prov) => prov.name === subNasionalValue)
+                 ?.Cities.map((city) => city.name) || []
+             }
+           />
             )}
           </div>
         )}

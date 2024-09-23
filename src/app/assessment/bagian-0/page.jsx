@@ -7,13 +7,11 @@ import DatePicker from "@/components/datepicker";
 import Sidebar from "@/components/sidebar";
 import axios from "axios";
 import { formatISO } from "date-fns";
-
 const Bagian0 = () => {
   const [answers, setAnswers] = useState({});
   const [isData, setData] = useState([]);
-  const [isDataArea, setDataArea] = useState([]); 
+  const [isDataArea, setDataArea] = useState({});
   const [isDataAreaLevel, setDataAreaLevel] = useState([]);
-  const [selectedProvinceId, setSelectedProvinceId] = useState();
   const [selectedLevel, setSelectedLevel] = useState("");
   const [activeId, setActiveId] = useState("/assessment/bagian-0/");
   const [isLoading, setLoading] = useState(false);
@@ -27,9 +25,13 @@ const Bagian0 = () => {
   const formRef = useRef(null);
   const [isPushed, setIsPushed] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
-
+  const dropdownOptions = isDataAreaLevel.map((item) => ({
+    value: item.value,
+    label: item.name,
+  }));
   useEffect(() => {
     setLoading(true);
+
     fetch("https://ppamkespro.com/api/instrument/area")
       .then((res) => {
         if (!res.ok) {
@@ -39,7 +41,6 @@ const Bagian0 = () => {
       })
       .then((responseData) => {
         setDataArea(responseData.data);
-        console.log(responseData.data);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -60,6 +61,32 @@ const Bagian0 = () => {
     router.push("/assessment");
   };
 
+  // const handleNext = async () => {
+  //   try {
+  //     if (formRef.current) {
+  //       formRef.current.dispatchEvent(
+  //         new Event("submit", { bubbles: true, cancelable: true })
+  //       );
+  //     }
+
+  //     if (isDone) {
+  //       const response = await axios.post(
+  //         "https://ppamkespro.com/api/response",
+  //         answers,
+  //         { headers: { Authorization: `Bearer ${token}` } }
+  //       );
+
+  //       if (response.status === 200) {
+  //         router.push("/assessment/bagian-1");
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error(
+  //       "Error posting data:",
+  //       error.response ? error.response.data : error.message
+  //     );
+  //   }
+  // };
   const onSubmit = async (e) => {
     e.preventDefault();
 
@@ -70,12 +97,13 @@ const Bagian0 = () => {
 
       const formattedDate = formatISO(new Date(data["date"]));
 
+      // Prepare data to be sent to the API, omitting data["area"]
       const mapData = {
-        leader: data["leader_comment"] || "",
+        leader: data["leader_comment"] || "", // Ensure default value or validation
         participant: data["participant_comment"] || "",
         date: formattedDate || "",
-        provinceId: selectedProvinceId,
-        city: data["area_city"],
+        province: `Provinsi ${data["area_sub_nasional"]} ` || "",
+        city: `Kota ${data["area_city"]}`,
       };
 
       const response = await axios.post(
@@ -143,13 +171,12 @@ const Bagian0 = () => {
             placeholder={"Masukan nama Provinsi atau Kabupaten/Kota..."}
             name={"area"}
             type={"dropdown"}
-            options={isDataArea.map((province) => ({
-              value: province.id,
-              label: province.name, 
-            }))}
-            selectedValue={selectedProvinceId}
-            setSelectedValue={(option) => {
-              setSelectedProvinceId(option.value); 
+            options={["Nasional", "Sub Nasional"]}
+            suggestions={isDataArea}
+            selectedValue={selectedOption}
+            setSelectedValue={setSelectedOption}
+            onChange={(name, value) => {
+              setAnswers((prev) => ({ ...prev, [name]: value }));
             }}
           />
           <Question0
