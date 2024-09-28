@@ -190,9 +190,9 @@ const View = ({ params }) => {
             <div className="flex justify-between">
               <button
                 onClick={handleBack}
-                className="flex items-center mb-4 text-blue-500"
+                className="flex items-center mb-4 text-accent font-semibold px-3 py-2 rounded-md bg-white border-2 border-accent "
               >
-                <IoMdArrowRoundBack className="mr-2" /> Back to Data Assessment
+                <IoMdArrowRoundBack className="mr-2" /> Back
               </button>
               <button
                 onClick={downloadXLSX}
