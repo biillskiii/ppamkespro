@@ -101,7 +101,7 @@ const Table = ({ columns = [], data = [], type }) => {
                     key={colIndex}
                     className={`py-4 px-6 border border-gray-200 ${getColorClass(
                       row[column.accessor]
-                    )}`}
+                    )} ${column.accessor === "value" ? "font-semibold" : ""}`}
                   >
                     {row[column.accessor] || "-"}
                   </td>
