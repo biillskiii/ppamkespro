@@ -85,8 +85,8 @@ const ParentComponent = () => {
     }
   }, [answers, isData]);
 
-  const handleBack = () => {
-    ("Back button clicked");
+  const handleBack = (e) => {
+    e.preventDefault();
     router.push("/assessment/bagian-2/assessment-8");
   };
 

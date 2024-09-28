@@ -102,8 +102,9 @@ const Bagian0 = () => {
         leader: data["leader_comment"] || "", // Ensure default value or validation
         participant: data["participant_comment"] || "",
         date: formattedDate || "",
-        province: `Provinsi ${data["area_sub_nasional"]} ` || "",
-        city: `Kota ${data["area_city"]}`,
+        area: data["area"] === "Indonesia",
+        province: data["area_sub_nasional"] || "",
+        city: data["area_city"] || "",
       };
 
       const response = await axios.post(

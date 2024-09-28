@@ -67,7 +67,8 @@ const ParentComponent = () => {
     }
   }, [answers, isData]);
 
-  const handleBack = () => {
+  const handleBack = (e) => {
+    e.preventDefault(); 
     router.push("/assessment/bagian-1/");
   };
 
