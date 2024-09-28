@@ -8,6 +8,12 @@ export default function NotFound() {
       <p className="text-sm">
         Sepertinya halaman yang Anda cari tidak tersedia.
       </p>
+      <p className="text-sm mt-5 ">
+        Back to{" "}
+        <a href="/" className="text-accent font-semibold">
+          Login
+        </a>
+      </p>
     </div>
   );
 }
