@@ -5,7 +5,12 @@ import Navbar from "@/components/navbar";
 import Table from "@/components/table";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
-import { FaFileDownload, FaClipboardList } from "react-icons/fa";
+import {
+  FaFileDownload,
+  FaClipboardList,
+  FaArrowRight,
+  FaArrowLeft,
+} from "react-icons/fa";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { HiMiniInboxArrowDown } from "react-icons/hi2";
 import { FaUserGear } from "react-icons/fa6";
@@ -114,14 +119,25 @@ const DetailData = ({ params }) => {
     indexOfLastItem
   );
   const handleNextPage = () => {
-    if (currentAssessment.length === itemsPerPage) {
-      setCurrentPage((prevPage) => prevPage + 1);
+    const assessmentKeys = Object.keys(tableData);
+    const currentIndex = assessmentKeys.indexOf(currentAssessment);
+
+    if (currentIndex < assessmentKeys.length - 1) {
+      setCurrentAssessment(assessmentKeys[currentIndex + 1]);
+      setCurrentPage(1); // Reset to first page of new assessment
     }
   };
 
   const handlePrevPage = () => {
-    setCurrentAssessment((prevPage) => (prevPage > 1 ? prevPage - 1 : 1));
+    const assessmentKeys = Object.keys(tableData);
+    const currentIndex = assessmentKeys.indexOf(currentAssessment);
+
+    if (currentIndex > 0) {
+      setCurrentAssessment(assessmentKeys[currentIndex - 1]);
+      setCurrentPage(1); // Reset to first page of new assessment
+    }
   };
+
 
   const downloadXLSX = () => {
     if (Object.keys(tableData).length > 0) {
@@ -198,17 +214,25 @@ const DetailData = ({ params }) => {
             <>
               <Table type={"sub"} data={currentItems} columns={columnConfig} />
               <div className="flex justify-center items-end gap-x-5">
+                <button
+                  onClick={handlePrevPage}
+                  disabled={currentAssessment === Object.keys(tableData)[0]} // Disable if on first assessment
+                  className="px-4 py-3 bg-accent text-white rounded"
+                >
+                  <FaArrowLeft size={15} color="#ffff" />
+                </button>
+
                 <div className="mt-4">
                   {Object.keys(tableData).map((assessment) => (
                     <button
                       key={assessment}
                       onClick={() => {
                         setCurrentAssessment(assessment);
-                        setCurrentPage(1); // Reset page to 1 when changing assessment
+                        setCurrentPage(1);
                       }}
                       className={`mr-2 px-4 py-2 rounded ${
                         currentAssessment === assessment
-                          ? "bg-blue-500 text-white"
+                          ? "bg-accent text-white"
                           : "bg-gray-300"
                       }`}
                     >
@@ -216,6 +240,16 @@ const DetailData = ({ params }) => {
                     </button>
                   ))}
                 </div>
+                <button
+                  onClick={handleNextPage}
+                  disabled={
+                    currentAssessment ===
+                    Object.keys(tableData)[Object.keys(tableData).length - 1]
+                  }
+                  className="px-4 py-3 bg-accent text-white rounded"
+                >
+                  <FaArrowRight size={15} color="#ffff" />
+                </button>
               </div>
             </>
           )}
