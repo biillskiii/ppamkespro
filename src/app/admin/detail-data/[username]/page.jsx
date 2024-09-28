@@ -176,9 +176,9 @@ const DetailData = ({ params }) => {
           <div className="flex justify-between">
             <button
               onClick={() => router.push("/admin/data-assessment")}
-              className="flex items-center mb-4 text-blue-500"
+              className="flex items-center mb-4 text-accent font-semibold px-3 py-2 rounded-md bg-white border-2 border-accent "
             >
-              <IoMdArrowRoundBack className="mr-2" /> Back to Data Assessment
+              <IoMdArrowRoundBack className="mr-2" /> Back
             </button>
             <button
               onClick={downloadXLSX}
@@ -198,14 +198,6 @@ const DetailData = ({ params }) => {
             <>
               <Table type={"sub"} data={currentItems} columns={columnConfig} />
               <div className="flex justify-center items-end gap-x-5">
-                <button
-                  onClick={handlePrevPage}
-                  disabled={currentPage === 1}
-                  className="px-4 py-2 bg-blue-500 text-white rounded"
-                >
-                  Previous
-                </button>
-
                 <div className="mt-4">
                   {Object.keys(tableData).map((assessment) => (
                     <button
@@ -224,13 +216,6 @@ const DetailData = ({ params }) => {
                     </button>
                   ))}
                 </div>
-                <button
-                  onClick={handleNextPage}
-                  disabled={currentItems.length < itemsPerPage}
-                  className="px-4 py-2 bg-blue-500 text-white rounded"
-                >
-                  Next
-                </button>
               </div>
             </>
           )}
