@@ -37,7 +37,7 @@ const ParentComponent = () => {
 
           // Filter data to get only items with ID between 14-17
           const filteredData = data.filter(
-            (item) => item.number >= 8 && item.number <= 13
+            (item) => item.number >= 8 && item.number <= 13 
           );
 
           setData(filteredData); // Set data to state
@@ -68,7 +68,7 @@ const ParentComponent = () => {
   }, [answers, isData]);
 
   const handleBack = (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
     router.push("/assessment/bagian-1/");
   };
 
@@ -104,61 +104,61 @@ const ParentComponent = () => {
 
       const mapData = [
         {
-          instrumentId: 8,
+          instrumentId: 210,
           value: data["input-8"],
           score: 0,
           comment: data["input-8_comment"],
         },
         {
-          instrumentId: 9,
+          instrumentId: 211,
           value: data["input-9"],
           score: 0,
           comment: data["input-9_comment"],
         },
         {
-          instrumentId: 11,
+          instrumentId: 212,
           value: `${data["input-10_sub_11"]}`,
           score: 0,
           comment: `${data["input-10_comment_sub_11"]}`,
         },
         {
-          instrumentId: 12,
+          instrumentId: 213,
           value: `${data["input-10_sub_12"]}`,
           score: 0,
           comment: `${data["input-10_comment_sub_12"]}`,
         },
         {
-          instrumentId: 13,
+          instrumentId: 214,
           value: `${data["input-10_sub_13"]}`,
           score: 0,
           comment: `${data["input-10_comment_sub_13"]}`,
         },
         {
-          instrumentId: 15,
+          instrumentId: 215,
           value: `${data["input-11_sub_15"]}`,
           score: 0,
           comment: `${data["input-11_comment_sub_15"]}`,
         },
         {
-          instrumentId: 16,
+          instrumentId: 216,
           value: `${data["input-11_sub_16"]}`,
           score: 0,
           comment: `${data["input-11_comment_sub_16"]}`,
         },
         {
-          instrumentId: 17,
+          instrumentId: 217,
           value: `${data["input-11_sub_17"]}`,
           score: 0,
           comment: `${data["input-11_comment_sub_17"]}`,
         },
         {
-          instrumentId: 18,
+          instrumentId: 218,
           value: data["input-12"],
           score: 0,
           comment: data["input-12_comment"],
         },
         {
-          instrumentId: 19,
+          instrumentId: 219,
           value: data["input-13"],
           score: 0,
           comment: data["input-13_comment"],

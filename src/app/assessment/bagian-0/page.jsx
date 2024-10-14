@@ -1,110 +1,108 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Button from "@/components/button";
 import Question0 from "@/components/q-bagian-0";
 import DatePicker from "@/components/datepicker";
 import Sidebar from "@/components/sidebar";
 import axios from "axios";
 import { formatISO } from "date-fns";
+
 const Bagian0 = () => {
   const [answers, setAnswers] = useState({});
-  const [isData, setData] = useState([]);
-  const [isDataArea, setDataArea] = useState({});
-  const [isDataAreaLevel, setDataAreaLevel] = useState([]);
-  const [selectedLevel, setSelectedLevel] = useState("");
+  const [questions, setQuestions] = useState([]);
+  const [areas, setAreas] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [selectedValue, setSelectedValue] = useState("");
+  
+  // Retrieve selectedProvince and selectedCity from localStorage
+  const [selectedProvince, setSelectedProvince] = useState(() => {
+    return localStorage.getItem("selectedProvince") || "";
+  });
+  const [selectedCity, setSelectedCity] = useState(() => {
+    return localStorage.getItem("selectedCity") || "";
+  });
+  
   const [activeId, setActiveId] = useState("/assessment/bagian-0/");
-  const [isLoading, setLoading] = useState(false);
-  const [isDone, setIsDone] = useState(false);
+  const [isLoadingQuestions, setLoadingQuestions] = useState(false);
+  const [isLoadingAreas, setLoadingAreas] = useState(false);
+  const [isPushed, setIsPushed] = useState(false);
+
   const router = useRouter();
-  const pathname = usePathname();
+  const formRef = useRef(null);
   const token =
     typeof window !== "undefined"
       ? sessionStorage.getItem("accessToken")
       : null;
-  const formRef = useRef(null);
-  const [isPushed, setIsPushed] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("");
-  const dropdownOptions = isDataAreaLevel.map((item) => ({
-    value: item.value,
-    label: item.name,
-  }));
-  useEffect(() => {
-    setLoading(true);
 
-    fetch("https://ppamkespro.com/api/instrument/area")
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`Network response was not ok: ${res.statusText}`);
-        }
-        return res.json();
-      })
-      .then((responseData) => {
-        setDataArea(responseData.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+  // Fetch questions from API
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      setLoadingQuestions(true);
+      try {
+        const response = await axios.get(
+          "https://ppamkespro.com/api/instrument"
+        );
+        const filteredQuestions = response.data.data.filter(
+          (item) => item.number >= 1 && item.number <= 4
+        );
+        setQuestions(filteredQuestions);
+      } catch (error) {
+        console.error("Error fetching questions:", error);
+      } finally {
+        setLoadingQuestions(false);
+      }
+    };
+
+    fetchQuestions();
   }, []);
 
+  // Fetch areas (provinces) from API
   useEffect(() => {
-    if (isData.length > 0) {
-      const allAnswered = isData.every((item) => answers[`input-${item.id}`]);
-      setIsDone(allAnswered);
-    }
-  }, [answers, isData]);
+    const fetchAreas = async () => {
+      setLoadingAreas(true);
+      try {
+        const response = await fetch(
+          "https://ppamkespro.com/api/instrument/area"
+        );
+        if (!response.ok) {
+          throw new Error(
+            `Network response was not ok: ${response.statusText}`
+          );
+        }
+        const responseData = await response.json();
+        setAreas(responseData.data);
+      } catch (error) {
+        console.error("Error fetching area data:", error);
+      } finally {
+        setLoadingAreas(false);
+      }
+    };
 
+    fetchAreas();
+  }, []);
+
+  // Handle back button click
   const handleBack = () => {
     router.push("/assessment");
   };
 
-  // const handleNext = async () => {
-  //   try {
-  //     if (formRef.current) {
-  //       formRef.current.dispatchEvent(
-  //         new Event("submit", { bubbles: true, cancelable: true })
-  //       );
-  //     }
-
-  //     if (isDone) {
-  //       const response = await axios.post(
-  //         "https://ppamkespro.com/api/response",
-  //         answers,
-  //         { headers: { Authorization: `Bearer ${token}` } }
-  //       );
-
-  //       if (response.status === 200) {
-  //         router.push("/assessment/bagian-1");
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error(
-  //       "Error posting data:",
-  //       error.response ? error.response.data : error.message
-  //     );
-  //   }
-  // };
+  // Form submission handling
   const onSubmit = async (e) => {
     e.preventDefault();
-
+    setIsPushed(true);
     try {
-      setIsPushed(true);
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData.entries());
 
       const formattedDate = formatISO(new Date(data["date"]));
 
-      // Prepare data to be sent to the API, omitting data["area"]
       const mapData = {
-        leader: data["leader_comment"] || "", // Ensure default value or validation
-        participant: data["participant_comment"] || "",
+        leader: data["leader_comment"] || "",
         date: formattedDate || "",
-        area: data["area"] === "Indonesia",
-        province: data["area_sub_nasional"] || "",
-        city: data["area_city"] || "",
+        participant: data["participant_comment"] || "",
+        provinceId: selectedProvince ? Number(selectedProvince) : null,
+        cityId: selectedCity ? Number(selectedCity) : null,
       };
 
       const response = await axios.post(
@@ -126,6 +124,7 @@ const Bagian0 = () => {
     }
   };
 
+  // Handle sidebar click
   const handleSidebarClick = () => {
     if (formRef.current) {
       setIsPushed(false);
@@ -134,6 +133,26 @@ const Bagian0 = () => {
       );
     }
   };
+
+  // Update cities based on selected province
+  useEffect(() => {
+    if (selectedProvince) {
+      const area = areas.find((area) => area.id === Number(selectedProvince));
+      setCities(area ? area.cities : []); // Set cities or clear if no area
+
+      // Store the selected province in local storage
+      localStorage.setItem("selectedProvince", selectedProvince);
+    } else {
+      setCities([]); // Clear cities if no province selected
+    }
+  }, [selectedProvince, areas]);
+
+  // Update local storage for selected city
+  useEffect(() => {
+    if (selectedCity) {
+      localStorage.setItem("selectedCity", selectedCity);
+    }
+  }, [selectedCity]);
 
   return (
     <div className="bg-[#F1F1F7] h-screen overflow-x-hidden">
@@ -151,41 +170,80 @@ const Bagian0 = () => {
         </div>
         <form
           ref={formRef}
-          onSubmit={(e) => {
-            onSubmit(e);
-            setIsPushed(true);
-          }}
+          onSubmit={onSubmit}
           className="flex flex-col gap-y-5"
         >
-          <div className="flex w-[1048px] gap-x-4 ">
-            <Question0
-              label={"Siapa yang Memimpin Penilaian?"}
-              type={"text"}
-              placeholder={"Nama pemimpin penilaian..."}
-              name={"leader"}
-            />
-            <DatePicker name="date" />
-          </div>
+          {isLoadingQuestions ? (
+            <p>Loading questions...</p>
+          ) : (
+            questions.length > 0 && (
+              <>
+                <div className="flex w-[1048px] gap-x-4">
+                  <Question0
+                    label={questions[0]?.question}
+                    type={"text"}
+                    placeholder={questions[0]?.question || ""}
+                    name={"leader"}
+                  />
+                  <DatePicker label={questions[1].question} name="date" />
+                </div>
 
-          <Question0
-            label={"Pada tingkat apa penilaian dilakukan?"}
-            placeholder={"Masukan nama Provinsi atau Kabupaten/Kota..."}
-            name={"area"}
-            type={"dropdown"}
-            options={["Nasional", "Sub Nasional"]}
-            suggestions={isDataArea}
-            selectedValue={selectedOption}
-            setSelectedValue={setSelectedOption}
-            onChange={(name, value) => {
-              setAnswers((prev) => ({ ...prev, [name]: value }));
-            }}
-          />
-          <Question0
-            label={"Peserta yang terlibat dalam penilaian?"}
-            placeholder={"Nama peserta penilaian..."}
-            name={"participant"}
-            type={"text"}
-          />
+                <Question0
+                  label={questions[2].question}
+                  placeholder={questions[2].question}
+                  name={"areaType"}
+                  type={"dropdown"}
+                  options={["Nasional", "Sub Nasional"].map((item) => ({
+                    value: item,
+                    label: item,
+                  }))}
+                  selectedValue={selectedValue}
+                  setSelectedValue={setSelectedValue}
+                  onChange={(name, value) => {
+                    setAnswers((prev) => ({ ...prev, [name]: value }));
+                  }}
+                />
+
+                {selectedValue === "Sub Nasional" && (
+                  <>
+                    <Question0
+                      label="Pilih Provinsi"
+                      placeholder={selectedProvince ? "Pilih Provinsi" : "Pilih Provinsi"}
+                      name="province"
+                      type="dropdown"
+                      options={areas.map((area) => ({
+                        value: area.id,
+                        label: area.name,
+                      }))}
+                      selectedValue={selectedProvince}
+                      setSelectedValue={setSelectedProvince}
+                    />
+                    {selectedProvince && cities.length > 0 && (
+                      <Question0
+                        label="Pilih Kota"
+                        placeholder={selectedCity ? "Pilih Kota" : "Pilih Kota"}
+                        name="city"
+                        type="dropdown"
+                        options={cities.map((city) => ({
+                          value: city.id,
+                          label: city.name,
+                        }))}
+                        selectedValue={selectedCity}
+                        setSelectedValue={setSelectedCity}
+                      />
+                    )}
+                  </>
+                )}
+
+                <Question0
+                  label={questions[3]?.question}
+                  placeholder={questions[3]?.question || ""}
+                  name={"participant"}
+                  type={"text"}
+                />
+              </>
+            )
+          )}
 
           <div className="flex items-center ml-80 my-10 gap-x-5 w-3/12">
             <Button

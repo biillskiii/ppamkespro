@@ -5,7 +5,7 @@ import TextInput from "../input-text";
 
 const Question0 = ({
   type,
-  options = [],
+  options = [], // Options should contain objects with id and name
   label,
   name,
   placeholder,
@@ -95,40 +95,23 @@ const Question0 = ({
           <div className="w-full flex flex-col items-start gap-y-2">
             <div className="w-full flex flex-row justify-start items-start gap-x-2">
               <DropdownInput
-                options={options}
+                options={options} // Pass objects with id and name
                 name={name}
                 placeholder={"Pilih Salah Satu"}
                 value={answer}
-                onChange={(e) => handleAnswerChange(e.target.value)}
+                onChange={(e) => {
+                  const selectedOption = options.find(
+                    (option) => option.name === e.target.value
+                  );
+                  if (selectedOption) {
+                    handleAnswerChange(selectedOption.id); // Use ID here
+                    setSelectedValue(selectedOption.name); // Set selected value to name
+                  }
+                }}
                 selectedValue={selectedValue}
                 setSelectedValue={setSelectedValue}
               />
-              {Array.isArray(suggestions) && showSubNasional && (
-                <DropdownInput
-                  options={suggestions.map((prov) => prov.name)}
-                  name={`${name}_sub_nasional`}
-                  placeholder={"Pilih Provinsi"}
-                  value={subNasionalValue}
-                  onChange={(e) => handleSubNasionalChange(e.target.value)}
-                  selectedValue={subNasionalValue}
-                  setSelectedValue={setSubNasionalValue}
-                />
-              )}
-         
             </div>
-            {subNasionalValue && Array.isArray(suggestions) && (
-             <TextInput
-             name={`${name}_city`}
-             placeholder="Cari Kota"
-             value={cityValue}
-             onChange={(e) => handleCityChange(e.target.value)}
-             suggestions={
-               suggestions
-                 .find((prov) => prov.name === subNasionalValue)
-                 ?.Cities.map((city) => city.name) || []
-             }
-           />
-            )}
           </div>
         )}
       </div>

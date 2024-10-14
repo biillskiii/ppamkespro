@@ -4,36 +4,29 @@ import clsx from "clsx";
 import { IoIosArrowDown } from "react-icons/io";
 
 const DropdownInput = ({
+  type,
+  value,
+  name,
   options = [],
   placeholder,
   selectedValue = "",
   setSelectedValue,
-  name,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const savedValue = localStorage.getItem(name);
     if (savedValue) {
-      setSelectedValue(savedValue);
+      setSelectedValue && setSelectedValue(savedValue);
     }
   }, [name, setSelectedValue]);
 
-  // Inside DropdownInput
-  const toggleDropdown = () => {
-    console.log("Dropdown toggled:", !isOpen);
-    setIsOpen((prev) => !prev);
-  };
+  const toggleDropdown = () => setIsOpen(!isOpen);
 
-  const handleSelectDropdown = (option) => {
-    console.log("Selected Option:", option);
-    if (typeof setSelectedValue === "function") {
-      setSelectedValue(option.value);
-      localStorage.setItem(name, option.value);
-      setIsOpen(false);
-    } else {
-      console.error("setSelectedValue is not a function");
-    }
+  const handleSelectDropdown = (value) => {
+    setSelectedValue && setSelectedValue(value);
+    setIsOpen(false);
+    localStorage.setItem(name, value);
   };
 
   return (
@@ -44,19 +37,12 @@ const DropdownInput = ({
         className={clsx(
           "border p-2 rounded-md w-full cursor-pointer",
           "focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
-          "text-black font-medium bg-white h-10"
+          "text-black font-medium",
+          "bg-white",
+          "h-10"
         )}
       >
-        {selectedValue ?
-          (
-            <p className="flex items-center justify-between">
-              {options.find((option) => {
-                if (option.value === selectedValue) {
-                  console.log('check: '+JSON.stringify(option) + ' = ' + selectedValue)
-                  return true
-              }
-              })?.label} <IoIosArrowDown size={15} /></p>
-        ): (
+        {selectedValue || (
           <p className="flex items-center justify-between">
             {placeholder} <IoIosArrowDown size={15} />
           </p>
@@ -69,16 +55,18 @@ const DropdownInput = ({
             "max-h-60 overflow-y-auto"
           )}
         >
-          {options.map((option) => (
+          {options.map((option, index) => (
             <li
-              key={option.value}
+              key={index}
               onClick={() => handleSelectDropdown(option)}
               className={clsx(
                 "px-4 py-2 cursor-pointer",
-                "hover:bg-blue-500 text-base hover:text-white"
+                "hover:bg-abu",
+                "text-base",
+                "hover:text-white"
               )}
             >
-              {option.label}
+              {option}
             </li>
           ))}
         </ul>

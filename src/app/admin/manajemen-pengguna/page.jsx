@@ -195,7 +195,7 @@ const Admin = () => {
               <tbody>
                 {data.map((user, index) => (
                   <tr key={index} className="border-b relative">
-                    <td className="px-6 py-4">{user.id}</td>
+                    <td className="px-6 py-4">{index + 1}</td>
                     <td className="px-6 py-4">{user.username}</td>
                     <td className="px-6 py-4 capitalize font-semibold">
                       {user.status}
@@ -205,14 +205,16 @@ const Admin = () => {
                       <button
                         onClick={() =>
                           setSelectedUserId(
-                            selectedUserId === user.id ? null : user.id
+                            selectedUserId === user.username
+                              ? null
+                              : user.username
                           )
                         }
                       >
                         <HiDotsVertical />
                       </button>
 
-                      {selectedUserId === user.id && (
+                      {selectedUserId === user.username && (
                         <div
                           className={`absolute right-3 top-0 mt-2 ${
                             user.status !== "blocked"

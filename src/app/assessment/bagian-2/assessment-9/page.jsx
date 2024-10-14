@@ -142,52 +142,52 @@ const ParentComponent = () => {
       // Prepare the data for API
       const mapData = [
         {
-          instrumentId: 184,
+          instrumentId: 384,
           value: data["input-68"] || "",
           comment: data["input-68_comment"] || "",
         },
         {
-          instrumentId: 185,
+          instrumentId: 385,
           value: data["input-69"] || "",
           comment: data["input-69_comment"] || "",
         },
         {
-          instrumentId: 186,
+          instrumentId: 386,
           value: data["input-70"] || "",
           comment: data["input-70_comment"] || "",
         },
         {
-          instrumentId: 187,
+          instrumentId: 387,
           value: data["input-71"] || "",
           comment: data["input-71_comment"] || "",
         },
         {
-          instrumentId: 189,
+          instrumentId: 389,
           value: getArrayValues("input-72_sub_189"),
           comment: data["input-72_comment_sub_189"] || "",
         },
         {
-          instrumentId: 190,
+          instrumentId: 390,
           value: getArrayValues("input-72_sub_190"),
           comment: data["input-72_comment_sub_190"] || "",
         },
         {
-          instrumentId: 191,
+          instrumentId: 391,
           value: getArrayValues("input-72_sub_191"),
           comment: data["input-72_comment_sub_191"] || "",
         },
         {
-          instrumentId: 193,
+          instrumentId: 393,
           value: data["input-73_sub_193"] || "",
           comment: data["input-73_comment_sub_193"] || "",
         },
         {
-          instrumentId: 194,
+          instrumentId: 394,
           value: data["input-73_sub_194"] || "",
           comment: data["input-73_comment_sub_194"] || "",
         },
         {
-          instrumentId: 195,
+          instrumentId: 395,
           value: data["input-73_sub_195"] || "",
           comment: data["input-73_comment_sub_195"] || "",
         },

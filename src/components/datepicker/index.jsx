@@ -11,11 +11,12 @@ import {
   addMonths,
   subMonths,
   getDay,
+
 } from "date-fns";
 import { id } from "date-fns/locale";
 import { FaCalendarAlt } from "react-icons/fa";
 
-const DatePicker = ({ title, name }) => {
+const DatePicker = ({ label, name }) => {
   const [showDatepicker, setShowDatepicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -101,7 +102,8 @@ const DatePicker = ({ title, name }) => {
       <div className="flex flex-col items-start gap-y-3 mb-4 border border-border p-4 rounded-lg">
         <label htmlFor="date-picker-input" className="block mb-2">
           <div>
-            Tanggal Penilaian <span></span>
+            {label}
+            <span></span>
           </div>
         </label>
         <div className="relative w-full">

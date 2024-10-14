@@ -44,7 +44,7 @@ const ParentComponent = () => {
           const data = responseData.data;
 
           const filteredData = data.filter(
-            (item) => item.number >= 1 && item.number <= 7
+            (item) => item.number >= 1 && item.number <= 7 && item.topicId > 0
           );
 
           setData(filteredData);
@@ -70,7 +70,7 @@ const ParentComponent = () => {
   }, [answers, isData]);
 
   const handleBack = (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
     router.push("/assessment/bagian-0");
   };
 
@@ -97,43 +97,43 @@ const ParentComponent = () => {
 
       const mapData = [
         {
-          instrumentId: 1,
+          instrumentId: 203,
           value: data["input-1"],
           score: 0,
           comment: data["input-1_comment"],
         },
         {
-          instrumentId: 2,
+          instrumentId: 204,
           value: data["input-2"],
           score: 0,
           comment: data["input-2_comment"],
         },
         {
-          instrumentId: 3,
+          instrumentId: 205,
           value: data["input-3"],
           score: 0,
           comment: data["input-3_comment"],
         },
         {
-          instrumentId: 4,
+          instrumentId: 206,
           value: data["input-4"],
           score: 0,
           comment: data["input-4_comment"],
         },
         {
-          instrumentId: 5,
+          instrumentId: 207,
           value: data["input-5"],
           score: 0,
           comment: data["input-5_comment"],
         },
         {
-          instrumentId: 6,
+          instrumentId: 208,
           value: data["input-6"],
           score: 0,
           comment: data["input-6_comment"],
         },
         {
-          instrumentId: 7,
+          instrumentId: 209,
           value: data["input-7"],
           score: 0,
           comment: data["input-7_comment"],

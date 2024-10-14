@@ -57,7 +57,7 @@ const Question = ({
       <div className="flex flex-col items-start gap-y-3 mb-4 border border-border p-4 rounded-lg">
         <label
           htmlFor={name}
-          className="block font-medium text-base w-2/3 h-auto pr-4"
+          className="block font-medium text-base w-full h-auto pr-4"
         >
           <span>{no}. </span>
           {label}
