@@ -13,7 +13,7 @@ const TextInput = ({ type, name, placeholder, label, value, onChange }) => {
         id={name}
         name={name}
         placeholder={placeholder}
-        value={value} // Value dikendalikan oleh state di komponen Login
+        value={value || ""} // Value dikendalikan oleh state di komponen Login
         onChange={onChange} // Pemanggilan fungsi onChange yang diterima dari props
         className={clsx(
           "border",

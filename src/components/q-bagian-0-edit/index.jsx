@@ -13,7 +13,9 @@ const Question0 = ({
   suggestions = [], // Default empty array for suggestions
   selectedValue,
   setSelectedValue,
-  
+  no,
+  onQuestionChange,
+  questionText,
 }) => {
   const [answer, setAnswer] = useState("");
   const [comment, setComment] = useState("");
@@ -56,9 +58,18 @@ const Question0 = ({
       <div className="flex flex-col items-start gap-y-3 mb-4 border border-border p-4 rounded-lg">
         <label
           htmlFor={name}
-          className="block font-medium text-base w-2/3 h-auto pr-4"
+          className=" flex gap-x-5 items-center font-bold text-base w-full h-auto pr-4"
         >
-          {label}
+          <span className="px-4 py-2 rounded-lg border border-border">
+            {no}
+          </span>
+          {/* Input text for editing the question */}
+          <input
+            type="text"
+            className="w-full border border-gray-300 p-2 rounded"
+            value={questionText} // Bind input to question text
+            onChange={(e) => onQuestionChange(e.target.value)} // Update question text on change
+          />
         </label>
         {type === "text" && (
           <div className="w-full flex flex-col items-start gap-y-2">
@@ -104,7 +115,7 @@ const Question0 = ({
                   const selectedOption = options.find(
                     (option) => option.label === e.target.value
                   );
-                  
+
                   if (selectedOption) {
                     handleAnswerChange(selectedOption.id); // Use ID here
                     setSelectedValue(selectedOption.name); // Set selected value to name

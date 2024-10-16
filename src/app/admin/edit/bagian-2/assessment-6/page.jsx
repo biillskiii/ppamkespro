@@ -2,71 +2,107 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/components/button";
-import Question0 from "@/components/q-bagian-0-edit";
+import Question0 from "@/components/q-edit"; // Import Question0
 import Sidebar from "@/components/sidebar-edit";
 import axios from "axios";
 
-const EditBagian0 = () => {
+const EditBagian1 = () => {
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState({});
-  const [editedQuestions, setEditedQuestions] = useState({});
-  const [isDataArea, setDataArea] = useState([]);
-  const [selectedOption, setSelectedOption] = useState("");
-  const [isLoading, setLoading] = useState(false);
+  const [editedQuestions, setEditedQuestions] = useState({}); // For edited questions
+  const [editedSubQuestions, setEditedSubQuestions] = useState({}); // For edited subquestions
+
   const router = useRouter();
   const token =
     typeof window !== "undefined"
       ? sessionStorage.getItem("accessToken")
       : null;
   const formRef = useRef(null);
-  const [isPushed, setIsPushed] = useState(false);
-  const [activeId, setActiveId] = useState("/edit/");
 
+  // Fetch data from API
   useEffect(() => {
-    setLoading(true);
-
     axios
       .get("https://ppamkespro.com/api/instrument", {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
-        const filteredQuestions = res.data.data.filter((q) => q.topicId === 0);
+        const filteredQuestions = res.data.data.filter(
+          (q) => q.number >= 53 && q.number <= 57
+        );
         setQuestions(filteredQuestions);
+
+        // Set edited questions and subquestions
         setEditedQuestions(
           filteredQuestions.reduce(
             (acc, question) => ({ ...acc, [question.id]: question.question }),
             {}
           )
         );
-      })
-      .catch((error) => console.error("Error fetching questions:", error))
-      .finally(() => setLoading(false));
 
-    axios
-      .get("https://ppamkespro.com/api/instrument/area", {
-        headers: { Authorization: `Bearer ${token}` },
+        setEditedSubQuestions(
+          filteredQuestions.reduce((acc, question) => {
+            if (question.sub) {
+              return {
+                ...acc,
+                [question.id]: question.sub.reduce(
+                  (subAcc, sub) => ({
+                    ...subAcc,
+                    [sub.id]: sub.question,
+                  }),
+                  {}
+                ),
+              };
+            }
+            return acc;
+          }, {})
+        );
       })
-      .then((res) => setDataArea(res.data.data))
-      .catch((error) => console.error("Error fetching area data:", error));
+      .catch((error) => console.error("Error fetching questions:", error));
   }, [token]);
 
-  const handleInputChange = (name, value) => {
-    setAnswers((prev) => ({ ...prev, [name]: value }));
-  };
-
+  // Update main question handler
   const handleQuestionChange = (id, value) => {
     setEditedQuestions((prev) => ({ ...prev, [id]: value }));
   };
 
+  // Update subquestion handler
+  const handleSubQuestionChange = (questionId, subId, value) => {
+    console.log(
+      `Updating subquestion ${subId} of question ${questionId} with value:`,
+      value
+    );
+    setEditedSubQuestions((prev) => ({
+      ...prev,
+      [questionId]: {
+        ...(prev[questionId] || {}),
+        [subId]: value,
+      },
+    }));
+  };
+
+  // Submit form
   const onSubmit = async (e) => {
     e.preventDefault();
-    setIsPushed(true);
 
+    // Build the updated questions payload
     const updatedQuestions = questions.map((q) => ({
       id: q.id,
-      question: editedQuestions[q.id],
+      number: q.number,
+      question: editedQuestions[q.id], // Main question text
+      sub: q.sub
+        ? q.sub.map((sub) => ({
+            id: sub.id,
+            question: editedSubQuestions[q.id]?.[sub.id] || sub.question, // Updated subquestion or original
+            type: sub.type,
+            choice: sub.choice || [], // Preserve choice options
+          }))
+        : [],
     }));
 
+    // Debugging payload
+    console.log("Payload to be sent to API:", updatedQuestions);
+
+    // Send request to API
     try {
       const response = await axios.put(
         "https://ppamkespro.com/api/instrument",
@@ -76,42 +112,24 @@ const EditBagian0 = () => {
 
       if (response.status === 200) {
         alert("Questions updated successfully");
-        router.push("/assessment/bagian-1");
+        console.log("Updated subquestions state: ", editedSubQuestions);
       }
     } catch (error) {
       console.error(
         "Error updating questions:",
         error.response ? error.response.data : error.message
       );
-    } finally {
-      setIsPushed(false);
     }
   };
-
-  const handleSidebarClick = () => {
-    if (formRef.current) {
-      setIsPushed(false);
-      formRef.current.dispatchEvent(
-        new Event("submit", { bubbles: true, cancelable: true })
-      );
-    }
-  };
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
 
   return (
     <div>
       <div className="bg-[#F1F1F7] h-screen overflow-x-hidden">
-        <Sidebar
-          activeId={activeId}
-          setActiveId={setActiveId}
-          onClick={handleSidebarClick}
-        />
+        <Sidebar />
         <div className="container w-[1048px] ml-[344px] space-y-6 p-4">
           <div className="bg-[#1446AB] pl-4 py-4 rounded-2xl w-[1048px]">
             <p className="text-white font-extrabold text-xl">
-              Bagian 0 - Informasi umum (Edit Pertanyaan)
+              Bagian 2 - Informasi umum (Edit Pertanyaan)
             </p>
           </div>
           <form
@@ -122,31 +140,25 @@ const EditBagian0 = () => {
             {questions.map((question) => (
               <Question0
                 key={question.id}
-                type={question.type}
                 no={question.number}
+                type={question.sub ? "sub" : question.type}
                 label={`${question.number}. ${question.question}`}
-                name={`question_${question.number}`}
-                placeholder="Edit pertanyaan"
+                name={`question_${question.id}`}
+                placeholder="Komentar/Referensi/Rincian..."
+                options={question.choice || []} // Ensure choices are passed
+                subname={question.subname}
                 questionText={editedQuestions[question.id] || ""}
                 onQuestionChange={(value) =>
                   handleQuestionChange(question.id, value)
                 }
-                selectedValue={editedQuestions[question.number] || ""}
-                setSelectedValue={(value) =>
-                  handleQuestionChange(question.number, value)
+                subquestions={question.sub} // Pass subquestions correctly
+                onSubQuestionChange={(subId, value) =>
+                  handleSubQuestionChange(question.id, subId, value)
                 }
-                onChange={handleInputChange}
               />
             ))}
 
             <div className="flex items-center ml-80 my-10 gap-x-5 w-3/12">
-              <Button
-                label={"Sebelumnya"}
-                onClick={() => router.push("/assessment")}
-                variant="disabled"
-                type="button"
-                disabled
-              />
               <Button label={"SIMPAN PERUBAHAN"} type="submit" />
             </div>
           </form>
@@ -156,4 +168,4 @@ const EditBagian0 = () => {
   );
 };
 
-export default EditBagian0;
+export default EditBagian1;

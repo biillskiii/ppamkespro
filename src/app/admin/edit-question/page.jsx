@@ -7,14 +7,13 @@ import Link from "next/link";
 import { FaClipboardList } from "react-icons/fa";
 import { HiMiniInboxArrowDown } from "react-icons/hi2";
 import { FaUserGear } from "react-icons/fa6";
-import { HiDotsVertical } from "react-icons/hi";
-// Pastikan gambar edit.png ada di folder public/assets
+import { FaEdit } from "react-icons/fa";
 const EditAssessmentPage = () => {
   const router = useRouter();
 
   const handleEditClick = () => {
     // Navigasi ke halaman edit sesuai dengan kebutuhan
-    router.push("/assessment/edit");
+    router.push("/admin/edit");
   };
 
   return (
@@ -40,9 +39,15 @@ const EditAssessmentPage = () => {
             </Link>
             <Link
               href="/admin/manajemen-pengguna"
-              className="py-2 px-4 flex items-center gap-x-3 text-accent"
+              className="py-2 px-4 flex items-center gap-x-3 hover:text-accent"
             >
               <FaUserGear /> User Management
+            </Link>
+            <Link
+              href="/admin/edit-question"
+              className="py-2 px-4 flex items-center gap-x-3 text-accent"
+            >
+              <FaEdit /> Edit Question
             </Link>
           </nav>
         </div>
