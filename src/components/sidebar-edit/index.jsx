@@ -14,36 +14,11 @@ const menus = [
   {
     id: 0,
     title: "Bagian 0",
-    href: "/assessment/bagian-0/",
+    href: "/admin/edit/",
   },
   {
     title: "Bagian I",
-    subMenu: [
-      {
-        id: 1,
-        title: "Asesmen 1",
-        desc: "Pertanyaan 1–7",
-        href: "/assessment/bagian-1/",
-      },
-      {
-        id: 2,
-        title: "Asesmen 2",
-        desc: "Pertanyaan 8–13",
-        href: "/assessment/bagian-1/assessment-2",
-      },
-      {
-        id: 3,
-        title: "Asesmen 3",
-        desc: "Pertanyaan 14–17",
-        href: "/assessment/bagian-1/assessment-3",
-      },
-      {
-        id: 4,
-        title: "Asesmen 4",
-        desc: "Pertanyaan 18–21",
-        href: "/assessment/bagian-1/assessment-4",
-      },
-    ],
+    href: "/admin/edit/bagian-1/",
   },
   {
     title: "Bagian II",
@@ -52,55 +27,55 @@ const menus = [
         id: 5,
         title: "Asesmen 1",
         desc: "Pertanyaan 22–30",
-        href: "/assessment/bagian-2/",
+        href: "/admin/edit/bagian-2/",
       },
       {
         id: 6,
         title: "Asesmen 2",
         desc: "Pertanyaan 31–36",
-        href: "/assessment/bagian-2/assessment-2",
+        href: "/admin/edit/bagian-2/assessment-2",
       },
       {
         id: 7,
         title: "Asesmen 3",
         desc: "Pertanyaan 37–42",
-        href: "/assessment/bagian-2/assessment-3",
+        href: "/admin/edit/bagian-2/assessment-3",
       },
       {
         id: 8,
         title: "Asesmen 4",
         desc: "Pertanyaan 43–47",
-        href: "/assessment/bagian-2/assessment-4",
+        href: "/admin/edit/bagian-2/assessment-4",
       },
       {
         id: 9,
         title: "Asesmen 5",
         desc: "Pertanyaan 48–52",
-        href: "/assessment/bagian-2/assessment-5",
+        href: "/admin/edit/bagian-2/assessment-5",
       },
       {
         id: 10,
         title: "Asesmen 6",
         desc: "Pertanyaan 53–57",
-        href: "/assessment/bagian-2/assessment-6",
+        href: "/admin/edit/bagian-2/assessment-6",
       },
       {
         id: 11,
         title: "Asesmen 7",
         desc: "Pertanyaan 58–62",
-        href: "/assessment/bagian-2/assessment-7",
+        href: "/admin/edit/bagian-2/assessment-7",
       },
       {
         id: 12,
         title: "Asesmen 8",
         desc: "Pertanyaan 63–67",
-        href: "/assessment/bagian-2/assessment-8",
+        href: "/admin/edit/bagian-2/assessment-8",
       },
       {
         id: 13,
         title: "Asesmen 9",
         desc: "Pertanyaan 68–73",
-        href: "/assessment/bagian-2/assessment-9",
+        href: "/admin/edit/bagian-2/assessment-9",
       },
     ],
   },
@@ -119,22 +94,20 @@ const Menu = ({
 }) => {
   const isActive = activeAccordion === title;
   const isHighlighted =
-    (activeId === href && title === "Bagian 0") ||
-    (activeId !== href &&
-      title !== "Bagian 0" &&
-      subMenu.some((item) => item.href === activeId));
+    activeId === href ||
+    (title === "Bagian II" && subMenu.some((item) => item.href === activeId));
+
+  console.log({ title, isActive, isHighlighted }); // Debug status
 
   return (
     <div
-      className={`flex flex-col mt-10 w-10/12 cursor-pointer justify-center ${
-        isHighlighted
-          ? isActive
-            ? "border-2 text-accent"
-            : "bg-accent text-white"
-          : "bg-transparent border border-border text-accent"
-      } py-4 px-4 rounded-lg font-semibold`}
+      className={`flex flex-col mt-10 w-10/12 cursor-pointer justify-center
+        ${isHighlighted ? "bg-accent text-white" : "bg-transparent text-accent"}
+        py-4 px-4 rounded-lg font-semibold border 
+        ${isHighlighted ? "border-accent" : "border border-border"}
+      `}
       onClick={() => {
-        if (title === "Bagian 0") {
+        if (title === "Bagian 0" || title === "Bagian I") {
           handleNavigation(href);
         } else {
           toggleAccordion(title);
@@ -142,21 +115,21 @@ const Menu = ({
       }}
     >
       <div className="flex items-center h-auto justify-between">
-        <div className="flex items-center h-full gap-x-2">
+        <div className="flex items-center gap-x-2">
           <FaCircleCheck
             size={24}
-            className={`${isHighlighted ? "text-gray-200" : "text-accent"}`}
-          />{" "}
+            className={`${isHighlighted ? "text-white" : "text-accent"}`}
+          />
           <span>{title}</span>
         </div>
-        {title !== "Bagian 0" &&
+        {title === "Bagian II" &&
           (isActive ? (
-            <IoIosArrowDown size={16} />
-          ) : (
             <IoIosArrowForward size={16} />
+          ) : (
+            <IoIosArrowDown size={16} />
           ))}
       </div>
-      {isActive && title !== "Bagian 0" && (
+      {isActive && title === "Bagian II" && (
         <div className="pl-6 mt-4">
           {subMenu.map((item, index) => (
             <Assesstment

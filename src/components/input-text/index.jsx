@@ -8,7 +8,8 @@ const TextInput = ({
   placeholder,
   label,
   suggestions = [],
-  onChange,
+  value,
+  onChange, // Ensure this is passed from the parent
 }) => {
   const [savedAnswer, setSavedAnswer] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -33,7 +34,10 @@ const TextInput = ({
     );
     setFilteredSuggestions(filtered);
 
-    if (onChange) onChange(e);
+    // Call the onChange handler passed from the parent
+    if (onChange) {
+      onChange(e); // Ensure this is called correctly
+    }
 
     setShowSuggestions(value.length > 0 && filtered.length > 0);
     setHighlightedIndex(-1); // Reset highlight index when typing
@@ -49,17 +53,11 @@ const TextInput = ({
         setHighlightedIndex((prev) => (prev > 0 ? prev - 1 : 0));
       } else if (e.key === "Enter" && highlightedIndex >= 0) {
         setSavedAnswer(filteredSuggestions[highlightedIndex]);
+        localStorage.setItem(name, filteredSuggestions[highlightedIndex]); // Save selected suggestion
         setShowSuggestions(false);
         setHighlightedIndex(-1);
       }
     }
-  };
-
-  const handleSuggestionClick = (suggestion) => {
-    setSavedAnswer(suggestion); // Set the clicked suggestion as the input value
-    localStorage.setItem(name, suggestion); // Save the suggestion to localStorage
-    setShowSuggestions(false); // Close the suggestions dropdown
-    setHighlightedIndex(-1); // Reset the highlighted index
   };
 
   return (
@@ -74,8 +72,8 @@ const TextInput = ({
         id={name}
         name={name}
         placeholder={placeholder}
-        value={savedAnswer}
-        onChange={handleOnChange}
+        value={value || ""} // Ensure no null is passed
+        onChange={handleOnChange} // Ensure onChange is set correctly
         onKeyDown={handleKeyDown}
         className={clsx(
           "border border-gray-300 rounded-md p-2 w-full",

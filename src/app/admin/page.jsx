@@ -8,6 +8,7 @@ import Link from "next/link";
 import { FaClipboardList } from "react-icons/fa";
 import { HiMiniInboxArrowDown } from "react-icons/hi2";
 import { FaUserGear } from "react-icons/fa6";
+import { FaEdit } from "react-icons/fa";
 import TextInput from "@/components/input-text";
 const Admin = () => {
   const [data, setData] = useState([]);
@@ -178,6 +179,12 @@ const Admin = () => {
               className="py-2 px-4 flex items-center gap-x-3 hover:text-accent"
             >
               <FaUserGear /> User Management
+            </Link>
+            <Link
+              href="/admin/edit-question"
+              className="py-2 px-4 flex items-center gap-x-3 hover:text-accent"
+            >
+              <FaEdit /> Edit Question
             </Link>
           </nav>
         </div>

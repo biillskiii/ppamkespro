@@ -14,15 +14,8 @@ const Bagian0 = () => {
   const [areas, setAreas] = useState([]);
   const [cities, setCities] = useState([]);
   const [selectedValue, setSelectedValue] = useState("");
-  
-  // Retrieve selectedProvince and selectedCity from localStorage
-  const [selectedProvince, setSelectedProvince] = useState(() => {
-    return localStorage.getItem("selectedProvince") || "";
-  });
-  const [selectedCity, setSelectedCity] = useState(() => {
-    return localStorage.getItem("selectedCity") || "";
-  });
-  
+  const [selectedProvince, setSelectedProvince] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
   const [activeId, setActiveId] = useState("/assessment/bagian-0/");
   const [isLoadingQuestions, setLoadingQuestions] = useState(false);
   const [isLoadingAreas, setLoadingAreas] = useState(false);
@@ -35,7 +28,6 @@ const Bagian0 = () => {
       ? sessionStorage.getItem("accessToken")
       : null;
 
-  // Fetch questions from API
   useEffect(() => {
     const fetchQuestions = async () => {
       setLoadingQuestions(true);
@@ -57,7 +49,6 @@ const Bagian0 = () => {
     fetchQuestions();
   }, []);
 
-  // Fetch areas (provinces) from API
   useEffect(() => {
     const fetchAreas = async () => {
       setLoadingAreas(true);
@@ -82,19 +73,16 @@ const Bagian0 = () => {
     fetchAreas();
   }, []);
 
-  // Handle back button click
   const handleBack = () => {
     router.push("/assessment");
   };
 
-  // Form submission handling
   const onSubmit = async (e) => {
     e.preventDefault();
     setIsPushed(true);
     try {
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData.entries());
-
       const formattedDate = formatISO(new Date(data["date"]));
 
       const mapData = {
@@ -124,7 +112,6 @@ const Bagian0 = () => {
     }
   };
 
-  // Handle sidebar click
   const handleSidebarClick = () => {
     if (formRef.current) {
       setIsPushed(false);
@@ -134,25 +121,28 @@ const Bagian0 = () => {
     }
   };
 
-  // Update cities based on selected province
+  useEffect(() => {
+    const province = localStorage.getItem("selectedProvince");
+    if (province) {
+      setSelectedProvince(province);
+    }
+  }, []);
+
   useEffect(() => {
     if (selectedProvince) {
       const area = areas.find((area) => area.id === Number(selectedProvince));
-      setCities(area ? area.cities : []); // Set cities or clear if no area
-
-      // Store the selected province in local storage
+      setCities(area ? area.cities : []);
       localStorage.setItem("selectedProvince", selectedProvince);
     } else {
-      setCities([]); // Clear cities if no province selected
+      setCities([]);
     }
   }, [selectedProvince, areas]);
 
-  // Update local storage for selected city
   useEffect(() => {
-    if (selectedCity) {
-      localStorage.setItem("selectedCity", selectedCity);
+    if (selectedProvince) {
+      localStorage.setItem("selectedProvince", selectedProvince);
     }
-  }, [selectedCity]);
+  }, [selectedProvince]);
 
   return (
     <div className="bg-[#F1F1F7] h-screen overflow-x-hidden">
@@ -163,7 +153,7 @@ const Bagian0 = () => {
       />
 
       <div className="container w-[1048px] ml-[344px] space-y-6 p-4">
-        <div className="bg-[#1446AB] pl-4 py-4 rounded-2xl w-[1048px] ">
+        <div className="bg-[#1446AB] pl-4 py-4 rounded-2xl w-[1048px]">
           <p className="text-white font-extrabold text-xl">
             Bagian 0 - Informasi umum
           </p>
@@ -184,7 +174,15 @@ const Bagian0 = () => {
                     type={"text"}
                     placeholder={questions[0]?.question || ""}
                     name={"leader"}
+                    value={answers.leader || ""}
+                    onChange={(e) =>
+                      setAnswers((prev) => ({
+                        ...prev,
+                        leader: e.target.value,
+                      }))
+                    }
                   />
+
                   <DatePicker label={questions[1].question} name="date" />
                 </div>
 
@@ -208,7 +206,6 @@ const Bagian0 = () => {
                   <>
                     <Question0
                       label="Pilih Provinsi"
-                      placeholder={selectedProvince ? "Pilih Provinsi" : "Pilih Provinsi"}
                       name="province"
                       type="dropdown"
                       options={areas.map((area) => ({
@@ -221,7 +218,7 @@ const Bagian0 = () => {
                     {selectedProvince && cities.length > 0 && (
                       <Question0
                         label="Pilih Kota"
-                        placeholder={selectedCity ? "Pilih Kota" : "Pilih Kota"}
+                        placeholder="Pilih Kota"
                         name="city"
                         type="dropdown"
                         options={cities.map((city) => ({
@@ -240,6 +237,13 @@ const Bagian0 = () => {
                   placeholder={questions[3]?.question || ""}
                   name={"participant"}
                   type={"text"}
+                  value={answers.participant || ""}
+                  onChange={(e) =>
+                    setAnswers((prev) => ({
+                      ...prev,
+                      participant: e.target.value,
+                    }))
+                  }
                 />
               </>
             )
