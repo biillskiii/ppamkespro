@@ -20,7 +20,7 @@ const EditBagian0 = () => {
       : null;
   const formRef = useRef(null);
   const [isPushed, setIsPushed] = useState(false);
-  const [activeId, setActiveId] = useState("/edit/");
+  const [activeId, setActiveId] = useState("/admin/edit/");
 
   useEffect(() => {
     setLoading(true);
