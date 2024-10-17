@@ -79,7 +79,14 @@ const EditBagian1 = () => {
       },
     }));
   };
-
+  const handleSidebarClick = () => {
+    if (formRef.current) {
+      setIsPushed(false);
+      formRef.current.dispatchEvent(
+        new Event("submit", { bubbles: true, cancelable: true })
+      );
+    }
+  };
   // Submit form
   // Submit form
   const onSubmit = async (e) => {

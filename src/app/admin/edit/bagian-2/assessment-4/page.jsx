@@ -86,7 +86,7 @@ const EditBagian1 = () => {
         new Event("submit", { bubbles: true, cancelable: true })
       );
     }
-  };s
+  };
   // Submit form
   // Submit form
   const onSubmit = async (e) => {
