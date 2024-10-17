@@ -4,36 +4,37 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/navbar";
 import Image from "next/image";
-import Pending from "../../../public/assets/amico.png";
-import RejectedImage from "../../../public/assets/reject.png";
-import NoAccess from "../../../public/assets/no-access.png";
-import { jwtDecode } from "jwt-decode"; // Hapus { }, jwtDecode tidak memerlukan {}
+import Pending from "../.././../public/assets/amico.png";
+import ApprovedImage from "../.././../public/assets/approved.png";
+import RejectedImage from "../.././../public/assets/reject.png";
+import NoAccess from "../.././../public/assets/no-access.png";
+import { jwtDecode } from "jwt-decode";
 import { FaSpinner } from "react-icons/fa";
-import { IoLogOutOutline } from "react-icons/io5"; // Mengganti import untuk icon logout yang digunakan
-import Button from "@/components/Button"; // Pastikan komponen Button ada
-import Start from "../../../public/assets/mulai.png";
+import { FaClipboardList } from "react-icons/fa";
+import { HiMiniInboxArrowDown } from "react-icons/hi2";
+import Link from "next/link";
+
 const StatusPage = () => {
-  const [accessStatus, setAccessStatus] = useState(null);
-  const [date, setDate] = useState(null);
+  const [accessStatus, setAccessStatus] = useState(null); // Alias untuk status pengajuan
+  const [date, setDate] = useState(null); // Alias untuk status pengajuan
   const [username, setUsername] = useState("");
   const [userRole, setUserRole] = useState("");
-  const [rejectReason, setRejectReason] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isOpen, setIsOpen] = useState(false); // Tambahan untuk handling logout menu
+  const [rejectReason, setRejectReason] = useState(null); // State untuk alasan penolakan
+  const [isLoading, setIsLoading] = useState(false); // State untuk alasan penolakan
   const router = useRouter();
-  const [instansi, setInstansi] = useState("");
+
   useEffect(() => {
     const token = sessionStorage.getItem("accessToken");
     setIsLoading(true);
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
-        const roleStatus = decodedToken.status || "";
+        const roleStatus = decodedToken.status || ""; // Ganti status role dengan alias
         const username = decodedToken.username || "";
 
-        setUserRole(roleStatus);
+        setUserRole(roleStatus); // Set status role
         setUsername(username);
-        setInstansi(decodedToken.institute || "");
+
         if (roleStatus === "submitter") {
           checkAccessStatus();
         } else {
@@ -48,7 +49,7 @@ const StatusPage = () => {
     }
   }, [router]);
 
-  const handleDate = date
+  let handleDate = date
     ? new Date(date).toLocaleDateString("id-ID", {
         day: "2-digit",
         month: "2-digit",
@@ -76,12 +77,14 @@ const StatusPage = () => {
           },
         }
       );
+      response.data;
       setAccessStatus(response.data.data.status);
       setDate(response.data.data.date);
 
       if (response.data.data.status === "rejected") {
         setRejectReason(
-          response.data.data.rejectReason || "Tidak ada alasan yang diberikan."
+          response.data.data.rejectsReaseon ||
+            "Tidak ada alasan yang diberikan."
         );
       }
     } catch (error) {
@@ -98,42 +101,19 @@ const StatusPage = () => {
     router.push("/assessment/form-ajuan");
   };
 
-  const handleOpenLogout = () => {
-    setIsOpen(!isOpen);
-  };
   const handleResubmit = async () => {
     router.push("/assessment/resubmit-ajuan");
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    router.push("/");
+  const handleTakeAssessment = () => {
+    router.push("/assessment");
   };
-  const handleStart = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      router.push("/assessment/bagian-0");
-    }, 3000);
-  };
+
   if (accessStatus === "pending") {
     return (
       <div className="bg-gray-100 min-h-screen flex flex-col items-center justify-start">
-        <Navbar
-          username={username}
-          status={userRole}
-          onClick={handleOpenLogout}
-        />
-        {isOpen && (
-          <div className="absolute top-20 right-[218px] bg-merah rounded-b-lg p-4 py-4 w-[176px] ">
-            <p
-              className="text-base flex items-center justify-between cursor-pointer text-white font-semibold"
-              onClick={handleLogout}
-            >
-              Keluar
-              <IoLogOutOutline size={15} />
-            </p>
-          </div>
-        )}
+        <Navbar username={username} status={userRole} />{" "}
+        {/* Tampilkan status role */}
         <div className="flex flex-col items-center justify-center mt-14">
           <h1 className="font-bold text-3xl mb-2">Status Pengajuan Akses</h1>
           <p className="text-gray-700 mb-10 text-center px-4">
@@ -165,51 +145,62 @@ const StatusPage = () => {
 
   if (accessStatus === "approved") {
     return (
-      <div>
-        <Navbar
-          username={username}
-          institute={instansi}
-          status={status}
-          onClick={handleOpenLogout}
-        />{" "}
-        {isOpen && (
-          <div className="absolute top-20 right-[218px] bg-merah rounded-b-lg p-4 py-4 w-[176px] ">
-            <p
-              className="text-base flex items-center justify-between cursor-pointer text-white font-semibold"
-              onClick={handleLogout}
-            >
-              Keluar
-              <IoLogOutOutline size={15} />
-            </p>
+      <div className="flex flex-col min-h-screen">
+        <Navbar username={username} status={userRole} />{" "}
+        {/* Tampilkan status role */}
+        <div className="flex flex-1">
+          <div className="w-64 bg-white ">
+            <nav className="flex flex-col p-4">
+              <Link
+                href="/view"
+                className="flex items-center gap-x-3 py-2 px-4 text-accent"
+              >
+                <HiMiniInboxArrowDown />
+                Permintaan Akses
+              </Link>
+              <Link
+                href="/view/data-assessmen"
+                className="py-2 px-4 flex items-center gap-x-3 hover:text-accent"
+              >
+                <FaClipboardList />
+                Data Assessment
+              </Link>
+            </nav>
           </div>
-        )}
-        <div className="flex flex-col items-center h-screen bg-gray-100">
-          <div className="flex flex-col justify-center mt-28 items-center mb-8">
-            <Image src={Start} alt="mulai assessmen" width={300} />
-            <h1 className="text-base text-center mt-6 text-hitam2 font-extrabold">
-              Instrumen Asessmen Kesiapsiagaan Paket Pelayanan Awal Minimum
-              (PPAM) <br /> (Minimum Initiative Services Package (MISP)
-              Readiness Assessment)
-            </h1>
-          </div>
-          <div className="">
-            <Button
-              label={
-                isLoading ? (
-                  <p className="flex items-center gap-x-2">
-                    Mulai Assessmen
-                    <FaSpinner className="animate-spin" />
-                  </p>
-                ) : (
-                  "Mulai Asesmen"
-                )
-              }
-              variant="primary"
-              onClick={handleStart}
-              withIcon={false}
-              disabled={isLoading} // Disable tombol saat loading
-            />
-          </div>
+          <main className="flex-1 p-8 bg-[#F1F1F7]">
+            <div className="flex flex-col items-center justify-center mt-14">
+              <div className="px-32 py-10 rouned-lg flex flex-col items-center">
+                <Image
+                  src={ApprovedImage}
+                  alt="Approved"
+                  className="mb-6"
+                  width={295.17}
+                />
+                <p className="text-2xl font-extrabold">
+                  {" "}
+                  Yeay! Permintaan akses telah{" "}
+                  <span className="text-green-600 ">disetujui</span>!
+                </p>
+                <p className="text-base text-center mb-5">
+                  Anda kini memiliki akses penuh ke data asesmen di seluruh
+                  Indonesia.
+                </p>
+                <p className="text-gray-500 text-xs">
+                  Permintaan oleh{" "}
+                  <span className="text-gray-700 font-semibold te">
+                    {username}
+                  </span>{" "}
+                  telah disetujui pada : <span>{handleDate}</span>
+                </p>
+                <button
+                  onClick={handleTakeAssessment}
+                  className="mt-6 uppercase bg-accent text-white py-2 px-4 rounded-lg"
+                >
+                  Akses Data Assessmen
+                </button>
+              </div>
+            </div>
+          </main>
         </div>
       </div>
     );
@@ -218,7 +209,8 @@ const StatusPage = () => {
   if (accessStatus === "rejected") {
     return (
       <div className="bg-gray-100 min-h-screen flex flex-col items-center justify-start">
-        <Navbar username={username} status={userRole} />
+        <Navbar username={username} status={userRole} />{" "}
+        {/* Tampilkan status role */}
         <div className="flex flex-col items-center justify-center mt-10">
           <h1 className="font-bold text-3xl mb-2">Status Pengajuan Akses</h1>
           <p className="text-gray-700 mb-10 text-center px-4">
@@ -234,7 +226,7 @@ const StatusPage = () => {
             />
             <p className="text-2xl font-extrabold">
               Oops, permintaan akses Anda{" "}
-              <span className="text-red-600">Ditolak</span> oleh admin
+              <span className="text-red-600 ">Ditolak</span> oleh admin
             </p>
             <p className="text-center mt-4">
               Silakan melakukan pengajuan ulang jika ada perubahan pada
@@ -246,6 +238,7 @@ const StatusPage = () => {
               telah ditolak dengan alasan :{" "}
               <span className="text-red-500 font-semibold">{rejectReason}</span>
             </p>
+            {/* Tampilkan rejectReason */}
             <button
               onClick={handleResubmit}
               className="mt-6 uppercase bg-accent font-semibold text-white py-2 px-4 rounded-lg"
@@ -259,7 +252,7 @@ const StatusPage = () => {
   }
 
   return (
-    <div>
+    <div className="">
       {isLoading ? (
         <div className="flex items-center justify-center min-h-screen">
           <FaSpinner className="animate-spin text-6xl text-accent" />
