@@ -11,7 +11,7 @@ const EditBagian1 = () => {
   const [answers, setAnswers] = useState({});
   const [editedQuestions, setEditedQuestions] = useState({}); // For edited questions
   const [editedSubQuestions, setEditedSubQuestions] = useState({}); // For edited subquestions
-
+  const [activeId, setActiveId] = useState("/admin/edit/bagian-2/assessment-3");
   const router = useRouter();
   const token =
     typeof window !== "undefined"
@@ -79,57 +79,66 @@ const EditBagian1 = () => {
       },
     }));
   };
+  const handleSidebarClick = () => {
+    if (formRef.current) {
+      setIsPushed(false);
+      formRef.current.dispatchEvent(
+        new Event("submit", { bubbles: true, cancelable: true })
+      );
+    }
+  };
 
+  // Submit form
   // Submit form
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    // Build the updated questions payload
+    // Prepare updated questions and subquestions in the required format
     const updatedQuestions = questions.map((q) => ({
       id: q.id,
-      number: q.number,
-      question: editedQuestions[q.id], // Main question text
-      sub: q.sub
-        ? q.sub.map((sub) => ({
-            id: sub.id,
-            question: editedSubQuestions[q.id]?.[sub.id] || sub.question, // Updated subquestion or original
-            type: sub.type,
-            choice: sub.choice || [], // Preserve choice options
-          }))
-        : [],
+      question: editedQuestions[q.id] || q.question,
     }));
 
-    // Debugging payload
-    console.log("Payload to be sent to API:", updatedQuestions);
+    // Prepare updated subquestions in the required format
+    const updatedSubQuestions = Object.entries(editedSubQuestions).flatMap(
+      ([questionId, subquestions]) =>
+        Object.entries(subquestions).map(([subId, subQuestion]) => ({
+          id: subId,
+          question: subQuestion,
+        }))
+    );
 
-    // Send request to API
+    // Combine questions and subquestions
+    const updatedData = [...updatedQuestions, ...updatedSubQuestions];
+
     try {
       const response = await axios.put(
         "https://ppamkespro.com/api/instrument",
-        updatedQuestions,
+        updatedData, // Send both questions and subquestions
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
       if (response.status === 200) {
-        alert("Questions updated successfully");
-        console.log("Updated subquestions state: ", editedSubQuestions);
+        alert("Questions and subquestions updated successfully");
       }
     } catch (error) {
-      console.error(
-        "Error updating questions:",
-        error.response ? error.response.data : error.message
-      );
+      console.error("Error updating subquestions:", error);
     }
   };
 
   return (
     <div>
       <div className="bg-[#F1F1F7] h-screen overflow-x-hidden">
-        <Sidebar />
+        <Sidebar
+          activeId={activeId}
+          setActiveId={setActiveId}
+          onClick={handleSidebarClick}
+        />
         <div className="container w-[1048px] ml-[344px] space-y-6 p-4">
           <div className="bg-[#1446AB] pl-4 py-4 rounded-2xl w-[1048px]">
             <p className="text-white font-extrabold text-xl">
-              Bagian 2 - Informasi umum (Edit Pertanyaan)
+              Komponen PPAM 3: Mencegah penularan dan mengurangi kesakitan dan
+              kematian akibat HIV dan IMS lainnya(Edit Pertanyaan)
             </p>
           </div>
           <form

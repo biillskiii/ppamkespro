@@ -51,7 +51,7 @@ const Admin = () => {
     }
 
     axios
-      .get("https://ppamkespro.com/api/view-access", {
+      .get("https://ppamkespro.com/api/submit-access", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -70,7 +70,7 @@ const Admin = () => {
     const token = sessionStorage.getItem("accessToken");
     axios
       .put(
-        `https://ppamkespro.com/api/view-access/${username}`,
+        `https://ppamkespro.com/api/submit-access/${username}`,
         {
           status: "approve",
         },
@@ -102,7 +102,7 @@ const Admin = () => {
 
     axios
       .put(
-        `https://ppamkespro.com/api/view-access/${selectedUser}`,
+        `https://ppamkespro.com/api/submit-access/${selectedUser}`,
         {
           status: "reject",
           rejectReason: rejectReason,
@@ -162,7 +162,7 @@ const Admin = () => {
           <nav className="flex flex-col p-4">
             <Link
               href="/admin"
-              className="flex items-center gap-x-3 py-2 px-4 text-accent"
+              className="flex items-center gap-x-3 py-2 px-4 hover:text-accent"
             >
               <HiMiniInboxArrowDown />
               Tinjauan Permintaan
@@ -188,7 +188,7 @@ const Admin = () => {
             </Link>
             <Link
               href="/admin/tinjauan-submitter"
-              className="py-2 px-4 flex items-center gap-x-3 hover:text-accent"
+              className="py-2 px-4 flex items-center gap-x-3 text-accent"
             >
               <HiMiniInboxArrowDown /> Tinjauan Submitter
             </Link>

@@ -94,18 +94,20 @@ const Menu = ({
 }) => {
   const isActive = activeAccordion === title;
   const isHighlighted =
-    activeId === href ||
-    (title === "Bagian II" && subMenu.some((item) => item.href === activeId));
-
-  console.log({ title, isActive, isHighlighted }); // Debug status
+    (activeId === href && (title === "Bagian 0" || title === "Bagian I")) ||
+    (activeId !== href &&
+      title !== "Bagian 0" &&
+      subMenu.some((item) => item.href === activeId));
 
   return (
     <div
-      className={`flex flex-col mt-10 w-10/12 cursor-pointer justify-center
-        ${isHighlighted ? "bg-accent text-white" : "bg-transparent text-accent"}
-        py-4 px-4 rounded-lg font-semibold border 
-        ${isHighlighted ? "border-accent" : "border border-border"}
-      `}
+      className={`flex flex-col mt-10 w-10/12 cursor-pointer justify-center ${
+        isHighlighted
+          ? isActive
+            ? "border-2 text-accent"
+            : "bg-accent text-white"
+          : "bg-transparent border border-border text-accent"
+      } py-4 px-4 rounded-lg font-semibold`}
       onClick={() => {
         if (title === "Bagian 0" || title === "Bagian I") {
           handleNavigation(href);
@@ -115,21 +117,22 @@ const Menu = ({
       }}
     >
       <div className="flex items-center h-auto justify-between">
-        <div className="flex items-center gap-x-2">
+        <div className="flex items-center h-full gap-x-2">
           <FaCircleCheck
             size={24}
-            className={`${isHighlighted ? "text-white" : "text-accent"}`}
-          />
+            className={`${isHighlighted ? "text-gray-200" : "text-accent"}`}
+          />{" "}
           <span>{title}</span>
         </div>
-        {title === "Bagian II" &&
+        {title !== "Bagian 0" &&
+          title !== "Bagian I" &&
           (isActive ? (
-            <IoIosArrowForward size={16} />
-          ) : (
             <IoIosArrowDown size={16} />
+          ) : (
+            <IoIosArrowForward size={16} />
           ))}
       </div>
-      {isActive && title === "Bagian II" && (
+      {isActive && title !== "Bagian 0" && title !== "Bagian I" && (
         <div className="pl-6 mt-4">
           {subMenu.map((item, index) => (
             <Assesstment
@@ -222,7 +225,7 @@ const Sidebar = ({ activeId, onClick = () => {} }) => {
 
   const handleBack = () => {
     setIsLoading(true); // Set loading state to true
-    router.push("/assessment");
+    router.push("/admin/edit-question");
     setIsLoading(false); // Reset loading state after navigation
   };
 
