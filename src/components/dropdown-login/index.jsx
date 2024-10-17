@@ -37,7 +37,7 @@ const DropdownInput = ({
         className={clsx(
           "border p-2 rounded-md w-full cursor-pointer",
           "focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
-          "text-black font-medium",
+          "text-black ",
           "bg-white",
           "h-10"
         )}
