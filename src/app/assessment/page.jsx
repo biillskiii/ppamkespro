@@ -10,7 +10,7 @@ import NoAccess from "../../../public/assets/no-access.png";
 import { jwtDecode } from "jwt-decode"; // Hapus { }, jwtDecode tidak memerlukan {}
 import { FaSpinner } from "react-icons/fa";
 import { IoLogOutOutline } from "react-icons/io5"; // Mengganti import untuk icon logout yang digunakan
-import Button from "@/components/Button"; // Pastikan komponen Button ada
+import Button from "@/components/button"; // Pastikan komponen Button ada
 import Start from "../../../public/assets/mulai.png";
 const StatusPage = () => {
   const [accessStatus, setAccessStatus] = useState(null);
