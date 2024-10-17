@@ -32,6 +32,7 @@ const Signup = () => {
       [name]: value,
     }));
   };
+
   const handleSignup = async (e) => {
     e.preventDefault();
 
@@ -39,10 +40,10 @@ const Signup = () => {
     if (
       !formData.username ||
       !formData.email ||
-      !formData.institute ||
       !formData.password ||
       !formData.confirmPassword ||
-      !formData.status
+      !formData.status ||
+      (formData.status !== "viewer" && !formData.institute) // validasi institute hanya jika role bukan viewer
     ) {
       toast.error("Semua input wajib diisi!");
       return;
@@ -51,13 +52,6 @@ const Signup = () => {
     // Validasi password dan konfirmasi password
     if (formData.password !== formData.confirmPassword) {
       toast.error("Password dan konfirmasi password tidak cocok!");
-      return;
-    }
-
-    // Validasi nilai status
-    const allowedStatuses = ["viewer", "submitter"];
-    if (!allowedStatuses.includes(formData.status)) {
-      toast.error("Status tidak valid!");
       return;
     }
 
@@ -151,6 +145,7 @@ const Signup = () => {
                 placeholder={"Misal: John Doe"}
                 value={formData.username}
                 onChange={handleChange}
+                required
               />
             </div>
             <div className="mb-4 w-full">
@@ -161,44 +156,11 @@ const Signup = () => {
                 placeholder={"Misal: johndoe@xyz.com"}
                 value={formData.email}
                 onChange={handleChange}
+                required
               />
             </div>
-            <div className="mb-4 w-full">
-              <TextInput
-                label={"Nama institute"}
-                name={"institute"}
-                placeholder={"Misal: Dinas Kesehatan Kota Semarang"}
-                value={formData.institute}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="flex flex-col xl:flex-row items-center gap-x-7 xl:gap-x-12">
-              <div className="mb-6 w-full">
-                <PasswordInput
-                  label={"Buat kata sandi"}
-                  name={"password"}
-                  placeholder={"Minimal 6 karakter"}
-                  value={formData.password}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="mb-6 w-full">
-                <PasswordInput
-                  label={"Masukan ulang kata sandi"}
-                  name={"confirmPassword"}
-                  placeholder={"Minimal 6 karakter"}
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-
             <div className="mb-6 w-full">
-              <label
-                htmlFor="status"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
+              <label htmlFor="status" className="block mb-2">
                 Pilih Peran
               </label>
               <DropdownInput
@@ -213,7 +175,44 @@ const Signup = () => {
                   }))
                 }
                 options={["Viewer", "Submitter"]}
+                required
               />
+            </div>
+            {/* Sembunyikan input Institute jika role viewer */}
+            {formData.status !== "viewer" && (
+              <div className="mb-6 w-full">
+                <TextInput
+                  label={"Nama institute"}
+                  name={"institute"}
+                  placeholder={"Misal: Dinas Kesehatan Kota Semarang"}
+                  value={formData.institute}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            )}
+
+            <div className="flex flex-col xl:flex-row items-center gap-x-7 xl:gap-x-12">
+              <div className="mb-6 w-full">
+                <PasswordInput
+                  label={"Buat kata sandi"}
+                  name={"password"}
+                  placeholder={"Minimal 6 karakter"}
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="mb-6 w-full">
+                <PasswordInput
+                  label={"Masukan ulang kata sandi"}
+                  name={"confirmPassword"}
+                  placeholder={"Minimal 6 karakter"}
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
             </div>
 
             <div className="flex w-full items-center justify-between">
