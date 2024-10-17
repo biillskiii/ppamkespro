@@ -138,7 +138,6 @@ const DetailData = ({ params }) => {
     }
   };
 
-
   const downloadXLSX = () => {
     if (Object.keys(tableData).length > 0) {
       const wb = XLSX.utils.book_new();
@@ -185,6 +184,12 @@ const DetailData = ({ params }) => {
               className="py-2 px-4 flex items-center gap-x-3 hover:text-accent"
             >
               <FaUserGear /> User Management
+            </Link>
+            <Link
+              href="/admin/tinjauan-submitter"
+              className="py-2 px-4 flex items-center gap-x-3 hover:text-accent"
+            >
+              <HiMiniInboxArrowDown /> Tinjauan Submitter
             </Link>
           </nav>
         </div>

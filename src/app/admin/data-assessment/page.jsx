@@ -8,7 +8,7 @@ import Link from "next/link";
 import { FaClipboardList } from "react-icons/fa";
 import { HiMiniInboxArrowDown } from "react-icons/hi2";
 import { FaUserGear } from "react-icons/fa6";
-import { FaEdit } from "react-icons/fa";
+import { HiMiniInboxArrowUp } from "react-icons/fa";
 const Admin = () => {
   const [data, setData] = useState([]);
   const [username, setUsername] = useState("");
@@ -135,6 +135,12 @@ const Admin = () => {
               className="py-2 px-4 flex items-center gap-x-3 hover:text-accent"
             >
               <FaEdit /> Edit Question
+            </Link>
+            <Link
+              href="/admin/tinjauan-submitter"
+              className="py-2 px-4 flex items-center gap-x-3 hover:text-accent"
+            >
+              <HiMiniInboxArrowDown /> Tinjauan Submitter
             </Link>
           </nav>
         </div>

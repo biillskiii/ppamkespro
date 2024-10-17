@@ -49,6 +49,12 @@ const EditAssessmentPage = () => {
             >
               <FaEdit /> Edit Question
             </Link>
+            <Link
+              href="/admin/tinjauan-submitter"
+              className="py-2 px-4 flex items-center gap-x-3 hover:text-accent"
+            >
+              <HiMiniInboxArrowDown /> Tinjauan Submitter
+            </Link>
           </nav>
         </div>
         <main className="flex-1 p-8 bg-[#F1F1F7]">
