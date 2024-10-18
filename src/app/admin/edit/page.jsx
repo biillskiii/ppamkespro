@@ -76,7 +76,6 @@ const EditBagian0 = () => {
 
       if (response.status === 200) {
         alert("Questions updated successfully");
-        router.push("/assessment/bagian-1");
       }
     } catch (error) {
       console.error(
