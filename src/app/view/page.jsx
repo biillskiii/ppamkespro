@@ -77,15 +77,23 @@ const StatusPage = () => {
           },
         }
       );
-      response.data;
-      setAccessStatus(response.data.data.status);
-      setDate(response.data.data.date);
 
-      if (response.data.data.status === "rejected") {
-        setRejectReason(
-          response.data.data.rejectsReaseon ||
-            "Tidak ada alasan yang diberikan."
-        );
+      // Cetak seluruh respons dari API untuk melihat strukturnya
+      console.log("API Response: ", response.data);
+
+      // Ambil elemen pertama dari array data
+      const data = response.data.data[0]; // Sesuaikan berdasarkan struktur API
+
+      if (data && data.status) {
+        setAccessStatus(data.status); // Set status
+        setDate(data.date); // Set tanggal
+        if (data.status === "rejected") {
+          setRejectReason(
+            data.rejectsReaseon || "Tidak ada alasan yang diberikan."
+          );
+        }
+      } else {
+        console.error("Status not found in response");
       }
     } catch (error) {
       console.error("Error fetching access status:", error);

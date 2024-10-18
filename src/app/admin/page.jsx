@@ -245,6 +245,7 @@ const Admin = () => {
                 <tr>
                   <th className="py-2 border-b">#Nomor</th>
                   <th className="py-2 border-b">Nama Pengguna</th>
+                  <th className="py-2 border-b">Tingkat</th>
                   <th className="py-2 border-b">Alasan Permintaan</th>
                   <th className="py-2 border-b">Status</th>
                   {filter === "Ditolak" && (
@@ -263,6 +264,9 @@ const Admin = () => {
                     <td className="py-2 border-b text-center">{index + 1}</td>
                     <td className="py-2 border-b text-center">
                       {item.username}
+                    </td>
+                    <td className="py-2 border-b text-center">
+                      {item.area}
                     </td>
                     <td className="py-2 border-b text-center">{item.reason}</td>
                     <td
