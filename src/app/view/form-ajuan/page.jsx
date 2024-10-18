@@ -9,7 +9,8 @@ import Select from "@/components/select";
 import useAreas from "@/app/hooks/useAreas";
 import Button from "@/components/button";
 import Navbar from "@/components/navbar";
-import Pending from "../../../../public/assets/amico.png"
+import Pending from "../../../../public/assets/amico.png";
+import Image from "next/image";
 const FormAjuan = () => {
   const [inputValue, setInputValue] = useState("");
   const [selectedDataAccess, setSelectedDataAccess] = useState("");
