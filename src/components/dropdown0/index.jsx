@@ -51,7 +51,7 @@ const DropdownInput = ({
           (
             <p className="flex items-center justify-between">
               {options.find((option) => {
-                if (option.value === selectedValue) {
+                if (option.value == selectedValue) {
                   console.log('check: '+JSON.stringify(option) + ' = ' + selectedValue)
                   return true
               }
